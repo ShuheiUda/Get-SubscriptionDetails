@@ -1,0 +1,779 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+    <html xmlns="http://www.w3.org/1999/xhtml">
+        <head>
+            <title>Get-SubscriptionDetails Report</title>
+                <style>
+                    body {
+                        color:#333333;
+                        font-family:Calibri,Tahoma,arial,verdana;
+                        font-size: 11pt;
+                    }
+                    h1 {
+                        text-align:center;
+                    }
+                    h2 {
+                        border-top:1px solid #666666;
+                    }
+                    table {
+                        border-collapse:collapse;
+                    }
+                    th {
+                        text-align:left;
+                        font-weight:bold;
+                        color:#eeeeee;
+                        background-color:#333333;
+                        border:1px solid black;
+                        padding:5px;
+                    }
+                    td {
+                        padding:5px;
+                        border:1px solid black;
+                    }
+                    .odd { background-color:#ffffff; }
+                    .even { background-color:#dddddd; }
+                </style>
+        </head>
+        <body>
+<h2>Get-SubscriptionDetails Report</h2><h3>Subscription ID: 1b30dfe1-c2b7-468d-a5cd-b0662c94ec2f ( Executed on : 2016-04-24T16:20:09 )<br><a href="#CRP">Virtual Machine</a> | <a href="#SRP">Storage</a> | <a href="#NRP">Network</a></h3><a name="CRP"><h2>Virtual Machine</h2></a><h3>ASM Windows VM</h3><table>
+  <colgroup>
+    <col />
+    <col />
+    <col />
+    <col />
+    <col />
+    <col />
+    <col />
+    <col />
+    <col />
+    <col />
+    <col />
+    <col />
+    <col />
+    <col />
+    <col />
+  </colgroup>
+  <tr class="odd">
+    <th>Name</th>
+    <th>HostName</th>
+    <th>Status</th>
+    <th>InstanceStatus</th>
+    <th>PowerState</th>
+    <th>InstanceSize</th>
+    <th>ServiceName</th>
+    <th>DNSName</th>
+    <th>AvailabilitySetName</th>
+    <th>VirtualNetworkName</th>
+    <th>SubnetNames</th>
+    <th>IpAddress</th>
+    <th>PublicIPAddress</th>
+    <th>RDP EndPoint</th>
+    <th>PowerShell EndPoint</th>
+  </tr>
+  <tr class="even">
+    <td>SimpleWindows</td>
+    <td>GuestOsName</td>
+    <td>ReadyRole</td>
+    <td>ReadyRole</td>
+    <td>Started</td>
+    <td>ExtraSmall</td>
+    <td>CloudServiceName</td>
+    <td>http://cloudservicename.cloudapp.net/</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td>100.73.170.31</td>
+    <td></td>
+    <td>58808</td>
+    <td>5986</td>
+  </tr>
+  <tr class="odd">
+    <td>VnetWindows</td>
+    <td>VnetWindows</td>
+    <td>ReadyRole</td>
+    <td>ReadyRole</td>
+    <td>Started</td>
+    <td>ExtraSmall</td>
+    <td>VnetVmCloudService</td>
+    <td>http://vnetvmcloudservice.cloudapp.net/</td>
+    <td>AvailabilitySet</td>
+    <td>VNetName</td>
+    <td>Subnet-1</td>
+    <td>10.0.0.4</td>
+    <td></td>
+    <td>62665</td>
+    <td>5986</td>
+  </tr>
+</table><h3>ASM Linux VM</h3><table>
+  <colgroup>
+    <col />
+    <col />
+    <col />
+    <col />
+    <col />
+    <col />
+    <col />
+    <col />
+    <col />
+    <col />
+    <col />
+    <col />
+    <col />
+    <col />
+  </colgroup>
+  <tr class="odd">
+    <th>Name</th>
+    <th>HostName</th>
+    <th>Status</th>
+    <th>InstanceStatus</th>
+    <th>PowerState</th>
+    <th>InstanceSize</th>
+    <th>ServiceName</th>
+    <th>DNSName</th>
+    <th>AvailabilitySetName</th>
+    <th>VirtualNetworkName</th>
+    <th>SubnetNames</th>
+    <th>IpAddress</th>
+    <th>PublicIPAddress</th>
+    <th>SSH EndPoint</th>
+  </tr>
+  <tr class="even">
+    <td>SimpleUbuntu</td>
+    <td></td>
+    <td>StoppedDeallocated</td>
+    <td>StoppedDeallocated</td>
+    <td>Stopped</td>
+    <td>Basic_A0</td>
+    <td>CloudServiceName</td>
+    <td>http://cloudservicename.cloudapp.net/</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td>22</td>
+  </tr>
+</table><h3>ARM Windows VM</h3><table>
+  <colgroup>
+    <col />
+    <col />
+    <col />
+    <col />
+    <col />
+    <col />
+    <col />
+    <col />
+    <col />
+    <col />
+    <col />
+  </colgroup>
+  <tr class="odd">
+    <th>Name</th>
+    <th>computerName</th>
+    <th>ResourceGroupName</th>
+    <th>ProvisioningState</th>
+    <th>vmSize</th>
+    <th>AvailabilitySetName</th>
+    <th>VirtualNetworkName</th>
+    <th>SubnetNames</th>
+    <th>PrivateIpAddress</th>
+    <th>PublicIPAddress</th>
+    <th>NetworkSecurityGroup</th>
+  </tr>
+  <tr class="even">
+    <td>ARMWindows</td>
+    <td>ARMWindows</td>
+    <td>ARMWINDOWS</td>
+    <td>Succeeded</td>
+    <td>Standard_A0</td>
+    <td></td>
+    <td>ArmVnet</td>
+    <td>subnet1</td>
+    <td>10.0.0.4</td>
+    <td>Not Assigned</td>
+    <td>ARMWindows</td>
+  </tr>
+</table><h3>ARM Linux VM</h3><table>
+  <colgroup>
+    <col />
+    <col />
+    <col />
+    <col />
+    <col />
+    <col />
+    <col />
+    <col />
+    <col />
+    <col />
+    <col />
+  </colgroup>
+  <tr class="odd">
+    <th>Name</th>
+    <th>computerName</th>
+    <th>ResourceGroupName</th>
+    <th>ProvisioningState</th>
+    <th>vmSize</th>
+    <th>AvailabilitySetName</th>
+    <th>VirtualNetworkName</th>
+    <th>SubnetNames</th>
+    <th>PrivateIpAddress</th>
+    <th>PublicIPAddress</th>
+    <th>NetworkSecurityGroup</th>
+  </tr>
+  <tr class="even">
+    <td>ArmCent</td>
+    <td>ArmCent</td>
+    <td>ARMLINUXRG</td>
+    <td>Succeeded</td>
+    <td>Standard_A0</td>
+    <td></td>
+    <td>ArmVnet</td>
+    <td>subnet1</td>
+    <td>10.0.0.6</td>
+    <td>13.71.149.24</td>
+    <td>ArmCent</td>
+  </tr>
+  <tr class="odd">
+    <td>ArmCent2</td>
+    <td>ArmCent2</td>
+    <td>ARMLINUXRG</td>
+    <td>Succeeded</td>
+    <td>Standard_A0</td>
+    <td>ARMAS</td>
+    <td>ARMLinuxRG</td>
+    <td>default</td>
+    <td>10.1.0.4</td>
+    <td>13.71.145.32</td>
+    <td>ArmCent2</td>
+  </tr>
+</table><a name="SRP"><h2>Storage</h2></a><h3>ASM StorageAccount</h3><table>
+  <colgroup>
+    <col />
+    <col />
+    <col />
+    <col />
+    <col />
+    <col />
+    <col />
+    <col />
+  </colgroup>
+  <tr class="odd">
+    <th>StorageAccountName</th>
+    <th>AccountType</th>
+    <th>StatusOfPrimary</th>
+    <th>Location</th>
+    <th>GeoReplicationEnabled</th>
+    <th>GeoPrimaryLocation</th>
+    <th>GeoSecondaryLocation</th>
+    <th>Endpoints</th>
+  </tr>
+  <tr class="even">
+    <td>eastasiapremium</td>
+    <td>Premium_LRS</td>
+    <td>Available</td>
+    <td>Southeast Asia</td>
+    <td></td>
+    <td>Southeast Asia</td>
+    <td></td>
+    <td>https://eastasiapremium.blob.core.windows.net/</td>
+  </tr>
+  <tr class="odd">
+    <td>storageaccounteastasia</td>
+    <td>Standard_GRS</td>
+    <td>Available</td>
+    <td>Southeast Asia</td>
+    <td>True</td>
+    <td>Southeast Asia</td>
+    <td>East Asia</td>
+    <td>https://storageaccounteastasia.blob.core.windows.net/</td>
+  </tr>
+  <tr class="even">
+    <td>v9portalvhdsrlssqp4g80y6</td>
+    <td>Standard_LRS</td>
+    <td>Available</td>
+    <td>Southeast Asia</td>
+    <td></td>
+    <td>Southeast Asia</td>
+    <td></td>
+    <td>https://v9portalvhdsrlssqp4g80y6.blob.core.windows.net/</td>
+  </tr>
+</table><h3>ASM VM Disk</h3><table>
+  <colgroup>
+    <col />
+    <col />
+    <col />
+    <col />
+    <col />
+    <col />
+  </colgroup>
+  <tr class="odd">
+    <th>DiskName</th>
+    <th>AttachedTo.RoleName</th>
+    <th>OS</th>
+    <th>DiskSizeInGB</th>
+    <th>SourceImageName</th>
+    <th>MediaLink</th>
+  </tr>
+  <tr class="even">
+    <td>CustomeTemplate-CustomeTemplate-0-201604101426010460</td>
+    <td></td>
+    <td>Windows</td>
+    <td>128</td>
+    <td>a699494373c04fc0bc8f2bb1389d6106__Windows-Server-2012-R2-20160229-en.us-127GB.vhd</td>
+    <td>https://storageaccounteastasia.blob.core.windows.net/vhds/CustomeTemplate-CustomeTemplate-2016-04-10.vhd</td>
+  </tr>
+  <tr class="odd">
+    <td>SimpleWindows-SimpleUbuntu-0-201604101005160637</td>
+    <td>SimpleUbuntu</td>
+    <td>Linux</td>
+    <td>30</td>
+    <td>b39f27a8b8c64d52b05eac6a62ebad85__Ubuntu-12_04_5-LTS-amd64-server-20160315-en-us-30GB</td>
+    <td>https://v9portalvhdsrlssqp4g80y6.blob.core.windows.net/vhds/CloudServiceName-SimpleUbuntu-2016-04-10.vhd</td>
+  </tr>
+  <tr class="even">
+    <td>SimpleWindows-SimpleWindows-0-201604100754480533</td>
+    <td>SimpleWindows</td>
+    <td>Windows</td>
+    <td>128</td>
+    <td>a699494373c04fc0bc8f2bb1389d6106__Windows-Server-2012-R2-20160229-en.us-127GB.vhd</td>
+    <td>https://v9portalvhdsrlssqp4g80y6.blob.core.windows.net/vhds/CloudServiceName-SimpleWindows-2016-04-10.vhd</td>
+  </tr>
+  <tr class="odd">
+    <td>VnetWindows-VnetWindows-0-201604100759150180</td>
+    <td>VnetWindows</td>
+    <td>Windows</td>
+    <td>128</td>
+    <td>a699494373c04fc0bc8f2bb1389d6106__Windows-Server-2012-R2-20160229-en.us-127GB.vhd</td>
+    <td>https://v9portalvhdsrlssqp4g80y6.blob.core.windows.net/vhds/VnetVmCloudService-VnetWindows-2016-04-10.vhd</td>
+  </tr>
+</table><h3>ASM OS Image</h3><table>
+  <colgroup>
+    <col />
+    <col />
+    <col />
+    <col />
+    <col />
+    <col />
+    <col />
+    <col />
+  </colgroup>
+  <tr class="odd">
+    <th>ImageName</th>
+    <th>Label</th>
+    <th>RoleName</th>
+    <th>OS</th>
+    <th>LogicalDiskSizeInGB</th>
+    <th>MediaLink</th>
+    <th>CreatedTime</th>
+    <th>ModifiedTime</th>
+  </tr>
+  <tr class="even">
+    <td>CustomeTemplate-20160410-547438</td>
+    <td>CustomeWindowsImage</td>
+    <td>CustomeTemplate</td>
+    <td>Windows</td>
+    <td>128</td>
+    <td>https://storageaccounteastasia.blob.core.windows.net/vhds/CustomeTemplate-20160410-547438-os-2016-04-10-E42A91.vhd</td>
+    <td>2016/04/10 23:54:04</td>
+    <td>2016/04/10 23:54:04</td>
+  </tr>
+</table><h3>ARM StorageAccount</h3><table>
+  <colgroup>
+    <col />
+    <col />
+    <col />
+    <col />
+    <col />
+    <col />
+    <col />
+    <col />
+  </colgroup>
+  <tr class="odd">
+    <th>StorageAccountName</th>
+    <th>AccountType</th>
+    <th>StatusOfPrimary</th>
+    <th>Location</th>
+    <th>GeoReplicationEnabled</th>
+    <th>GeoPrimaryLocation</th>
+    <th>GeoSecondaryLocation</th>
+    <th>Endpoints</th>
+  </tr>
+  <tr class="even">
+    <td>armstr</td>
+    <td>StandardLRS</td>
+    <td>Available</td>
+    <td>japaneast</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td>https://armstr.blob.core.windows.net/</td>
+  </tr>
+</table><h3>ARM VM Disk</h3><table>
+  <colgroup>
+    <col />
+    <col />
+    <col />
+    <col />
+    <col />
+    <col />
+    <col />
+    <col />
+    <col />
+    <col />
+  </colgroup>
+  <tr class="odd">
+    <th>Disk Name</th>
+    <th>Attached To</th>
+    <th>StorageAccountName</th>
+    <th>OS</th>
+    <th>Publisher</th>
+    <th>Offer</th>
+    <th>Sku</th>
+    <th>DiskSizeInGB</th>
+    <th>Create Option</th>
+    <th>MediaLink</th>
+  </tr>
+  <tr class="even">
+    <td>ArmCent</td>
+    <td>ArmCent</td>
+    <td>armstr</td>
+    <td>Linux</td>
+    <td>OpenLogic</td>
+    <td>CentOS</td>
+    <td>7.0</td>
+    <td></td>
+    <td>FromImage</td>
+    <td>https://armstr.blob.core.windows.net/vhds/ArmCent201631203149.vhd</td>
+  </tr>
+  <tr class="odd">
+    <td>ArmCent2</td>
+    <td>ArmCent2</td>
+    <td>armstr</td>
+    <td>Linux</td>
+    <td>OpenLogic</td>
+    <td>CentOS</td>
+    <td>7.0</td>
+    <td></td>
+    <td>FromImage</td>
+    <td>https://armstr.blob.core.windows.net/vhds/ArmCent220163121111.vhd</td>
+  </tr>
+  <tr class="even">
+    <td>ARMWindows</td>
+    <td>ARMWindows</td>
+    <td>armstr</td>
+    <td>Windows</td>
+    <td>MicrosoftWindowsServer</td>
+    <td>WindowsServer</td>
+    <td>2012-R2-Datacenter</td>
+    <td></td>
+    <td>FromImage</td>
+    <td>https://armstr.blob.core.windows.net/vhds/ARMWindows2016311233220.vhd</td>
+  </tr>
+</table><a name="NRP"><h2>Network</h2></a><h3>ASM DNS Server</h3><table>
+  <colgroup>
+    <col />
+    <col />
+  </colgroup>
+  <tr class="odd">
+    <th>name</th>
+    <th>IPAddress</th>
+  </tr>
+  <tr class="even">
+    <td>DNS1</td>
+    <td>10.10.10.10</td>
+  </tr>
+  <tr class="odd">
+    <td>DNS2</td>
+    <td>10.10.10.11</td>
+  </tr>
+</table><h3>ASM Local Network Sites</h3><table>
+  <colgroup>
+    <col />
+    <col />
+    <col />
+  </colgroup>
+  <tr class="odd">
+    <th>name</th>
+    <th>AddressSpace</th>
+    <th>VPNGatewayAddress</th>
+  </tr>
+  <tr class="even">
+    <td>OnPremise</td>
+    <td>192.0.0.0/16</td>
+    <td>133.27.0.0</td>
+  </tr>
+</table><h3>ASM Virtual Network Sites</h3><table>
+  <colgroup>
+    <col />
+    <col />
+    <col />
+    <col />
+    <col />
+  </colgroup>
+  <tr class="odd">
+    <th>name</th>
+    <th>Location</th>
+    <th>AddressSpace</th>
+    <th>Subnets</th>
+    <th>DnsServersRef</th>
+  </tr>
+  <tr class="even">
+    <td>VNetName</td>
+    <td>Southeast Asia</td>
+    <td>10.0.0.0/8</td>
+    <td>10.0.0.0/11, 10.32.0.0/11, 10.64.0.0/10</td>
+    <td>DNS1</td>
+  </tr>
+</table><h3>ASM Virtual Network Gateway</h3><table>
+  <colgroup>
+    <col />
+    <col />
+    <col />
+    <col />
+    <col />
+    <col />
+  </colgroup>
+  <tr class="odd">
+    <th>GatewayName</th>
+    <th>State</th>
+    <th>GatewayType</th>
+    <th>GatewayId</th>
+    <th>VnetId</th>
+    <th>VIPAddress</th>
+  </tr>
+  <tr class="even">
+    <td>EastUS</td>
+    <td>NotProvisioned</td>
+    <td>StaticRouting</td>
+    <td>0f198c9e-e93a-4fde-8d94-feee1a52d159</td>
+    <td>28aee3d7-662f-483e-acfe-9347f2091858</td>
+    <td>40.114.49.228</td>
+  </tr>
+  <tr class="odd">
+    <td>EastAsia</td>
+    <td>NotProvisioned</td>
+    <td>StaticRouting</td>
+    <td>6f56aa8d-2d5d-430e-832c-467ffa8051ff</td>
+    <td>54389405-7f80-4b91-bb41-cc9c30923a37</td>
+    <td>40.83.122.149</td>
+  </tr>
+  <tr class="even">
+    <td>JapanEastVpnGateway</td>
+    <td>NotProvisioned</td>
+    <td>StaticRouting</td>
+    <td>c3dc0082-61b2-4de4-a6aa-848e08ccdd55</td>
+    <td>5760b595-318f-46be-9c6e-4a5bba453fed</td>
+    <td>40.115.255.195</td>
+  </tr>
+  <tr class="odd">
+    <td>VpnGw</td>
+    <td>Provisioned</td>
+    <td>DynamicRouting</td>
+    <td>8e004431-1d65-452f-8a9c-6ea3298f4667</td>
+    <td>ecc45dc7-1a22-4a3b-abe2-8904d1bccaf9</td>
+    <td>13.78.62.238</td>
+  </tr>
+</table><h3>ARM Virtual Network</h3><table>
+  <colgroup>
+    <col />
+    <col />
+    <col />
+    <col />
+    <col />
+    <col />
+  </colgroup>
+  <tr class="odd">
+    <th>Name</th>
+    <th>ResourceGroupName</th>
+    <th>Location</th>
+    <th>Address Space</th>
+    <th>Subnets</th>
+    <th>DnsServers</th>
+  </tr>
+  <tr class="even">
+    <td>ARMLinuxRG</td>
+    <td>ARMLinuxRG</td>
+    <td>japaneast</td>
+    <td>10.1.0.0/16</td>
+    <td>10.1.0.0/24, 10.1.1.0/24</td>
+    <td>10.10.10.10, 10.10.10.11</td>
+  </tr>
+  <tr class="odd">
+    <td>ArmVnet</td>
+    <td>ARMWindows</td>
+    <td>japaneast</td>
+    <td>10.0.0.0/16</td>
+    <td>10.0.0.0/24</td>
+    <td></td>
+  </tr>
+</table><h3>ARM Virtual Network Gateway</h3><table>
+  <colgroup>
+    <col />
+    <col />
+    <col />
+    <col />
+    <col />
+    <col />
+  </colgroup>
+  <tr class="odd">
+    <th>Name</th>
+    <th>ResourceGroupName</th>
+    <th>Location</th>
+    <th>ProvisioningState</th>
+    <th>GatewayType</th>
+    <th>VpnType</th>
+  </tr>
+  <tr class="even">
+    <td>VpnGw</td>
+    <td>ARMLinuxRG</td>
+    <td>japaneast</td>
+    <td>Succeeded</td>
+    <td>Vpn</td>
+    <td>RouteBased</td>
+  </tr>
+</table><h3>ARM Network Interface</h3><table>
+  <colgroup>
+    <col />
+    <col />
+    <col />
+    <col />
+    <col />
+    <col />
+    <col />
+    <col />
+    <col />
+  </colgroup>
+  <tr class="odd">
+    <th>Name</th>
+    <th>Location</th>
+    <th>Virtual Machine</th>
+    <th>VirtualNetwork</th>
+    <th>Subnet</th>
+    <th>PrivateIpAddress</th>
+    <th>PrivateIpAllocationMethod</th>
+    <th>CustomeDnsSettings</th>
+    <th>NetworkSecurityGroup</th>
+  </tr>
+  <tr class="even">
+    <td>armcent2703</td>
+    <td>japaneast</td>
+    <td>ArmCent2</td>
+    <td>ARMLinuxRG</td>
+    <td>default</td>
+    <td>10.1.0.4</td>
+    <td>Dynamic</td>
+    <td>8.8.8.8</td>
+    <td>ArmCent2</td>
+  </tr>
+  <tr class="odd">
+    <td>armcent719</td>
+    <td>japaneast</td>
+    <td>ArmCent</td>
+    <td>ArmVnet</td>
+    <td>subnet1</td>
+    <td>10.0.0.6</td>
+    <td>Dynamic</td>
+    <td></td>
+    <td>ArmCent</td>
+  </tr>
+  <tr class="even">
+    <td>armwindows839</td>
+    <td>japaneast</td>
+    <td>ARMWindows</td>
+    <td>ArmVnet</td>
+    <td>subnet1</td>
+    <td>10.0.0.4</td>
+    <td>Dynamic</td>
+    <td></td>
+    <td>ARMWindows</td>
+  </tr>
+</table><h3>ARM Public IP Address</h3><table>
+  <colgroup>
+    <col />
+    <col />
+    <col />
+    <col />
+    <col />
+    <col />
+  </colgroup>
+  <tr class="odd">
+    <th>Name</th>
+    <th>ResourceGroupName</th>
+    <th>Location</th>
+    <th>PublicIpAllocationMethod</th>
+    <th>IpAddress</th>
+    <th>IdleTimeoutInMinutes</th>
+  </tr>
+  <tr class="even">
+    <td>ArmCent</td>
+    <td>ARMLinuxRG</td>
+    <td>japaneast</td>
+    <td>Dynamic</td>
+    <td>13.71.149.24</td>
+    <td>4</td>
+  </tr>
+  <tr class="odd">
+    <td>ArmCent2</td>
+    <td>ARMLinuxRG</td>
+    <td>japaneast</td>
+    <td>Dynamic</td>
+    <td>13.71.145.32</td>
+    <td>4</td>
+  </tr>
+  <tr class="even">
+    <td>VpnGwIp</td>
+    <td>ARMLinuxRG</td>
+    <td>japaneast</td>
+    <td>Dynamic</td>
+    <td>13.78.62.238</td>
+    <td>4</td>
+  </tr>
+  <tr class="odd">
+    <td>ARMWindows</td>
+    <td>ARMWindows</td>
+    <td>japaneast</td>
+    <td>Dynamic</td>
+    <td>Not Assigned</td>
+    <td>4</td>
+  </tr>
+</table><h3>ARM Local Network Gateway</h3><table>
+  <colgroup>
+    <col />
+    <col />
+    <col />
+    <col />
+    <col />
+    <col />
+  </colgroup>
+  <tr class="odd">
+    <th>Name</th>
+    <th>ResourceGroupName</th>
+    <th>Location</th>
+    <th>ProvisioningState</th>
+    <th>GatewayIpAddress</th>
+    <th>LocalNetworkAddressSpace</th>
+  </tr>
+  <tr class="even">
+    <td>OnPremise</td>
+    <td>OnPremise</td>
+    <td>japaneast</td>
+    <td>Succeeded</td>
+    <td>133.27.1.1</td>
+    <td>133.27.1.0/24, 133.27.2.0/24</td>
+  </tr>
+</table><h3>ARM Local Network Sites</h3><table>
+  <colgroup>
+    <col />
+    <col />
+    <col />
+  </colgroup>
+  <tr class="odd">
+    <th>name</th>
+    <th>AddressSpace</th>
+    <th>VPNGatewayAddress</th>
+  </tr>
+  <tr class="even">
+    <td>OnPremise</td>
+    <td>192.0.0.0/16</td>
+    <td>133.27.0.0</td>
+  </tr>
+</table>

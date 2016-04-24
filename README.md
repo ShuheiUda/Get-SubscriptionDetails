@@ -9,6 +9,11 @@ Get-SubscriptionDetails collect your Azure Subscription's details.
 3. login to azure  (ASM and ARM)
 4. wait for a while
 
+## Sample
+[Sample Report](http://www.syuheiuda.com/wp-content/uploads/2016/04/1b30dfe1-c2b7-468d-a5cd-b0662c94ec2f-20160424_162010.htm)
+
+!["Sample Image"](http://www.syuheiuda.com/wp-content/uploads/2016/04/Get-SubscriptionDetails_0_8_0.png)
+
 ## Features
 * Collect ASM Resource Information
     * Compute
