@@ -14,7 +14,7 @@ If a subscription ID is specified, subscription-wide information will be provide
 .NOTES
     Name    : Get-SubscriptionDetails.ps1
     GitHub  : https://github.com/ShuheiUda/Get-SubscriptionDetails
-    Version : 0.8.0
+    Version : 0.8.1
     Author  : Syuhei Uda
     
     HTML table functions by Cookie.Monster (MIT License) http://gallery.technet.microsoft.com/scriptcenter/PowerShell-HTML-Notificatio-e1c5759d
@@ -23,6 +23,10 @@ If a subscription ID is specified, subscription-wide information will be provide
 Param(
     [string]$SubscriptionID
 )
+
+# Header
+$script:Version = "0.8.1"
+$script:LatestVersionUrl = "https://raw.githubusercontent.com/ShuheiUda/Get-SubscriptionDetails/master/LatestVersion.txt"
 
 <# start of html function #>
 function ConvertTo-PropertyValue {
@@ -309,6 +313,14 @@ function Initialize{
     $VerbosePreference = "SilentlyContinue"
     $DebugPreference = "SilentlyContinue"
     $WarningPreference = "SilentlyContinue"
+    $script:ExecutedDate = Get-Date
+    $script:ExecutedDateString = $script:ExecutedDate.ToString("yyyy-MM-ddTHH:mm:ss")
+
+    # Version Check
+    $script:LatestVersion = (Invoke-WebRequest $script:LatestVersionUrl).Content
+    if($script:Version -ne $script:LatestVersion){
+        Write-Warning "New version is available. ($script:LatestVersion)`nhttps://github.com/ShuheiUda/Get-SubscriptionDetails"
+    }
 }
 
 # Get ASM Information
@@ -333,14 +345,14 @@ function Get-ArmInformation{
     $Script:AzureRmVirtualNetworkGateway = ($Script:AzureRmResourceGroup | Get-AzureRmVirtualNetworkGateway)
     $script:AzureRmPublicIpAddress = Get-AzureRmPublicIpAddress
     $script:AzureRmStorageAccount = Get-AzureRmStorageAccount
+    $script:AzureRmLog = Get-AzureRmLog -StartTime $script:ExecutedDate.AddDays(-14)
 }
 
 # Create new html data
 function Save-AzureReportHeader{
     $script:Report = New-HTMLHead -title "Get-SubscriptionDetails Report"
-    $script:Report += "<h2>Get-SubscriptionDetails Report</h2>"
-    $ExecutedDate = Get-Date -format "yyyy-MM-ddTHH:mm:ss"
-    $script:Report += "<h3>Subscription ID: $SubscriptionID ( Executed on : $ExecutedDate )<br><a href=`"#CRP`">Virtual Machine</a> | <a href=`"#SRP`">Storage</a> | <a href=`"#NRP`">Network</a></h3>"
+    $script:Report += "<h2>Get-SubscriptionDetails Report (Version: $script:Version)</h2>"
+    $script:Report += "<h3>Subscription ID: $SubscriptionID ( Executed on : $script:ExecutedDateString )<br><a href=`"#CRP`">Virtual Machine</a> | <a href=`"#SRP`">Storage</a> | <a href=`"#NRP`">Network</a> | <a href=`"#Ops`">Operation</a></h3>"
 }
 
 # Save information for ASM VMs
@@ -767,6 +779,89 @@ function Save-AzureReportArmNw{
     $script:Report += New-HTMLTable -InputObject $script:AzureLocalNetworkSiteTable
 }
 
+function Save-AzureReportArmOps{
+    $script:AzureLogTable = @()
+
+    $script:AzureRmLogCorrelationId = ($script:AzureRmLog.CorrelationId | Get-Unique)
+    
+    $script:AzureRmLogCorrelationId | foreach{
+        $script:CorrelationId = $_
+        $script:Action = $null
+        $script:Status = $null
+        $script:StartTime = $null
+        $script:EndTime = $null
+        $script:ResourceGroupName = $null
+        $script:Scope = $null
+        $script:Caller = $null
+
+        $script:AzureRmLog | where{$_.CorrelationId -eq $script:CorrelationId} | foreach{
+            if($_.Status -eq "Started"){
+                $script:Action            = $_.Authorization.Action
+                $script:StartTime         = Get-Date $_.EventTimestamp -Format "yyyy-MM-ddTHH:mm:ss"
+                $script:ResourceGroupName = $_.ResourceGroupName
+                $script:Scope             = $_.Authorization.Scope -replace "/subscriptions/$SubscriptionID", ""
+                $script:Caller            = $_.Caller
+                $script:CorrelationId     = $_.CorrelationId
+            }else{
+                $script:Action            = $_.Authorization.Action
+                $script:Status            = $_.Status
+                $script:EndTime           = Get-Date $_.EventTimestamp -Format "yyyy-MM-ddTHH:mm:ss"
+                $script:ResourceGroupName = $_.ResourceGroupName
+                $script:Scope             = $_.Authorization.Scope -replace "/subscriptions/$SubscriptionID", ""
+                $script:Caller            = $_.Caller
+                $script:CorrelationId     = $_.CorrelationId
+            }
+        }
+
+        if($script:Status -eq $null){
+            $script:Status                = "Started"
+        }
+
+        $script:Duration                  = New-TimeSpan $script:StartTime $script:EndTime
+
+        $script:AzureLogTable += [PSCustomObject]@{
+            "Action"                      = $script:Action;
+            "Status"                      = $script:Status;
+            "StartTime"                   = $script:StartTime;
+            "EndTime"                     = $script:EndTime;
+            "Duration"                    = $script:Duration;
+            "Scope"                       = $script:Scope;
+            "ResourceGroupName"           = $script:ResourceGroupName;
+            "Caller"                      = $script:Caller;
+            "CorrelationId"               = $script:CorrelationId
+        }
+    }
+    
+    $script:AzureComputeLogTable = ($script:AzureLogTable | where {$_.Action -match "Microsoft.ClassicCompute"})
+    $script:AzureStorageLogTable = ($script:AzureLogTable | where {$_.Action -match "Microsoft.ClassicStorage"})
+    $script:AzureNetworkLogTable = ($script:AzureLogTable | where {$_.Action -match "Microsoft.ClassicNetwork"})
+    $script:AzureRmResourcesLogTable = ($script:AzureLogTable | where {$_.Action -match "Microsoft.Resources"})
+    $script:AzureRmComputeLogTable = ($script:AzureLogTable | where {$_.Action -match "Microsoft.Compute"})
+    $script:AzureRmStorageLogTable = ($script:AzureLogTable | where {$_.Action -match "Microsoft.Storage"})
+    $script:AzureRmNetworkLogTable = ($script:AzureLogTable | where {$_.Action -match "Microsoft.Network"})
+    $script:AzureRmAnotherLogTable = ($script:AzureLogTable | where {($_.Action -notmatch "Microsoft.ClassicCompute") -and ($_.Action -notmatch "Microsoft.ClassicStorage") -and ($_.Action -notmatch "Microsoft.ClassicNetwork") -and ($_.Action -notmatch "Microsoft.Resources") -and ($_.Action -notmatch "Microsoft.Compute") -and ($_.Action -notmatch "Microsoft.Storage") -and ($_.Action -notmatch "Microsoft.Network")})
+
+    # Create Tables
+    $script:LogStartTime = $script:ExecutedDate.AddDays(-14).ToString("yyyy-MM-ddTHH:mm:ss")
+    $script:Report += "<a name=`"Ops`"><h2>Operation</h2></a> between $script:LogStartTime and $script:ExecutedDateString"
+    $script:Report += "<h3>ASM Compute Operation</h3>"
+    $script:Report += New-HTMLTable -InputObject $script:AzureComputeLogTable
+    $script:Report += "<h3>ARM Storage Operation</h3>"
+    $script:Report += New-HTMLTable -InputObject $script:AzureStorageLogTable
+    $script:Report += "<h3>ARM Network Operation</h3>"
+    $script:Report += New-HTMLTable -InputObject $script:AzureNetworkLogTable
+    $script:Report += "<h3>ARM Resource Operation</h3>"
+    $script:Report += New-HTMLTable -InputObject $script:AzureRmResourceLogTable
+    $script:Report += "<h3>ARM Compute Operation</h3>"
+    $script:Report += New-HTMLTable -InputObject $script:AzureRmComputeLogTable
+    $script:Report += "<h3>ARM Storage Operation</h3>"
+    $script:Report += New-HTMLTable -InputObject $script:AzureRmStorageLogTable
+    $script:Report += "<h3>ARM Network Operation</h3>"
+    $script:Report += New-HTMLTable -InputObject $script:AzureRmNetworkLogTable
+    $script:Report += "<h3>ASM / ARM Another Operation</h3>"
+    $script:Report += New-HTMLTable -InputObject $script:AzureRmAnotherLogTable
+}
+
 # Close html
 function Save-AzureReportFooter{
     Close-HTML -HTML $script:Report -Verbose
@@ -790,6 +885,7 @@ function Save-AzureReport{
     Save-AzureReportArmStr
     Save-AzureReportAsmNw
     Save-AzureReportArmNw
+    Save-AzureReportArmOps
     Save-AzureReportFooter
 }
 

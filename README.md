@@ -28,6 +28,11 @@ Get-SubscriptionDetails collect your Azure Subscription's details.
         * ASM Local Network Sites
         * ASM Virtual Network Sites
         * ASM Virtual Network Gateway
+    * Operation
+        * Microsoft.ClassicCompute Provider
+        * Microsoft.ClassicStorage Provider
+        * Microsoft.ClassicNetwork Provider
+        * Another Provider
         
 * Collect ARM Resource Information
     * Compute
@@ -43,6 +48,11 @@ Get-SubscriptionDetails collect your Azure Subscription's details.
         * ARM Public IP Address
         * ARM Local Network Gateway
         * ARM Local Network Sites
+    * Operation
+        * Microsoft.Compute Provider
+        * Microsoft.Storage Provider
+        * Microsoft.Network Provider
+        * Another Provider
 
 ## Requirements
 This script need Latest version of [Azure PowerShell module](http://aka.ms/webpi-azps). 
@@ -54,4 +64,5 @@ Copyright (c) 2016 Syuhei Uda
 Released under the [MIT license](http://opensource.org/licenses/mit-license.php )
 
 ## Release Notes
-2016/04/24 Ver.0.8.0 (Preview Release)
+* 2016/04/24 Ver.0.8.0 (Preview Release) : +VM, Storage, Network summary
+* 2016/05/05 Ver.0.8.1 (Preview Release) : +Operation log summary
