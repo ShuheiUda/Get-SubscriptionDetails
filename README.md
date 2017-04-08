@@ -16,16 +16,18 @@ Get-SubscriptionDetails collect your Azure Subscription's details.
 * Optional
     * SkipAuth: if you already logged in ASM & ARM, you can skip authorization popup.
     * OutputFolder: you can change output folder. (default: $env:USERPROFILE\desktop\Get-SubscriptionDetails\)
+    * ASMOnlyReport, ARMOnlyReport, FullReport: Select report mode.
 
 ## Sample
-[Sample Report](http://www.syuheiuda.com/wp-content/uploads/2016/04/1b30dfe1-c2b7-468d-a5cd-b0662c94ec2f-20160424_162010.htm)
+[Sample Report](http://www.syuheiuda.com/wp-content/uploads/2017/04/Sample_0_9_1-676ba02b-eb02-4b62-885d-1116518ebd1f-20170408_192331.htm)
 
-!["Sample Image"](http://www.syuheiuda.com/wp-content/uploads/2016/04/Get-SubscriptionDetails_0_8_0.png)
+!["Sample Image"](http://www.syuheiuda.com/wp-content/uploads/2017/04/Get-SubscriptionDetails_0_9_1.png)
 
 ## Features
 * Collect ASM Resource Information
     * Compute
         * ASM Cloud Service
+        * ASM Affinity Group
         * ASM Windows VM
         * ASM Linux VM
     * Storage
@@ -37,7 +39,12 @@ Get-SubscriptionDetails collect your Azure Subscription's details.
         * ASM Local Network Site
         * ASM Virtual Network Site
         * ASM Virtual Network Gateway
+        * ASM Application Gateway
         * ASM Dedicated Circuit (ExpressRoute)
+        * ASM Internal Load Balancer
+        * ASM Reserved IP Address
+        * ASM Network Security Group (NSG)
+        * ASM Route Table (UDR)
     * Subscription
         * ASM Subscription
         * ASM Location
@@ -55,18 +62,20 @@ Get-SubscriptionDetails collect your Azure Subscription's details.
     * Storage
         * ARM Storage Account
         * ARM VM Disk
+        * ARM Managed Disks (Snapshot, Image)
     * Network
         * ARM Virtual Network
         * ARM Virtual Network Gateway
+        * ARM Virtual Network Gateway Connection
         * ARM Local Network Gateway
+        * ARM Application Gateway
         * ARM ExpressRoute Circuit
         * ARM ExpressRoute Authorization
-        * ARM Network Interface
-        * ARM Network Security Group
-        * ARM Route Table
         * ARM Load Balancer
+        * ARM Network Interface
         * ARM Public IP Address
-        * ARM Application Gateway
+        * ARM Network Security Group (NSG)
+        * ARM Route Table (UDR)
         * ARM DNS Zone
     * Subscription
         * ARM Context (Subscription)
@@ -94,3 +103,4 @@ Released under the [MIT license](http://opensource.org/licenses/mit-license.php 
 * 2016/04/24 Ver.0.8.0 (Preview Release) : +VM, Storage, Network summary
 * 2016/05/05 Ver.0.8.1 (Preview Release) : +Operation log summary
 * 2017/01/14 Ver.0.9.0 (Preview Release) : +some resources & detail view
+* 2017/04/08 Ver.0.9.1 (Preview Release) : +some resources & Status color
