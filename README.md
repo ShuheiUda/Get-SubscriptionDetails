@@ -71,6 +71,8 @@ Get-SubscriptionDetails collect your Azure Subscription's details.
         * ARM Application Gateway
         * ARM ExpressRoute Circuit
         * ARM ExpressRoute Authorization
+        * ARM ExpressRoute ARP Table
+        * ARM ExpressRoute Route Table
         * ARM Load Balancer
         * ARM Network Interface
         * ARM Public IP Address
@@ -104,3 +106,4 @@ Released under the [MIT license](http://opensource.org/licenses/mit-license.php 
 * 2016/05/05 Ver.0.8.1 (Preview Release) : +Operation log summary
 * 2017/01/14 Ver.0.9.0 (Preview Release) : +some resources & detail view
 * 2017/04/08 Ver.0.9.1 (Preview Release) : +some resources & Status color
+* 2018/03/18 Ver.0.9.2 (Preview Release) : optimized for Azure PowerShell 5.5.0
