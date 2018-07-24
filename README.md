@@ -107,3 +107,4 @@ Released under the [MIT license](http://opensource.org/licenses/mit-license.php 
 * 2017/01/14 Ver.0.9.0 (Preview Release) : +some resources & detail view
 * 2017/04/08 Ver.0.9.1 (Preview Release) : +some resources & Status color
 * 2018/03/18 Ver.0.9.2 (Preview Release) : optimized for Azure PowerShell 5.5.0
+* 2018/07/25 Ver.0.9.3 (Preview Release) : + Resource Links (ARM Only)
