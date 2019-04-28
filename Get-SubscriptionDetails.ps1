@@ -55,6 +55,7 @@ Param(
 .".\Storage\Image.ps1"
 .".\Storage\Snapshot.ps1"
 .".\Storage\StorageAccount.ps1"
+.".\Storage\RecoveryServiceVault.ps1"
 
 # Header
 $script:Version = "0.9.3"
@@ -584,6 +585,11 @@ function Get-ArmInformation{
     Write-Log "Waiting: Get-AzureRmLocation"
     $script:AzureRmLocation = Get-AzureRmLocation
     Write-Log "Success: Get-AzureRmLocation" -Color Green
+
+    Write-Log "Waiting: Get-AzureRmRecoveryServicesVault"
+    $script:AzureRmRecoveryServicesVault = Get-AzureRmRecoveryServicesVault
+    Write-Log "Success: Get-AzureRmRecoveryServicesVault" -Color Green
+
 }
 
 # Create new html data
@@ -1025,6 +1031,10 @@ function Save-AzureReport{
     Write-Log "Waiting: Save-AzureRmImageTable"
     Save-AzureRmImageTable
     Write-Log "Success: Save-AzureRmImageTable" -Color Green
+
+    Write-Log "Waiting: Save-AzureRmRecoveryServiceVault"
+    Save-AzureRmRecoveryServicesVault
+    Write-Log "Success: Save-AzureRmRecoveryServiceVault" -Color Green
     
     Write-Log "Waiting: Save-AzureNetworkHeader"
     Save-AzureNetworkHeader

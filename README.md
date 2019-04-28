@@ -14,7 +14,7 @@ Get-SubscriptionDetails collect your Azure Subscription's details.
     * SubscriptionID
     
 * Optional
-    * SkipAuth: if you already logged in ASM & ARM, you can skip authorization popup.
+    * SkipAuth: if you already logged in ARM, you can skip authorization popup.
     * OutputFolder: you can change output folder. (default: $env:USERPROFILE\desktop\Get-SubscriptionDetails\)
 
 ## Sample
@@ -24,38 +24,39 @@ Get-SubscriptionDetails collect your Azure Subscription's details.
 
 ## Features
         
-* Collect ARM Resource Information
+* Collect Resource Information
     * Compute
-        * ARM Availability Set
-        * ARM Windows VM
-        * ARM Linux VM
+        * Availability Set
+        * Windows VM
+        * Linux VM
     * Storage
-        * ARM Storage Account
-        * ARM VM Disk
-        * ARM Managed Disks (Snapshot, Image)
+        * Storage Account
+        * VM Disk
+        * Managed Disks (Snapshot, Image)
+        * Recovery Service Vault
     * Network
-        * ARM Virtual Network
-        * ARM Virtual Network Gateway
-        * ARM Virtual Network Gateway Connection
-        * ARM Local Network Gateway
-        * ARM Application Gateway
-        * ARM ExpressRoute Circuit
-        * ARM ExpressRoute Authorization
-        * ARM ExpressRoute ARP Table
-        * ARM ExpressRoute Route Table
-        * ARM Load Balancer
-        * ARM Network Interface
-        * ARM Public IP Address
-        * ARM Network Security Group (NSG)
-        * ARM Route Table (UDR)
-        * ARM DNS Zone
+        * Virtual Network
+        * Virtual Network Gateway
+        * Virtual Network Gateway Connection
+        * Local Network Gateway
+        * Application Gateway
+        * ExpressRoute Circuit
+        * ExpressRoute Authorization
+        * ExpressRoute ARP Table
+        * ExpressRoute Route Table
+        * Load Balancer
+        * Network Interface
+        * Public IP Address
+        * Network Security Group (NSG)
+        * Route Table (UDR)
+        * DNS Zone
     * Subscription
-        * ARM Context (Subscription)
-        * ARM Resource Provider
-        * ARM Provider Feature
-        * ARM Role Assignment
-        * ARM Role Definition
-        * ARM Location
+        * Context (Subscription)
+        * Resource Provider
+        * Provider Feature
+        * Role Assignment
+        * Role Definition
+        * Location
     * Operation
         * Microsoft.Compute Provider
         * Microsoft.Storage Provider
@@ -77,4 +78,4 @@ Released under the [MIT license](http://opensource.org/licenses/mit-license.php 
 * 2017/01/14 Ver.0.9.0 (Preview Release) : +some resources & detail view
 * 2017/04/08 Ver.0.9.1 (Preview Release) : +some resources & Status color
 * 2018/03/18 Ver.0.9.2 (Preview Release) : optimized for Azure PowerShell 5.5.0
-* 2018/07/25 Ver.0.9.3 (Preview Release) : + Resource Links (ARM Only)
+* 2018/07/25 Ver.0.9.3 (Preview Release) : + Resource Links (Only)
