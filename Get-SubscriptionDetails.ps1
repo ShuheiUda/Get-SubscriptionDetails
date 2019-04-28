@@ -26,9 +26,6 @@ If a subscription ID is specified, subscription-wide information will be provide
 
 Param(
     [Parameter(Mandatory=$true)][string]$SubscriptionID,
-    [Parameter(ParameterSetName='ASM')][switch]$ASMOnlyReport,
-    [Parameter(ParameterSetName='ARM')][switch]$ARMOnlyReport,
-    [Parameter(ParameterSetName='Full')][switch]$FullReport,
     [string]$OutputFolder = "$env:USERPROFILE\Desktop\Get-SubscriptionDetails",
     [switch]$SkipAuth
 )
@@ -411,29 +408,17 @@ function New-AzureSession{
         break
     }
         
-    if($ARMOnlyReport -ne $true){
-        if($SkipAuth -ne $true){
-            Write-Log "Waiting: Add-AzureAccount"
-            $null = Add-AzureAccount
-            Write-Log "Success: Add-AzureAccount" -Color Green
-        }
-
-        Write-Log "Waiting: Select-AzureSubscription"
-        $null = Select-AzureSubscription -SubscriptionId $SubscriptionID
-        Write-Log "Success: Select-AzureSubscription" -Color Green
-    }
         
-    if($ASMOnlyReport -ne $true){
-        if($SkipAuth -ne $true){
-            Write-Log "Waiting: Login-AzureRmAccount"
-            $null = Login-AzureRmAccount
-            Write-Log "Success: Login-AzureRmAccount" -Color Green
-        }
-
-        Write-Log "Waiting: Select-AzureRmSubscription"
-        $null = Select-AzureRmSubscription -SubscriptionId $SubscriptionID
-        Write-Log "Success: Select-AzureRmSubscription" -Color Green
+    if($SkipAuth -ne $true){
+        Write-Log "Waiting: Login-AzureRmAccount"
+        $null = Login-AzureRmAccount
+        Write-Log "Success: Login-AzureRmAccount" -Color Green
     }
+ 
+    Write-Log "Waiting: Select-AzureRmSubscription"
+    $null = Select-AzureRmSubscription -SubscriptionId $SubscriptionID
+    Write-Log "Success: Select-AzureRmSubscription" -Color Green
+
 }
 
 function Initialize{
@@ -463,186 +448,116 @@ function Initialize{
     }
 }
 
-# Get ASM Information
-function Get-AsmInformation{
-    if($ARMOnlyReport -ne $true){
-        Write-Log "Waiting: Get-AzureSubscription"
-        $script:AzureSubscription = Get-AzureSubscription -Current
-        Write-Log "Success: Get-AzureSubscription" -Color Green
-    
-        Write-Log "Waiting: Get-AzureService"
-        $script:AzureService = Get-AzureService
-        Write-Log "Success: Get-AzureService" -Color Green
-
-        Write-Log "Waiting: Get-AzureVM"
-        $script:AzureVM = Get-AzureVM
-        Write-Log "Success: Get-AzureVM" -Color Green
-    
-        Write-Log "Waiting: Get-AzureInternalLoadBalancer"
-        $script:AzureInternalLoadBalancer = $script:AzureService | Get-AzureInternalLoadBalancer
-        Write-Log "Success: Get-AzureInternalLoadBalancer" -Color Green
-
-        Write-Log "Waiting: Get-AzureAffinityGroup"
-        $script:AzureAffinityGroup = Get-AzureAffinityGroup
-        Write-Log "Success: Get-AzureAffinityGroup" -Color Green
-    
-        Write-Log "Waiting: Get-AzureVNetConfig"
-        $script:AzureVNetConfig = [xml](Get-AzureVNetConfig).XMLConfiguration
-        Write-Log "Success: Get-AzureVNetConfig" -Color Green
-    
-        Write-Log "Waiting: Get-AzureVirtualNetworkGateway"
-        $script:AzureVirtualNetworkGateway = Get-AzureVirtualNetworkGateway
-        Write-Log "Success: Get-AzureVirtualNetworkGateway" -Color Green
-        
-        Write-Log "Waiting: Get-AzureApplicationGateway"
-        $script:AzureApplicationGateway = Get-AzureApplicationGateway
-        Write-Log "Success: Get-AzureApplicationGateway" -Color Green
-    
-        Write-Log "Waiting: Get-AzureRouteTable"
-        $script:AzureRouteTable = Get-AzureRouteTable -Detailed
-        Write-Log "Success: Get-AzureRouteTable" -Color Green
-
-        Write-Log "Waiting: Get-AzureReservedIP"
-        $script:AzureReservedIP = Get-AzureReservedIP
-        Write-Log "Success: Get-AzureReservedIP" -Color Green
-
-        Write-Log "Waiting: Get-AzureNetworkSecurityGroup"
-        $script:AzureNetworkSecurityGroup = Get-AzureNetworkSecurityGroup -Detailed
-        Write-Log "Success: Get-AzureNetworkSecurityGroup" -Color Green
-        
-        Write-Log "Waiting: Get-AzureDedicatedCircuit"
-        $script:AzureDedicatedCircuit = Get-AzureDedicatedCircuit
-        Write-Log "Success: Get-AzureDedicatedCircuit" -Color Green
-
-        Write-Log "Waiting: Get-AzureStorageAccount"
-        $script:AzureStorageAccount = Get-AzureStorageAccount
-        Write-Log "Success: Get-AzureStorageAccount" -Color Green
-    
-        Write-Log "Waiting: Get-AzureDisk"
-        $script:AzureDisk = Get-AzureDisk
-        Write-Log "Success: Get-AzureDisk" -Color Green
-    
-        Write-Log "Waiting: Get-AzureVMImage"
-        $script:AzureVMImage = Get-AzureVMImage
-        Write-Log "Success: Get-AzureVMImage" -Color Green
-    
-        Write-Log "Waiting: Get-AzureLocation"
-        $script:AzureLocation = Get-AzureLocation
-        Write-Log "Success: Get-AzureLocation" -Color Green
-    }
-}
-
-# Get ARM Information
+# Get Information
 function Get-ArmInformation{
-    if($ASMOnlyReport -ne $true){
-        Write-Log "Waiting: Get-AzureRmContext"
-        $script:AzureRmContext = Get-AzureRmContext
-        Write-Log "Success: Get-AzureRmContext" -Color Green
 
-        Write-Log "Waiting: Get-AzureRmResourceGroup"
-        $script:AzureRmResourceGroup = Get-AzureRmResourceGroup
-        Write-Log "Success: Get-AzureRmResourceGroup" -Color Green
-    
-        Write-Log "Waiting: Get-AzureRmVM"
-        $script:AzureRmVM = Get-AzureRmVM
-        Write-Log "Success: Get-AzureRmVM" -Color Green
-    
-        Write-Log "Waiting: Get-AzureRmDisk"
-        $script:AzureRmDisk = Get-AzureRmDisk
-        Write-Log "Success: Get-AzureRmDisk" -Color Green
-    
-        Write-Log "Waiting: Get-AzureRmSnapshot"
-        $script:AzureRmSnapshot = Get-AzureRmSnapshot
-        Write-Log "Success: Get-AzureRmSnapshot" -Color Green
-    
-        Write-Log "Waiting: Get-AzureRmImage"
-        $script:AzureRmImage = Get-AzureRmImage
-        Write-Log "Success: Get-AzureRmImage" -Color Green
-    
-        Write-Log "Waiting: Get-AzureRmAvailabilitySet"
-        $script:AzureRmAvailabilitySet = Get-AzureRmResourceGroup | Get-AzureRmAvailabilitySet
-        Write-Log "Success: Get-AzureRmAvailabilitySet" -Color Green
-    
-        Write-Log "Waiting: Get-AzureRmVirtualNetwork"
-        $script:AzureRmVirtualNetwork = Get-AzureRmVirtualNetwork
-        Write-Log "Success: Get-AzureRmVirtualNetwork" -Color Green
-    
-        Write-Log "Waiting: Get-AzureRmNetworkInterface"
-        $script:AzureRmNetworkInterface = Get-AzureRmNetworkInterface
-        Write-Log "Success: Get-AzureRmNetworkInterface" -Color Green
+    Write-Log "Waiting: Get-AzureRmContext"
+    $script:AzureRmContext = Get-AzureRmContext
+    Write-Log "Success: Get-AzureRmContext" -Color Green
 
-        Write-Log "Waiting: Get-AzureRmNetworkSecurityGroup"
-        $script:AzureRmNetworkSecurityGroup = Get-AzureRmNetworkSecurityGroup
-        Write-Log "Success: Get-AzureRmNetworkSecurityGroup" -Color Green
+    Write-Log "Waiting: Get-AzureRmResourceGroup"
+    $script:AzureRmResourceGroup = Get-AzureRmResourceGroup
+    Write-Log "Success: Get-AzureRmResourceGroup" -Color Green
 
-        Write-Log "Waiting: Get-AzureRmRouteTable"
-        $script:AzureRmRouteTable = Get-AzureRmRouteTable
-        Write-Log "Success: Get-AzureRmRouteTable" -Color Green
+    Write-Log "Waiting: Get-AzureRmVM"
+    $script:AzureRmVM = Get-AzureRmVM
+    Write-Log "Success: Get-AzureRmVM" -Color Green
 
-        Write-Log "Waiting: Get-AzureRmLoadBalancer"
-        $script:AzureRmLoadBalancer = Get-AzureRmLoadBalancer
-        Write-Log "Success: Get-AzureRmLoadBalancer" -Color Green
-    
-        Write-Log "Waiting: Get-AzureRmLocalNetworkGateway"
-        $script:AzureRmLocalNetworkGateway = ($script:AzureRmResourceGroup | Get-AzureRmLocalNetworkGateway)
-        Write-Log "Success: Get-AzureRmLocalNetworkGateway" -Color Green
-    
-        Write-Log "Waiting: Get-AzureRmVirtualNetworkGateway"
-        $script:AzureRmVirtualNetworkGateway = ($script:AzureRmResourceGroup | Get-AzureRmVirtualNetworkGateway)
-        Write-Log "Success: Get-AzureRmVirtualNetworkGateway" -Color Green
-    
-        Write-Log "Waiting: Get-AzureRmVirtualNetworkGatewayConnection"
-        $script:AzureRmVirtualNetworkGatewayConnection = ($script:AzureRmResourceGroup | Get-AzureRmVirtualNetworkGatewayConnection)
-        Write-Log "Success: Get-AzureRmVirtualNetworkGatewayConnection" -Color Green
-    
-        Write-Log "Waiting: Get-AzureRmExpressRouteCircuit"
-        $script:AzureRmExpressRouteCircuit = Get-AzureRmExpressRouteCircuit
-        Write-Log "Success: Get-AzureRmExpressRouteCircuit" -Color Green
+    Write-Log "Waiting: Get-AzureRmDisk"
+    $script:AzureRmDisk = Get-AzureRmDisk
+    Write-Log "Success: Get-AzureRmDisk" -Color Green
 
-        Write-Log "Waiting: Get-AzureRmRouteFilter"
-        $script:AzureRmRouteFilter = Get-AzureRmRouteFilter
-        Write-Log "Success: Get-AzureRmRouteFilter" -Color Green
-    
-        Write-Log "Waiting: Get-AzureRmApplicationGateway"
-        $script:AzureRmApplicationGateway = Get-AzureRmApplicationGateway
-        Write-Log "Success: Get-AzureRmApplicationGateway" -Color Green
-    
-        Write-Log "Waiting: Get-AzureRmPublicIpAddress"
-        $script:AzureRmPublicIpAddress = Get-AzureRmPublicIpAddress
-        Write-Log "Success: Get-AzureRmPublicIpAddress" -Color Green
-    
-        Write-Log "Waiting: Get-AzureRmDnsZone"
-        $script:AzureRmDnsZone = Get-AzureRmDnsZone
-        Write-Log "Success: Get-AzureRmDnsZone" -Color Green
-    
-        Write-Log "Waiting: Get-AzureRmStorageAccount"
-        $script:AzureRmStorageAccount = Get-AzureRmStorageAccount
-        Write-Log "Success: Get-AzureRmStorageAccount" -Color Green
-    
-        Write-Log "Waiting: Get-AzureRmRoleAssignment"
-        $script:AzureRmRoleAssignment = Get-AzureRmRoleAssignment
-        Write-Log "Success: Get-AzureRmRoleAssignment" -Color Green
+    Write-Log "Waiting: Get-AzureRmSnapshot"
+    $script:AzureRmSnapshot = Get-AzureRmSnapshot
+    Write-Log "Success: Get-AzureRmSnapshot" -Color Green
 
-        Write-Log "Waiting: Get-AzureRmRoleDefinition"
-        $script:AzureRmRoleDefinition = Get-AzureRmRoleDefinition
-        Write-Log "Success: Get-AzureRmRoleDefinition" -Color Green
+    Write-Log "Waiting: Get-AzureRmImage"
+    $script:AzureRmImage = Get-AzureRmImage
+    Write-Log "Success: Get-AzureRmImage" -Color Green
 
-        Write-Log "Waiting: Get-AzureRmResourceProvider"
-        $script:AzureRmResourceProvider = Get-AzureRmResourceProvider -ListAvailable
-        Write-Log "Success: Get-AzureRmResourceProvider" -Color Green
+    Write-Log "Waiting: Get-AzureRmAvailabilitySet"
+    $script:AzureRmAvailabilitySet = Get-AzureRmResourceGroup | Get-AzureRmAvailabilitySet
+    Write-Log "Success: Get-AzureRmAvailabilitySet" -Color Green
 
-        Write-Log "Waiting: Get-AzureRmProviderFeature"
-        $script:AzureRmProviderFeature = Get-AzureRmProviderFeature -ListAvailable
-        Write-Log "Success: Get-AzureRmProviderFeature" -Color Green
-    
-        Write-Log "Waiting: Get-AzureRmLog"
-        $script:AzureRmLog = Get-AzureRmLog -StartTime $script:ExecutedDate.AddDays(-14)
-        Write-Log "Success: Get-AzureRmLog" -Color Green
-    
-        Write-Log "Waiting: Get-AzureRmLocation"
-        $script:AzureRmLocation = Get-AzureRmLocation
-        Write-Log "Success: Get-AzureRmLocation" -Color Green
-    }
+    Write-Log "Waiting: Get-AzureRmVirtualNetwork"
+    $script:AzureRmVirtualNetwork = Get-AzureRmVirtualNetwork
+    Write-Log "Success: Get-AzureRmVirtualNetwork" -Color Green
+
+    Write-Log "Waiting: Get-AzureRmNetworkInterface"
+    $script:AzureRmNetworkInterface = Get-AzureRmNetworkInterface
+    Write-Log "Success: Get-AzureRmNetworkInterface" -Color Green
+
+    Write-Log "Waiting: Get-AzureRmNetworkSecurityGroup"
+    $script:AzureRmNetworkSecurityGroup = Get-AzureRmNetworkSecurityGroup
+    Write-Log "Success: Get-AzureRmNetworkSecurityGroup" -Color Green
+
+    Write-Log "Waiting: Get-AzureRmRouteTable"
+    $script:AzureRmRouteTable = Get-AzureRmRouteTable
+    Write-Log "Success: Get-AzureRmRouteTable" -Color Green
+
+    Write-Log "Waiting: Get-AzureRmLoadBalancer"
+    $script:AzureRmLoadBalancer = Get-AzureRmLoadBalancer
+    Write-Log "Success: Get-AzureRmLoadBalancer" -Color Green
+
+    Write-Log "Waiting: Get-AzureRmLocalNetworkGateway"
+    $script:AzureRmLocalNetworkGateway = ($script:AzureRmResourceGroup | Get-AzureRmLocalNetworkGateway)
+    Write-Log "Success: Get-AzureRmLocalNetworkGateway" -Color Green
+
+    Write-Log "Waiting: Get-AzureRmVirtualNetworkGateway"
+    $script:AzureRmVirtualNetworkGateway = ($script:AzureRmResourceGroup | Get-AzureRmVirtualNetworkGateway)
+    Write-Log "Success: Get-AzureRmVirtualNetworkGateway" -Color Green
+
+    Write-Log "Waiting: Get-AzureRmVirtualNetworkGatewayConnection"
+    $script:AzureRmVirtualNetworkGatewayConnection = ($script:AzureRmResourceGroup | Get-AzureRmVirtualNetworkGatewayConnection)
+    Write-Log "Success: Get-AzureRmVirtualNetworkGatewayConnection" -Color Green
+
+    Write-Log "Waiting: Get-AzureRmExpressRouteCircuit"
+    $script:AzureRmExpressRouteCircuit = Get-AzureRmExpressRouteCircuit
+    Write-Log "Success: Get-AzureRmExpressRouteCircuit" -Color Green
+
+    Write-Log "Waiting: Get-AzureRmRouteFilter"
+    $script:AzureRmRouteFilter = Get-AzureRmRouteFilter
+    Write-Log "Success: Get-AzureRmRouteFilter" -Color Green
+
+    Write-Log "Waiting: Get-AzureRmApplicationGateway"
+    $script:AzureRmApplicationGateway = Get-AzureRmApplicationGateway
+    Write-Log "Success: Get-AzureRmApplicationGateway" -Color Green
+
+    Write-Log "Waiting: Get-AzureRmPublicIpAddress"
+    $script:AzureRmPublicIpAddress = Get-AzureRmPublicIpAddress
+    Write-Log "Success: Get-AzureRmPublicIpAddress" -Color Green
+
+    Write-Log "Waiting: Get-AzureRmDnsZone"
+    $script:AzureRmDnsZone = Get-AzureRmDnsZone
+    Write-Log "Success: Get-AzureRmDnsZone" -Color Green
+
+    Write-Log "Waiting: Get-AzureRmStorageAccount"
+    $script:AzureRmStorageAccount = Get-AzureRmStorageAccount
+    Write-Log "Success: Get-AzureRmStorageAccount" -Color Green
+
+    Write-Log "Waiting: Get-AzureRmRoleAssignment"
+    $script:AzureRmRoleAssignment = Get-AzureRmRoleAssignment
+    Write-Log "Success: Get-AzureRmRoleAssignment" -Color Green
+
+    Write-Log "Waiting: Get-AzureRmRoleDefinition"
+    $script:AzureRmRoleDefinition = Get-AzureRmRoleDefinition
+    Write-Log "Success: Get-AzureRmRoleDefinition" -Color Green
+
+    Write-Log "Waiting: Get-AzureRmResourceProvider"
+    $script:AzureRmResourceProvider = Get-AzureRmResourceProvider -ListAvailable
+    Write-Log "Success: Get-AzureRmResourceProvider" -Color Green
+
+    Write-Log "Waiting: Get-AzureRmProviderFeature"
+    $script:AzureRmProviderFeature = Get-AzureRmProviderFeature -ListAvailable
+    Write-Log "Success: Get-AzureRmProviderFeature" -Color Green
+
+    Write-Log "Waiting: Get-AzureRmLog"
+    $script:AzureRmLog = Get-AzureRmLog -StartTime $script:ExecutedDate.AddDays(-14)
+    Write-Log "Success: Get-AzureRmLog" -Color Green
+
+    Write-Log "Waiting: Get-AzureRmLocation"
+    $script:AzureRmLocation = Get-AzureRmLocation
+    Write-Log "Success: Get-AzureRmLocation" -Color Green
 }
 
 # Create new html data
@@ -785,183 +700,6 @@ function Check-AzureKnownIssue{
     }
 }
 
-function Save-AzureServiceTable{
-    $script:AzureServiceTable = @()
-    $script:AzureService | foreach{
-         $script:AzureServiceDetail = [PSCustomObject]@{
-            "ServiceName"                       = $_.ServiceName
-            "Status"                            = $_.Status
-            "Location"                          = $_.Location
-            "Label"                             = $_.Label
-            "Description"                       = $_.Description
-            "AffinityGroup"                     = $_.AffinityGroup
-            "DateCreated"                       = $_.DateCreated
-            "DateModified"                      = $_.DateModified
-            "ReverseDnsFqdn"                    = $_.ReverseDnsFqdn
-            "WebWorkerRoleSizes"                = $_.WebWorkerRoleSizes -join "<br>"
-            "VirtualMachineRoleSizes"           = $_.VirtualMachineRoleSizes -join "<br>"
-        }
-        $script:AzureServiceDetailTable = New-HTMLTable -InputObject (ConvertTo-PropertyValue -InputObject $script:AzureServiceDetail) 
-
-        $script:AzureServiceTable += [PSCustomObject]@{
-            "ServiceName"                       = $_.ServiceName
-            "Status"                            = $_.Status
-            "Location"                          = $_.Location
-            "AffinityGroup"                     = $_.AffinityGroup
-            "Detail"                            = ConvertTo-DetailView -InputObject $script:AzureServiceDetailTable
-        }
-    }
-    $script:Report += "<h3>ASM Cloud Service</h3>"
-    $script:Report += ConvertTo-SummaryView -InputObject (New-ResourceHTMLTable -InputObject $AzureServiceTable)
-}
-
-
-function Save-AzureAffinityGroupTable{
-    $script:AzureAffinityGroupTable = @()
-    $script:AzureAffinityGroup | foreach{
-         $script:AzureAffinityGroupDetail = [PSCustomObject]@{
-            "Name"                              = $_.Name
-            "Location"                          = $_.Location
-            "Label"                             = $_.Label
-            "Description"                       = $_.Description
-            "CreatedTime"                       = $_.CreatedTime
-            "HostedServices"                    = $_.HostedServices
-            "StorageServices"                   = $_.StorageServices
-            "Capabilities"                      = $_.Capabilities -join "<br>"
-            "WebWorkerRoleSizes"                = $_.WebWorkerRoleSizes -join "<br>"
-            "VirtualMachineRoleSizes"           = $_.VirtualMachineRoleSizes -join "<br>"
-        }
-        $script:AzureAffinityGroupDetailTable = New-HTMLTable -InputObject (ConvertTo-PropertyValue -InputObject $script:AzureAffinityGroupDetail) 
-
-        $script:AzureAffinityGroupTable += [PSCustomObject]@{
-            "Name"                              = $_.Name
-            "Location"                          = $_.Location
-            "Detail"                            = ConvertTo-DetailView -InputObject $script:AzureAffinityGroupDetailTable
-        }
-    }
-    $script:Report += "<h3>ASM Affinity Group</h3>"
-    $script:Report += ConvertTo-SummaryView -InputObject (New-ResourceHTMLTable -InputObject $AzureAffinityGroupTable)
-
-}
-
-function Save-AzureVmWindowsTable{
-    $script:AzureVmWindows = $Script:AzureVM | where{$_.VM.OSVirtualHardDisk.OS -eq "Windows"}
-    $script:AzureVmWindowsTable = @()
-    $script:AzureVmWindows | foreach{
-         $script:AzureVmWindowsDetail = [PSCustomObject]@{
-            "Name"                              = $_.Name
-            "HostName"                          = $_.HostName
-            "InstanceName"                      = $_.InstanceName
-            "Label"                             = $_.Label
-            "Status"                            = $_.Status
-            "InstanceStatus"                    = $_.InstanceStatus
-            "PowerState"                        = $_.PowerState
-            "GuestAgentStatus"                  = $_.GuestAgentStatus.Status
-            "MaintenanceStatus"                 = $_.MaintenanceStatus
-            "InstanceStateDetails"              = $_.InstanceStateDetails
-            "InstanceUpgradeDomain"             = $_.InstanceUpgradeDomain
-            "InstanceErrorCode"                 = $_.InstanceErrorCode
-            "InstanceFaultDomain"               = $_.InstanceFaultDomain
-            "InstanceSize"                      = $_.InstanceSize
-            "ServiceName"                       = $_.ServiceName
-            "DNSName"                           = $_.DNSName
-            "DeploymentName"                    = $_.DeploymentName
-            "AvailabilitySetName"               = $_.AvailabilitySetName
-            "VirtualNetworkName"                = $_.VirtualNetworkName
-            "SubnetNames"                       = $_.VM.ConfigurationSets.SubnetNames
-            "IpAddress"                         = $_.IpAddress
-            "PublicIPAddress"                   = $_.PublicIPAddress
-            "PublicIPName"                      = $_.PublicIPName
-            "PublicIPDomainNameLabel"           = $_.PublicIPDomainNameLabel
-            "PublicIPFqdns"                     = $_.PublicIPFqdns
-            "NetworkInterfaces"                 = $_.NetworkInterfaces.Name -join "<br>"
-            "RemoteAccessCertificateThumbprint" = $_.RemoteAccessCertificateThumbprint
-            "RDP EndPoint"                      = (($_.VM.ConfigurationSets.InputEndPoints | where{(($_.LocalPort -eq "3389") -and ($_.Protocol -eq "tcp")) -or (($_.Name -contains "Remote Desktop") -and ($_.Protocol -eq "tcp")) -or (($_.Name -contains "RDP") -and ($_.Protocol -eq "tcp"))})).Port
-            "PowerShell EndPoint"               = (($_.VM.ConfigurationSets.InputEndPoints) | where{($_.LocalPort -eq "5986") -or ($_.Name -eq "PowerShell")}).Port
-        }
-        $script:AzureVmWindowsDetailTable = New-HTMLTable -InputObject (ConvertTo-PropertyValue -InputObject $script:AzureVmWindowsDetail) 
-
-        $script:AzureVmWindowsTable += [PSCustomObject]@{
-            "Name"                              = $_.Name
-            "HostName"                          = $_.HostName
-            "Status"                            = $_.Status
-            "InstanceStatus"                    = $_.InstanceStatus
-            "PowerState"                        = $_.PowerState
-            "InstanceSize"                      = $_.InstanceSize
-            "ServiceName"                       = $_.ServiceName
-            "DNSName"                           = $_.DNSName
-            "AvailabilitySetName"               = $_.AvailabilitySetName
-            "VirtualNetworkName"                = $_.VirtualNetworkName
-            "SubnetNames"                       = $_.VM.ConfigurationSets.SubnetNames
-            "IpAddress"                         = $_.IpAddress
-            "PublicIPAddress"                   = $_.PublicIPAddress
-            "RDP EndPoint"                      = (($_.VM.ConfigurationSets.InputEndPoints | where{(($_.LocalPort -eq "3389") -and ($_.Protocol -eq "tcp")) -or (($_.Name -contains "Remote Desktop") -and ($_.Protocol -eq "tcp")) -or (($_.Name -contains "RDP") -and ($_.Protocol -eq "tcp"))})).Port
-            "PowerShell EndPoint"               = (($_.VM.ConfigurationSets.InputEndPoints) | where{($_.LocalPort -eq "5986") -or ($_.Name -eq "PowerShell")}).Port
-            "Detail"                            = ConvertTo-DetailView -InputObject $script:AzureVmWindowsDetailTable
-        }
-    }
-    $script:Report += "<h3>ASM Windows VM</h3>"
-    $script:Report += ConvertTo-SummaryView -InputObject (Add-AzureVMStatusColor(New-ResourceHTMLTable -InputObject $AzureVmWindowsTable))
-}
-
-function Save-AzureVmLinuxTable{
-    $script:AzureVmLinux = $Script:AzureVM | where{$_.VM.OSVirtualHardDisk.OS -eq "Linux"}
-    $script:AzureVmLinuxTable = @()
-    $AzureVmLinux | foreach{
-         $script:AzureVmLinuxDetail = [PSCustomObject]@{
-            "Name"                              = $_.Name
-            "HostName"                          = $_.HostName
-            "InstanceName"                      = $_.InstanceName
-            "Label"                             = $_.Label
-            "Status"                            = $_.Status
-            "InstanceStatus"                    = $_.InstanceStatus
-            "PowerState"                        = $_.PowerState
-            "GuestAgentStatus"                  = $_.GuestAgentStatus.Status
-            "MaintenanceStatus"                 = $_.MaintenanceStatus
-            "InstanceStateDetails"              = $_.InstanceStateDetails
-            "InstanceUpgradeDomain"             = $_.InstanceUpgradeDomain
-            "InstanceErrorCode"                 = $_.InstanceErrorCode
-            "InstanceFaultDomain"               = $_.InstanceFaultDomain
-            "InstanceSize"                      = $_.InstanceSize
-            "ServiceName"                       = $_.ServiceName
-            "DNSName"                           = $_.DNSName
-            "DeploymentName"                    = $_.DeploymentName
-            "AvailabilitySetName"               = $_.AvailabilitySetName
-            "VirtualNetworkName"                = $_.VirtualNetworkName
-            "SubnetNames"                       = $_.VM.ConfigurationSets.SubnetNames
-            "IpAddress"                         = $_.IpAddress
-            "PublicIPAddress"                   = $_.PublicIPAddress
-            "PublicIPName"                      = $_.PublicIPName
-            "PublicIPDomainNameLabel"           = $_.PublicIPDomainNameLabel
-            "PublicIPFqdns"                     = $_.PublicIPFqdns
-            "NetworkInterfaces"                 = $_.NetworkInterfaces.Name -join "<br>"
-            "RemoteAccessCertificateThumbprint" = $_.RemoteAccessCertificateThumbprint
-            "SSH EndPoint"                      = (($_.VM.ConfigurationSets.InputEndPoints) | where{($_.LocalPort -eq "22") -or ($_.Name -eq "SSH")}).Port
-        }
-        $script:AzureVmLinuxDetailTable = New-HTMLTable -InputObject (ConvertTo-PropertyValue -InputObject $script:AzureVmLinuxDetail) 
-
-        $script:AzureVmLinuxTable += [PSCustomObject]@{
-            "Name"                      = $_.Name
-            "HostName"                  = $_.HostName
-            "Status"                    = $_.Status
-            "InstanceStatus"            = $_.InstanceStatus
-            "PowerState"                = $_.PowerState
-            "InstanceSize"              = $_.InstanceSize
-            "ServiceName"               = $_.ServiceName
-            "DNSName"                   = $_.DNSName
-            "AvailabilitySetName"       = $_.AvailabilitySetName
-            "VirtualNetworkName"        = $_.VirtualNetworkName
-            "SubnetNames"               = $_.VM.ConfigurationSets.SubnetNames
-            "IpAddress"                 = $_.IpAddress
-            "PublicIPAddress"           = $_.PublicIPAddress
-            "SSH EndPoint"              = (($_.VM.ConfigurationSets.InputEndPoints) | where{($_.LocalPort -eq "22") -or ($_.Name -eq "SSH")}).Port
-            "Detail"                    = ConvertTo-DetailView -InputObject $script:AzureVmLinuxDetailTable
-         }
-    }
-    $script:Report += "<h3>ASM Linux VM</h3>"
-    $script:Report += ConvertTo-SummaryView -InputObject (Add-AzureVMStatusColor(New-ResourceHTMLTable -InputObject $AzureVmLinuxTable))
-}
-
 function Save-AzureRmAvailabilitySetTable{
     $script:AzureRmAvailabilitySetTable = @()
     $script:AzureRmAvailabilitySet | foreach{
@@ -1001,7 +739,7 @@ function Save-AzureRmAvailabilitySetTable{
             "Detail"                    = $script:AzureRmAvailabilitySetDetailTable
         }
     }
-    $script:Report += "<h3>ARM Availability Sets</h3>"
+    $script:Report += "<h3>Availability Sets</h3>"
     $script:Report += ConvertTo-SummaryView -InputObject (New-ResourceHTMLTable -InputObject $script:AzureRmAvailabilitySetTable)
 }
 
@@ -1163,7 +901,7 @@ function Save-AzureRmVmWindowsTable{
             "Detail"                        = ConvertTo-DetailView -InputObject $script:AzureRmVmWindowsDetailTable
         }
     }
-    $script:Report += "<h3>ARM Windows VM</h3>"
+    $script:Report += "<h3>Windows VM</h3>"
     $script:Report += ConvertTo-SummaryView -InputObject (Add-ProvisioningStateColor(New-ResourceHTMLTable -InputObject $script:AzureRmVmWindowsTable))
 }
 
@@ -1325,113 +1063,8 @@ function Save-AzureRmVmLinuxTable{
             "Detail"                    = ConvertTo-DetailView -InputObject $script:AzureRmVmLinuxDetailTable
         }
     }
-    $script:Report += "<h3>ARM Linux VM</h3>"
+    $script:Report += "<h3>Linux VM</h3>"
     $script:Report += ConvertTo-SummaryView -InputObject (Add-ProvisioningStateColor(New-ResourceHTMLTable -InputObject $script:AzureRmVmLinuxTable))
-}
-
-function Save-AzureStorageAccountTable{
-    $script:AzureStorageAccountTable = @()
-    $script:AzureStorageAccount | foreach{
-        $script:AzureStorageAccountDetail = [PSCustomObject]@{
-            "StorageAccountName"        = $_.StorageAccountName
-            "Location"                  = $_.Location
-            "AffinityGroup"             = $_.AffinityGroup
-            "StorageAccountStatus"      = $_.StorageAccountStatus
-            "Label"                     = $_.Label
-            "StorageAccountDescription" = $_.StorageAccountDescription
-            "AccountType"               = $_.AccountType
-            "LastGeoFailoverTime"       = $_.LastGeoFailoverTime
-            "MigrationState"            = $_.MigrationState
-            "GeoPrimaryLocation"        = $_.GeoPrimaryLocation
-            "StatusOfPrimary"           = $_.StatusOfPrimary
-            "GeoSecondaryLocation"      = $_.GeoSecondaryLocation
-            "StatusOfSecondary"         = $_.StatusOfSecondary
-            "Endpoints"                 = $_.Endpoints[0]
-        }
-        $script:AzureStorageAccountDetailTable = New-HTMLTable -InputObject (ConvertTo-PropertyValue -InputObject $script:AzureStorageAccountDetail)
-
-        $script:AzureStorageAccountTable += [PSCustomObject]@{
-            "StorageAccountName"        = $_.StorageAccountName
-            "Location"                  = $_.Location
-            "AccountType"               = $_.AccountType
-            "StatusOfPrimary"           = $_.StatusOfPrimary
-            "GeoPrimaryLocation"        = $_.GeoPrimaryLocation
-            "GeoSecondaryLocation"      = $_.GeoSecondaryLocation
-            "Endpoints"                 = $_.Endpoints[0]
-            "Detail"                    = ConvertTo-DetailView -InputObject $script:AzureStorageAccountDetailTable
-        }
-    }
-    $script:Report += "<h3>ASM StorageAccount</h3>"
-    $script:Report += ConvertTo-SummaryView -InputObject (New-ResourceHTMLTable -InputObject $script:AzureStorageAccountTable)
-}
-
-function Save-AzureDiskTable{
-    $script:AzureDiskTable = @()
-    $script:AzureDisk | foreach{
-        $script:AzureDiskDetail = [PSCustomObject]@{
-            "DiskName"                  = $_.DiskName
-            "AttachedTo.RoleName"       = $_.AttachedTo.RoleName
-            "Location"                  = $_.Location
-            "AffinityGroup"             = $_.AffinityGroup
-            "OS"                        = $_.OS
-            "Label"                     = $_.Label
-            "IOType"                    = $_.IOType
-            "DiskSizeInGB"              = $_.DiskSizeInGB
-            "SourceImageName"           = $_.SourceImageName
-            "MediaLink"                 = $_.MediaLink
-            "IsCorrupted"               = $_.IsCorrupted
-        }
-        $script:AzureDiskDetailTable = New-HTMLTable -InputObject (ConvertTo-PropertyValue -InputObject $script:AzureDiskDetail)
-
-        $script:AzureDiskTable += [PSCustomObject]@{
-            "DiskName"                  = $_.DiskName
-            "AttachedTo.RoleName"       = $_.AttachedTo.RoleName
-            "OS"                        = $_.OS
-            "DiskSizeInGB"              = $_.DiskSizeInGB
-            "SourceImageName"           = $_.SourceImageName
-            "MediaLink"                 = $_.MediaLink
-            "Detail"                    = ConvertTo-DetailView -InputObject $script:AzureDiskDetailTable
-        }
-    }
-    $script:Report += "<h3>ASM VM Disk</h3>"
-    $script:Report += ConvertTo-SummaryView -InputObject (New-ResourceHTMLTable -InputObject $script:AzureDiskTable)
-}
-
-function Save-AzureVMImageTable{
-    $script:AzureVMImageTable = @()
-    $script:AzureVMImage | where {$_.category -eq “User”} | foreach{
-        $script:AzureVMImageDetail = [PSCustomObject]@{
-            "ImageName"                 = $_.ImageName
-            "Description"               = $_.Description
-            "Location"                  = $_.Location
-            "AffinityGroup"             = $_.AffinityGroup
-            "Category"                  = $_.Category
-            "ServiceName"               = $_.ServiceName
-            "DeploymentName"            = $_.DeploymentName
-            "RoleName"                  = $_.RoleName
-            "OS"                        = $_.OS
-            "Label"                     = $_.Label
-            "LogicalDiskSizeInGB"       = $_.OSDiskConfiguration.LogicalDiskSizeInGB
-            "MediaLink"                 = $_.OSDiskConfiguration.MediaLink
-            "CreatedTime"               = $_.CreatedTime
-            "ModifiedTime"              = $_.ModifiedTime
-        }
-        $script:AzureVMImageDetailTable = New-HTMLTable -InputObject (ConvertTo-PropertyValue -InputObject $script:AzureVMImageDetail)
-
-        $script:AzureVMImageTable += [PSCustomObject]@{
-            "ImageName"                 = $_.ImageName
-            "Label"                     = $_.Label
-            "RoleName"                  = $_.RoleName
-            "OS"                        = $_.OS
-            "LogicalDiskSizeInGB"       = $_.OSDiskConfiguration.LogicalDiskSizeInGB
-            "MediaLink"                 = $_.OSDiskConfiguration.MediaLink
-            "CreatedTime"               = $_.CreatedTime
-            "ModifiedTime"              = $_.ModifiedTime
-            "Detail"                    = ConvertTo-DetailView -InputObject $script:AzureVMImageDetailTable
-        }
-    }
-    $script:Report += "<h3>ASM OS Image</h3>"
-    $script:Report += ConvertTo-SummaryView -InputObject (New-ResourceHTMLTable -InputObject $script:AzureVMImageTable)
 }
 
 function Save-AzureRmStorageAccountTable{
@@ -1498,7 +1131,7 @@ function Save-AzureRmStorageAccountTable{
             "Detail"                    = ConvertTo-DetailView -InputObject $script:AzureRmStorageAccountDetailTable
         }
     }
-    $script:Report += "<h3>ARM StorageAccount</h3>"
+    $script:Report += "<h3>StorageAccount</h3>"
     $script:Report += ConvertTo-SummaryView -InputObject (Add-ProvisioningStateColor(New-ResourceHTMLTable -InputObject $script:AzureRmStorageAccountTable))
 }
 
@@ -1556,7 +1189,7 @@ function Save-AzureRmDiskTable{
         }
     }
 
-    $script:Report += "<h3>ARM Managed Disk</h3>"
+    $script:Report += "<h3>Managed Disk</h3>"
     $script:Report += ConvertTo-SummaryView -InputObject (Add-ProvisioningStateColor(New-ResourceHTMLTable -InputObject $Script:AzureRmDiskTable))
 }
 
@@ -1613,7 +1246,7 @@ function Save-AzureRmSnapshotTable{
         }
     }
 
-    $script:Report += "<h3>ARM Managed Disk (Snapshot)</h3>"
+    $script:Report += "<h3>Managed Disk (Snapshot)</h3>"
     $script:Report += ConvertTo-SummaryView -InputObject (Add-ProvisioningStateColor(New-ResourceHTMLTable -InputObject $Script:AzureRmSnapshotTable))
 }
 
@@ -1675,186 +1308,8 @@ function Save-AzureRmImageTable{
         }
     }
 
-    $script:Report += "<h3>ARM Managed Disk (Image)</h3>"
+    $script:Report += "<h3>Managed Disk (Image)</h3>"
     $script:Report += ConvertTo-SummaryView -InputObject (Add-ProvisioningStateColor(New-ResourceHTMLTable -InputObject $Script:AzureRmImageTable))
-}
-
-function Save-AzureDnsServerTable{
-    $script:AzureDnsServerTable = @()    
-    $script:AzureVNetConfig.NetworkConfiguration.VirtualNetworkConfiguration.dns.DnsServers.DnsServer | foreach{
-        if($_.name -ne $null){
-            $script:AzureDnsServerDetail = [PSCustomObject]@{
-                "name"                      = $_.name
-                "IPAddress"                 = $_.IPAddress
-            }
-            $script:AzureDnsServerDetailTable = New-HTMLTable -InputObject (ConvertTo-PropertyValue -InputObject $script:AzureDnsServerDetail)
-
-            $script:AzureDnsServerTable += [PSCustomObject]@{
-                "name"                      = $_.name
-                "IPAddress"                 = $_.IPAddress
-                "Detail"                    = ConvertTo-DetailView -InputObject $script:AzureDnsServerDetailTable
-            }
-        }
-    }
-    $script:Report += "<h3>ASM DNS Server</h3>"
-    $script:Report += ConvertTo-SummaryView -InputObject (New-ResourceHTMLTable -InputObject $script:AzureDnsServerTable)
-}
-
-function Save-AzureVirtualNetworkSiteTable{
-    $script:AzureVirtualNetworkSiteTable = @()
-    $script:AzureVNetConfig.NetworkConfiguration.VirtualNetworkConfiguration.VirtualNetworkSites.VirtualNetworkSite | foreach{
-        if($_.name -ne $null){
-            $script:AzureVirtualNetworkSiteDetail = [PSCustomObject]@{
-                "name"                      = $_.name
-                "Location"                  = $_.Location
-                "AddressSpace"              = $_.AddressSpace.AddressPrefix -join "<br>"
-                "Subnets"                   = $_.Subnets.Subnet.AddressPrefix -join "<br>"
-            }
-            $script:AzureVirtualNetworkSiteDetailTable = New-HTMLTable -InputObject (ConvertTo-PropertyValue -InputObject $script:AzureVirtualNetworkSiteDetail)
-
-            $script:AzureVirtualNetworkSiteTable += [PSCustomObject]@{
-                "name"                      = $_.name
-                "Location"                  = $_.Location
-                "AddressSpace"              = $_.AddressSpace.AddressPrefix -join ", "
-                "Subnets"                   = $_.Subnets.Subnet.AddressPrefix -join ", "
-                "Detail"                    = ConvertTo-DetailView -InputObject $script:AzureVirtualNetworkSiteDetailTable
-            }
-        }
-    }
-    $script:Report += "<h3>ASM Virtual Network Sites</h3>"
-    $script:Report += ConvertTo-SummaryView -InputObject (New-ResourceHTMLTable -InputObject $script:AzureVirtualNetworkSiteTable)
-}
-
-function Save-AzureLocalNetworkSiteTable{
-    $script:AzureLocalNetworkSiteTable = @()
-    $script:AzureVNetConfig.NetworkConfiguration.VirtualNetworkConfiguration.LocalNetworkSites.LocalNetworkSite | foreach{
-        if($_.name -ne $null){
-            $script:AzureLocalNetworkSiteDetail = [PSCustomObject]@{
-                "name"                      = $_.name
-                "AddressSpace"              = $_.AddressSpace.AddressPrefix -join ", "
-                "VPNGatewayAddress"         = $_.VPNGatewayAddress
-            }
-            $script:AzureLocalNetworkSiteDetailTable = New-HTMLTable -InputObject (ConvertTo-PropertyValue -InputObject $script:AzureLocalNetworkSiteDetail)
-
-            $script:AzureLocalNetworkSiteTable += [PSCustomObject]@{
-                "name"                      = $_.name
-                "AddressSpace"              = $_.AddressSpace.AddressPrefix -join ", "
-                "VPNGatewayAddress"         = $_.VPNGatewayAddress
-                "Detail"                    = ConvertTo-DetailView -InputObject $script:AzureLocalNetworkSiteDetailTable
-            }
-        }
-    }
-    $script:Report += "<h3>ASM Local Network Sites</h3>"
-    $script:Report += ConvertTo-SummaryView -InputObject (New-ResourceHTMLTable -InputObject $script:AzureLocalNetworkSiteTable)
-}
-
-function Save-AzureVirtualNetworkGatewayTable{
-    $script:AzureVirtualNetworkGatewayTable = @()
-    $script:AzureVirtualNetworkGateway | foreach{
-        if($_.GatewayName -ne $null){
-            $script:AzureVirtualNetworkGatewayDetail = [PSCustomObject]@{
-                "GatewayName"               = $_.GatewayName
-                "State"                     = $_.State
-                "Location"                  = $_.Location
-                "GatewayType"               = $_.GatewayType
-                "GatewaySKU"                = $_.GatewaySKU
-                "GatewayId"                 = $_.GatewayId
-                "VnetId"                    = $_.VnetId
-                "SubnetId"                  = $_.SubnetId
-                "VIPAddress"                = $_.VIPAddress
-                "LastEventTimeStamp"        = $_.LastEventTimeStamp
-                "LastEventID"               = $_.LastEventID
-                "LastEventMessage"          = $_.LastEventMessage
-                "LastEventData"             = $_.LastEventData
-                "DefaultSite"               = $_.DefaultSite
-                "EnableBgp"                 = $_.EnableBgp
-                "Asn"                       = $_.Asn
-                "BgpPeeringAddress"         = $_.BgpPeeringAddress
-                "PeerWeight"                = $_.PeerWeight
-                "OperationId"               = $_.OperationId
-                "OperationDescription"      = $_.OperationDescription
-                "OperationStatus"           = $_.OperationStatus
-            }
-            $script:AzureVirtualNetworkGatewayDetailTable = New-HTMLTable -InputObject (ConvertTo-PropertyValue -InputObject $script:AzureVirtualNetworkGatewayDetail)
-
-            $script:AzureVirtualNetworkGatewayTable += [PSCustomObject]@{
-                "GatewayName"               = $_.GatewayName
-                "State"                     = $_.State
-                "GatewayType"               = $_.GatewayType
-                "GatewayId"                 = $_.GatewayId
-                "VnetId"                    = $_.VnetId
-                "VIPAddress"                = $_.VIPAddress
-                "Detail"                    = ConvertTo-DetailView -InputObject $script:AzureVirtualNetworkGatewayDetailTable
-            }
-        }
-    }
-    $script:Report += "<h3>ASM (+ ARM) Virtual Network Gateway</h3>"
-    $script:Report += ConvertTo-SummaryView -InputObject (New-ResourceHTMLTable -InputObject $script:AzureVirtualNetworkGatewayTable)
-}
-
-function Save-AzureApplicationGatewayTable{
-    $script:AzureApplicationGatewayTable = @()
-    $script:AzureApplicationGateway | foreach{
-        if($_.Name -ne $null){
-            $script:AzureApplicationGatewayDetail = [PSCustomObject]@{
-                "Name"                      = $_.Name
-                "State"                     = $_.State
-                "Description"               = $_.Description
-                "VnetName"                  = $_.VnetName
-                "Subnets"                   = $_.Subnets
-                "InstanceCount"             = $_.InstanceCount
-                "GatewaySize"               = $_.GatewaySize
-                "VirtualIPs"                = $_.VirtualIPs
-                "DnsName"                   = $_.DnsName
-            }
-            $script:AzureApplicationGatewayDetailTable = New-HTMLTable -InputObject (ConvertTo-PropertyValue -InputObject $script:AzureApplicationGatewayDetail)
-
-            $script:AzureApplicationGatewayTable += [PSCustomObject]@{
-                "Name"                      = $_.Name
-                "State"                     = $_.State
-                "VnetName"                  = $_.VnetName
-                "VirtualIPs"                = $_.VirtualIPs
-                "Detail"                    = ConvertTo-DetailView -InputObject $script:AzureApplicationGatewayDetailTable
-            }
-        }
-    }
-    $script:Report += "<h3>ASM Application Gateway</h3>"
-    $script:Report += ConvertTo-SummaryView -InputObject (New-ResourceHTMLTable -InputObject $script:AzureApplicationGatewayTable)
-}
-
-function Save-AzureDedicatedCircuitTable{
-    $script:AzureDedicatedCircuitTable = @()
-    $script:AzureDedicatedCircuit | foreach{
-            if($_.CircuitName -ne $null){
-                $script:AzureDedicatedCircuitDetail = [PSCustomObject]@{
-                    "CircuitName"                       = $_.CircuitName
-                    "ServiceKey"                        = $_.ServiceKey
-                    "Location"                          = $_.Location
-                    "Bandwidth"                         = $_.Bandwidth
-                    "ServiceProviderName"               = $_.ServiceProviderName
-                    "ServiceProviderProvisioningState"  = $_.ServiceProviderProvisioningState
-                    "BillingType"                       = $_.BillingType
-                    "Sku"                               = $_.Sku
-                    "Status"                            = $_.Status
-                }
-                $script:AzureDedicatedCircuitDetailTable = New-HTMLTable -InputObject (ConvertTo-PropertyValue -InputObject $script:AzureDedicatedCircuitDetail)
-            }
-
-        $script:AzureDedicatedCircuitTable += [PSCustomObject]@{
-            "CircuitName"                       = $_.CircuitName
-            "ServiceKey"                        = $_.ServiceKey
-            "Location"                          = $_.Location
-            "Bandwidth"                         = $_.Bandwidth
-            "ServiceProviderName"               = $_.ServiceProviderName
-            "ServiceProviderProvisioningState"  = $_.ServiceProviderProvisioningState
-            "BillingType"                       = $_.BillingType
-            "Sku"                               = $_.Sku
-            "Status"                            = $_.Status
-            "Detail"                    = ConvertTo-DetailView -InputObject $script:AzureDedicatedCircuitDetailTable
-        }
-    }
-    $script:Report += "<h3>ASM ExpressRoute Circuit</h3>"
-    $script:Report += ConvertTo-SummaryView -InputObject (New-ResourceHTMLTable -InputObject $script:AzureDedicatedCircuitTable)
 }
 
 function Save-AzureRmVirtualNetworkTable{
@@ -1950,7 +1405,7 @@ function Save-AzureRmVirtualNetworkTable{
             "Detail"                    = ConvertTo-DetailView -InputObject $script:AzureRmVirtualNetworkDetailTable
         }
     }
-    $script:Report += "<h3>ARM Virtual Network</h3>"
+    $script:Report += "<h3>Virtual Network</h3>"
     $script:Report += ConvertTo-SummaryView -InputObject (Add-ProvisioningStateColor(New-ResourceHTMLTable -InputObject $script:AzureRmVirtualNetworkTable))
 }
 
@@ -1991,7 +1446,7 @@ function Save-AzureRmVirtualNetworkGatewayTable{
             "Detail"                        = ConvertTo-DetailView -InputObject $script:AzureRmVirtualNetworkGatewayDetailTable
         }
     }
-    $script:Report += "<h3>ARM Virtual Network Gateway</h3>"
+    $script:Report += "<h3>Virtual Network Gateway</h3>"
     $script:Report += ConvertTo-SummaryView -InputObject (Add-ProvisioningStateColor(New-ResourceHTMLTable -InputObject $script:AzureRmVirtualNetworkGatewayTable))
 }
 
@@ -2141,7 +1596,7 @@ function Save-AzureRmExpressRouteCircuitTable{
             }
         }
     }
-    $script:Report += "<h3>ARM ExpressRoute Circuit</h3>"
+    $script:Report += "<h3>ExpressRoute Circuit</h3>"
     $script:Report += ConvertTo-SummaryView -InputObject (Add-ProvisioningStateColor(New-ResourceHTMLTable -InputObject $script:AzureRmExpressRouteCircuitTable))
 }
 
@@ -2181,7 +1636,7 @@ function Save-AzureRmRouteFilter{
             "Detail"                    = ConvertTo-DetailView -InputObject $script:AzureRmRouteFilterDetailTable
         }
     }
-    $script:Report += "<h3>ARM Route Filter</h3>"
+    $script:Report += "<h3>Route Filter</h3>"
     $script:Report += ConvertTo-SummaryView -InputObject (Add-ProvisioningStateColor(New-ResourceHTMLTable -InputObject $script:AzureRmRouteFilterTable))
 }
 
@@ -2303,80 +1758,8 @@ function Save-AzureRmNetworkInterfaceTable{
             "Detail"                        = ConvertTo-DetailView -InputObject $script:AzureRmNetworkInterfaceDetailTable
         }
     }
-    $script:Report += "<h3>ARM Network Interface</h3>"
+    $script:Report += "<h3>Network Interface</h3>"
     $script:Report += ConvertTo-SummaryView -InputObject (Add-ProvisioningStateColor(New-ResourceHTMLTable -InputObject $script:AzureRmNetworkInterfaceTable))
-}
-
-function Save-AzureNetworkSecurityGroupTable{
-    $script:AzureNetworkSecurityGroupTable = @()
-    $script:AzureNetworkSecurityGroupAssociation = @()
-    $script:AzureVM | foreach{
-        $VMName = $_.Name
-        $Association = $_ | Get-AzureNetworkSecurityGroupAssociation -ErrorAction SilentlyContinue
-        $script:AzureNetworkSecurityGroupAssociation += [PSCustomObject]@{
-            "VMName"                        = $VMName
-            "VNetName"                      = $null
-            "SubnetName"                    = $null
-            "NetworkSecurityGroup"          = $Association.Name
-        }
-    }
-    $script:AzureVNetConfig.NetworkConfiguration.VirtualNetworkConfiguration.VirtualNetworkSites.VirtualNetworkSite | foreach{
-        $VNetName = $_.Name
-        $_.Subnets.Subnet.name | foreach{
-            $SubnetName = $_
-            $Association = Get-AzureNetworkSecurityGroupAssociation -VirtualNetworkName $VNetName -SubnetName $_ -ErrorAction SilentlyContinue
-            if($Association -ne $null){
-                $script:AzureNetworkSecurityGroupAssociation += [PSCustomObject]@{
-                    "VMName"                        = $null
-                    "VNetName"                      = $VNetName
-                    "SubnetName"                    = $SubnetName
-                    "NetworkSecurityGroup"          = $Association.Name
-                }
-            }
-        }
-    }
-
-    $script:AzureNetworkSecurityGroup | foreach{
-        $script:AzureNetworkSecurityGroupRulesDetail = @()
-
-        if($_.Rules -ne $null){
-            $_.Rules | foreach{
-                $script:AzureNetworkSecurityGroupRulesDetail += [PSCustomObject]@{
-                    "Name"                      = $_.Name
-                    "State"                     = $_.State
-                    "Action"                    = $_.Action
-                    "Type"                      = $_.Type
-                    "Priority"                  = $_.Priority
-                    "Protocol"                  = $_.Protocol
-                    "SourceAddressPrefix"       = $_.SourceAddressPrefix
-                    "SourcePortRange"           = $_.SourcePortRange
-                    "DestinationAddressPrefix"  = $_.DestinationAddressPrefix
-                    "DestinationPortRange"      = $_.DestinationPortRange
-                }
-            }
-        $script:AzureNetworkSecurityGroupRulesDetailTable = New-HTMLTable -InputObject $script:AzureNetworkSecurityGroupRulesDetail
-        }
-
-        $script:AzureNetworkSecurityGroupDetail = [PSCustomObject]@{
-        "Name"                      = $_.Name
-        "Location"                  = $_.Location
-        "Label"                     = $_.Label
-        "VM"                        = ($script:AzureNetworkSecurityGroupAssociation.VMName | where {$_ -ne $null}) -join "<br>"
-        "Subnets"                   = ($script:AzureNetworkSecurityGroupAssociation.SubnetName | where {$_ -ne $null}) -join "<br>"
-        "Rules"                     = ConvertTo-DetailView -InputObject $script:AzureNetworkSecurityGroupRulesDetailTable
-        }
-        $script:AzureNetworkSecurityGroupDetailTable = New-HTMLTable -InputObject (ConvertTo-PropertyValue -InputObject $script:AzureNetworkSecurityGroupDetail)
-
-        $script:AzureNetworkSecurityGroupTable += [PSCustomObject]@{
-            "Name"                      = $_.Name
-            "Location"                  = $_.Location
-            "VM"                        = ($script:AzureNetworkSecurityGroupAssociation.VMName | where {$_ -ne $null}) -join ", "
-            "Subnets"                   = ($script:AzureNetworkSecurityGroupAssociation.SubnetName | where {$_ -ne $null}) -join ", "
-            "Detail"                    = ConvertTo-DetailView -InputObject $script:AzureNetworkSecurityGroupDetailTable
-        }
-    }
-    $script:Report += "<h3>ASM Network Security Group</h3>"
-    $script:Report += ConvertTo-SummaryView -InputObject (New-ResourceHTMLTable -InputObject $script:AzureNetworkSecurityGroupTable)
 }
 
 function Save-AzureRmNetworkSecurityGroupTable{
@@ -2476,44 +1859,8 @@ function Save-AzureRmNetworkSecurityGroupTable{
             "Detail"                    = ConvertTo-DetailView -InputObject $script:AzureRmNetworkSecurityGroupDetailTable
         }
     }
-    $script:Report += "<h3>ARM Network Security Group</h3>"
+    $script:Report += "<h3>Network Security Group</h3>"
     $script:Report += ConvertTo-SummaryView -InputObject (Add-ProvisioningStateColor(New-ResourceHTMLTable -InputObject $script:AzureRmNetworkSecurityGroupTable))
-}
-
-
-function Save-AzureRouteTableTable{
-    $script:AzureRouteTableTable= @()
-    $script:AzureRouteTable | foreach{
-        $script:AzureRouteTableRoutesDetail = @()
-        if($_.Routes -ne $null){
-            $_.Routes | foreach{
-                $script:AzureRouteTableRoutesDetail += [PSCustomObject]@{
-                    "Name"                      = $_.Name
-                    "AddressPrefix"             = $_.AddressPrefix
-                    "NextHopType"               = $_.NextHop.Type
-                    "NextHopIpAddress"          = $_.NextHop.IpAddress
-                }
-            }
-        $script:AzureRouteTableRoutesDetailTable = New-HTMLTable -InputObject $script:AzureRouteTableRoutesDetail
-        }
-
-        $script:AzureRouteTableDetail = [PSCustomObject]@{
-        "Name"                      = $_.Name
-        "Location"                  = $_.Location
-        "Label"                     = $_.Label
-        "Routes"                    = ConvertTo-DetailView -InputObject $script:AzureRouteTableRoutesDetailTable
-        }
-        $script:AzureRouteTableDetailTable = New-HTMLTable -InputObject (ConvertTo-PropertyValue -InputObject $script:AzureRouteTableDetail)
-
-        $script:AzureRouteTableTable += [PSCustomObject]@{
-            "Name"                      = $_.Name
-            "Location"                  = $_.Location
-            "Label"                     = $_.Label
-            "Detail"                    = ConvertTo-DetailView -InputObject $script:AzureRouteTableDetailTable
-        }
-    }
-    $script:Report += "<h3>ASM Route Table</h3>"
-    $script:Report += ConvertTo-SummaryView -InputObject (New-ResourceHTMLTable -InputObject $script:AzureRouteTableTable)
 }
 
 function Save-AzureRmRouteTableTable{
@@ -2560,34 +1907,8 @@ function Save-AzureRmRouteTableTable{
             "Detail"                    = ConvertTo-DetailView -InputObject $script:AzureRmRouteTableDetailTable
         }
     }
-    $script:Report += "<h3>ARM Route Table</h3>"
+    $script:Report += "<h3>Route Table</h3>"
     $script:Report += ConvertTo-SummaryView -InputObject (Add-ProvisioningStateColor(New-ResourceHTMLTable -InputObject $script:AzureRmRouteTableTable))
-}
-
-function Save-AzureInternalLoadBalancerTable{
-    $script:AzureInternalLoadBalancerTable = @()
-    $script:AzureInternalLoadBalancer | foreach{
-        $script:AzureInternalLoadBalancerDetail = @()
-
-        $script:AzureInternalLoadBalancerDetail = [PSCustomObject]@{
-            "InternalLoadBalancerName"  = $_.InternalLoadBalancerName
-            "ServiceName"               = $_.ServiceName
-            "DeploymentName"            = $_.DeploymentName
-            "SubnetName"                = $_.SubnetName
-            "IPAddress"                 = $_.IPAddress
-        }
-        $script:AzureInternalLoadBalancerDetailTable = New-HTMLTable -InputObject (ConvertTo-PropertyValue -InputObject $script:AzureInternalLoadBalancerDetail)
-
-        $script:AzureInternalLoadBalancerTable += [PSCustomObject]@{
-            "InternalLoadBalancerName"  = $_.InternalLoadBalancerName
-            "SubnetName"                = $_.SubnetName
-            "IPAddress"                 = $_.IPAddress
-            "Detail"                    = ConvertTo-DetailView -InputObject $script:AzureInternalLoadBalancerDetailTable
-
-        }
-    }
-    $script:Report += "<h3>ASM Internal Load Balancer</h3>"
-    $script:Report += ConvertTo-SummaryView -InputObject (New-ResourceHTMLTable -InputObject $script:AzureInternalLoadBalancerTable)
 }
 
 function Save-AzureRmLoadBalancerTable{
@@ -2738,38 +2059,8 @@ function Save-AzureRmLoadBalancerTable{
 
         }
     }
-    $script:Report += "<h3>ARM Load Balancer</h3>"
+    $script:Report += "<h3>Load Balancer</h3>"
     $script:Report += ConvertTo-SummaryView -InputObject (Add-ProvisioningStateColor(New-ResourceHTMLTable -InputObject $script:AzureRmLoadBalancerTable))
-}
-
-function Save-AzureReservedIPTable{
-    $script:AzureReservedIPTable = @()
-    $script:AzureReservedIP | foreach{
-        $script:AzureReservedIPDetail = [PSCustomObject]@{
-            "ReservedIPName"            = $_.ReservedIPName
-            "Address"                   = $_.Address
-            "Id"                        = $_.Id
-            "Label"                     = $_.Label
-            "Location"                  = $_.Location
-            "State"                     = $_.State
-            "InUse"                     = $_.InUse
-            "ServiceName"               = $_.ServiceName
-            "DeploymentName"            = $_.DeploymentName
-            "VirtualIPName"             = $_.VirtualIPName
-        }
-        $script:AzureReservedIPDetailTable = New-HTMLTable -InputObject (ConvertTo-PropertyValue -InputObject $script:AzureReservedIPDetail)
-
-        $script:AzureReservedIPTable += [PSCustomObject]@{
-            "ReservedIPName"            = $_.ReservedIPName
-            "Address"                   = $_.Address
-            "Location"                  = $_.Location
-            "State"                     = $_.State
-            "InUse"                     = $_.InUse
-            "Detail"                    = ConvertTo-DetailView -InputObject $script:AzureReservedIPDetailTable
-        }
-    }
-    $script:Report += "<h3>ASM Reserved IP Address</h3>"
-    $script:Report += ConvertTo-SummaryView -InputObject (New-ResourceHTMLTable -InputObject $script:AzureReservedIPTable)
 }
 
 function Save-AzureRmPublicIpAddressTable{
@@ -2810,7 +2101,7 @@ function Save-AzureRmPublicIpAddressTable{
             "Detail"                    = ConvertTo-DetailView -InputObject $script:AzureRmPublicIpAddressDetailTable
         }
     }
-    $script:Report += "<h3>ARM Public IP Address</h3>"
+    $script:Report += "<h3>Public IP Address</h3>"
     $script:Report += ConvertTo-SummaryView -InputObject (Add-ProvisioningStateColor(New-ResourceHTMLTable -InputObject $script:AzureRmPublicIpAddressTable))
 }
 
@@ -2842,7 +2133,7 @@ function Save-AzureRmLocalNetworkGatewayTable{
             "Detail"                    = ConvertTo-DetailView -InputObject $script:AzureRmLocalNetworkGatewayDetailTable
         }
     }
-    $script:Report += "<h3>ARM Local Network Gateway</h3>"
+    $script:Report += "<h3>Local Network Gateway</h3>"
     $script:Report += ConvertTo-SummaryView -InputObject (Add-ProvisioningStateColor(New-ResourceHTMLTable -InputObject $script:AzureRmLocalNetworkGatewayTable))
 }
 
@@ -2894,7 +2185,7 @@ function Save-AzureRmVirtualNetworkGatewayConnection{
             "Detail"                    = ConvertTo-DetailView -InputObject $script:AzureRmVirtualNetworkGatewayConnectionDetailTable
         }
     }
-    $script:Report += "<h3>ARM Virtual Network Gateway Connection</h3>"
+    $script:Report += "<h3>Virtual Network Gateway Connection</h3>"
     $script:Report += ConvertTo-SummaryView -InputObject (Add-ProvisioningStateColor(New-ResourceHTMLTable -InputObject $script:AzureRmVirtualNetworkGatewayConnectionTable))
 }
 
@@ -3117,7 +2408,7 @@ function Save-AzureRmApplicationGatewayTable{
             "Detail"                    = ConvertTo-DetailView -InputObject $script:AzureRmApplicationGatewayDetailTable
         }
     }
-    $script:Report += "<h3>ARM Application Gateway</h3>"
+    $script:Report += "<h3>Application Gateway</h3>"
     $script:Report += ConvertTo-SummaryView -InputObject (Add-ProvisioningStateColor(New-ResourceHTMLTable -InputObject $script:AzureRmApplicationGatewayTable))
 }
 
@@ -3155,63 +2446,8 @@ function Save-AzureRmDnsZoneTable{
             "Detail"                    = ConvertTo-DetailView -InputObject $script:AzureRmDnsZoneDetailTable
         }
     }
-    $script:Report += "<h3>ARM DNS Zones</h3>"
+    $script:Report += "<h3>DNS Zones</h3>"
     $script:Report += ConvertTo-SummaryView -InputObject (New-ResourceHTMLTable -InputObject $script:AzureRmDnsZoneTable)
-}
-
-function Save-AzureSubscriptionAccountsTable{
-    $script:AzureSubscriptionAccountsDetail = @()
-    $script:AzureSubscription.Accounts | foreach{
-        $script:AzureSubscriptionAccountsDetail += [PSCustomObject]@{
-            "Id"                            = $_.Id
-            "Type"                          = $_.Type
-        }
-    }
-    $script:AzureSubscriptionAccountsDetailTable = New-HTMLTable -InputObject $script:AzureSubscriptionAccountsDetail
-
-    $script:AzureSubscriptionDetail = [PSCustomObject]@{
-        "SubscriptionId"                = $script:AzureSubscription.SubscriptionId
-        "SubscriptionName"              = $script:AzureSubscription.SubscriptionName
-        "Environment"                   = $script:AzureSubscription.Environment
-        "TenantId"                      = $script:AzureSubscription.TenantId
-        "DefaultAccount"                = $script:AzureSubscription.DefaultAccount
-        "Accounts"                      = $script:AzureSubscriptionAccountsDetailTable
-    }
-    $script:AzureSubscriptionDetailTable = New-HTMLTable -InputObject (ConvertTo-PropertyValue -InputObject $script:AzureSubscriptionDetail)
-
-    $script:AzureSubscriptionTable = [PSCustomObject]@{
-        "SubscriptionId"                = $script:AzureSubscription.SubscriptionId
-        "SubscriptionName"              = $script:AzureSubscription.SubscriptionName
-        "Environment"                   = $script:AzureSubscription.Environment
-        "TenantId"                      = $script:AzureSubscription.TenantId
-        "DefaultAccount"                = $script:AzureSubscription.DefaultAccount
-        "Detail"                        = ConvertTo-DetailView -InputObject $script:AzureSubscriptionDetailTable
-    }
-    $script:Report += "<h3>ASM Subscription</h3>"
-    $script:Report += ConvertTo-SummaryView -InputObject (New-ResourceHTMLTable -InputObject $script:AzureSubscriptionTable)
-}
-
-function Save-AzureLocationTable{
-    $script:AzureLocationTable = @()
-    $AzureLocation | foreach{
-        $script:AzureLocationDetail = [PSCustomObject]@{
-            "Name"                      = $_.Name
-            "DisplayName"               = $_.DisplayName
-            "AvailableServices"         = $_.AvailableServices -join "<br>"
-            "VirtualMachineRoleSizes"   = $_.VirtualMachineRoleSizes -join "<br>"
-            "WebWorkerRoleSizes"        = $_.WebWorkerRoleSizes -join "<br>"
-            "StorageAccountTypes"       = $_.StorageAccountTypes -join "<br>"
-        }
-        $script:AzureLocationDetailTable = New-HTMLTable -InputObject (ConvertTo-PropertyValue -InputObject $script:AzureLocationDetail)
-
-        $script:AzureLocationTable += [PSCustomObject]@{
-            "Location"                  = $_.Name
-            "AvailableServices"         = $_.AvailableServices -join ", "
-            "Detail"                    = ConvertTo-DetailView -InputObject $script:AzureLocationDetailTable
-        }
-    }
-    $script:Report += "<h3>ASM Location / VM Size</h3>"
-    $script:Report += ConvertTo-SummaryView -InputObject (New-ResourceHTMLTable -InputObject $script:AzureLocationTable)
 }
 
 function Save-AzureRmContextTable{
@@ -3234,7 +2470,7 @@ function Save-AzureRmContextTable{
         "Account"                     = $script:AzureRmContext.Account
         "Detail"                      = ConvertTo-DetailView -InputObject $script:AzureRmContextDetailTable
     }
-    $script:Report += "<h3>ARM Subscription</h3>"
+    $script:Report += "<h3>Subscription</h3>"
     $script:Report += ConvertTo-SummaryView -InputObject (New-ResourceHTMLTable -InputObject $script:AzureRmContextTable)
 }
 
@@ -3255,7 +2491,7 @@ function Save-AzureRmResourceProviderTable{
             "Detail"                      = ConvertTo-DetailView -InputObject $script:AzureRmResourceProviderDetailTable
         }
     }
-    $script:Report += "<h3>ARM Resource Provider</h3>"
+    $script:Report += "<h3>Resource Provider</h3>"
     $script:Report += ConvertTo-SummaryView -InputObject (Add-RegistrationStateColor(New-ResourceHTMLTable -InputObject $script:AzureRmResourceProviderTable))
 }
 
@@ -3276,7 +2512,7 @@ function Save-AzureRmProviderFeatureTable{
             "Detail"                    = ConvertTo-DetailView -InputObject $script:AzureRmProviderFeatureDetailTable
         }
     }
-    $script:Report += "<h3>ARM Provider Feature</h3>"
+    $script:Report += "<h3>Provider Feature</h3>"
     $script:Report += ConvertTo-SummaryView -InputObject (Add-RegistrationStateColor(New-ResourceHTMLTable -InputObject $script:AzureRmProviderFeatureTable))
 }
 
@@ -3303,7 +2539,7 @@ function Save-AzureRmRoleAssignmentTable{
             "Detail"                    = ConvertTo-DetailView -InputObject $script:AzureRmRoleAssignmentDetailTable
         }
     }
-    $script:Report += "<h3>ARM Role Assignment</h3>"
+    $script:Report += "<h3>Role Assignment</h3>"
     $script:Report += ConvertTo-SummaryView -InputObject (New-ResourceHTMLTable -InputObject $script:AzureRmRoleAssignmentTable)
 }
 
@@ -3327,7 +2563,7 @@ function Save-AzureRmRoleDefinitionTable{
             "Detail"                    = ConvertTo-DetailView -InputObject $script:AzureRmRoleDefinitionDetailTable
         }
     }
-    $script:Report += "<h3>ARM Role Definition</h3>"
+    $script:Report += "<h3>Role Definition</h3>"
     $script:Report += ConvertTo-SummaryView -InputObject (New-ResourceHTMLTable -InputObject $script:AzureRmRoleDefinitionTable)
 }
 
@@ -3347,7 +2583,7 @@ function Save-AzureRmVMSizeTable{
             "Detail"                    = ConvertTo-DetailView -InputObject $script:AzureRmVMSizeDetailTable
         }
     }
-    $script:Report += "<h3>ARM Location / VM Size</h3>"
+    $script:Report += "<h3>Location / VM Size</h3>"
     $script:Report += ConvertTo-SummaryView -InputObject (New-ResourceHTMLTable -InputObject $script:AzureRmVMSizeTable)
 }
 
@@ -3435,19 +2671,19 @@ function Save-AzureLogTable{
     $script:LogStartTime = $script:ExecutedDate.AddDays(-14).ToString("yyyy-MM-ddTHH:mm:ss")
     $script:Report += "<h3>ASM Compute Operation</h3>"
     $script:Report += ConvertTo-SummaryView -InputObject (Add-OperationStatusColor (New-ResourceHTMLTable -InputObject $script:AzureComputeLogTable))
-    $script:Report += "<h3>ARM Storage Operation</h3>"
+    $script:Report += "<h3>Storage Operation</h3>"
     $script:Report += ConvertTo-SummaryView -InputObject (Add-OperationStatusColor(New-ResourceHTMLTable -InputObject $script:AzureStorageLogTable))
-    $script:Report += "<h3>ARM Network Operation</h3>"
+    $script:Report += "<h3>Network Operation</h3>"
     $script:Report += ConvertTo-SummaryView -InputObject (Add-OperationStatusColor(New-ResourceHTMLTable -InputObject $script:AzureNetworkLogTable))
-    $script:Report += "<h3>ARM Resource Operation</h3>"
+    $script:Report += "<h3>Resource Operation</h3>"
     $script:Report += ConvertTo-SummaryView -InputObject (Add-OperationStatusColor(New-ResourceHTMLTable -InputObject $script:AzureRmResourceLogTable))
-    $script:Report += "<h3>ARM Compute Operation</h3>"
+    $script:Report += "<h3>Compute Operation</h3>"
     $script:Report += ConvertTo-SummaryView -InputObject (Add-OperationStatusColor(New-ResourceHTMLTable -InputObject $script:AzureRmComputeLogTable))
-    $script:Report += "<h3>ARM Storage Operation</h3>"
+    $script:Report += "<h3>Storage Operation</h3>"
     $script:Report += ConvertTo-SummaryView -InputObject (Add-OperationStatusColor(New-ResourceHTMLTable -InputObject $script:AzureRmStorageLogTable))
-    $script:Report += "<h3>ARM Network Operation</h3>"
+    $script:Report += "<h3>Network Operation</h3>"
     $script:Report += ConvertTo-SummaryView -InputObject (Add-OperationStatusColor(New-ResourceHTMLTable -InputObject $script:AzureRmNetworkLogTable))
-    $script:Report += "<h3>ASM / ARM Another Operation</h3>"
+    $script:Report += "<h3>ASM / Another Operation</h3>"
     $script:Report += ConvertTo-SummaryView -InputObject (Add-OperationStatusColor(New-ResourceHTMLTable -InputObject $script:AzureRmAnotherLogTable))
 }
 
@@ -3481,256 +2717,130 @@ function Save-AzureReport{
     Write-Log "Waiting: Save-AzureComputeHeader"
     Save-AzureComputeHeader
     Write-Log "Success: Save-AzureComputeHeader" -Color Green
-    
-    if($ARMOnlyReport -ne $true){
-        Write-Log "Waiting: Save-AzureServiceTable"
-        Save-AzureServiceTable
-        Write-Log "Success: Save-AzureServiceTable" -Color Green
-
-        Write-Log "Waiting: Save-AzureAffinityGroupTable"
-        Save-AzureAffinityGroupTable
-        Write-Log "Success: Save-AzureAffinityGroupTable" -Color Green
         
-        Write-Log "Waiting: Save-AzureVmWindowsTable"
-        Save-AzureVmWindowsTable
-        Write-Log "Success: Save-AzureVmWindowsTable" -Color Green
+    Write-Log "Waiting: Save-AzureRmAvailabilitySetTable"
+    Save-AzureRmAvailabilitySetTable
+    Write-Log "Success: Save-AzureRmAvailabilitySetTable" -Color Green
 
-        Write-Log "Waiting: Save-AzureVmLinuxTable"
-        Save-AzureVmLinuxTable
-        Write-Log "Success: Save-AzureVmLinuxTable" -Color Green    
-    }
-    
-    if($ASMOnlyReport -ne $true){
-        Write-Log "Waiting: Save-AzureRmAvailabilitySetTable"
-        Save-AzureRmAvailabilitySetTable
-        Write-Log "Success: Save-AzureRmAvailabilitySetTable" -Color Green
+    Write-Log "Waiting: Save-AzureRmVmWindowsTable"
+    Save-AzureRmVmWindowsTable
+    Write-Log "Success: Save-AzureRmVmWindowsTable" -Color Green
 
-        Write-Log "Waiting: Save-AzureRmVmWindowsTable"
-        Save-AzureRmVmWindowsTable
-        Write-Log "Success: Save-AzureRmVmWindowsTable" -Color Green
-
-        Write-Log "Waiting: Save-AzureRmVmLinuxTable"
-        Save-AzureRmVmLinuxTable
-        Write-Log "Success: Save-AzureRmVmLinuxTable" -Color Green
-    }
+    Write-Log "Waiting: Save-AzureRmVmLinuxTable"
+    Save-AzureRmVmLinuxTable
+    Write-Log "Success: Save-AzureRmVmLinuxTable" -Color Green
     
     Write-Log "Waiting: Save-AzureStorageHeader"
     Save-AzureStorageHeader
     Write-Log "Success: Save-AzureStorageHeader" -Color Green
     
-    if($ARMOnlyReport -ne $true){
-        Write-Log "Waiting: Save-AzureStorageAccountTable"
-        Save-AzureStorageAccountTable
-        Write-Log "Success: Save-AzureStorageAccountTable" -Color Green
-    }
+    Write-Log "Waiting: Save-AzureRmStorageAccountTable"
+    Save-AzureRmStorageAccountTable
+    Write-Log "Success: Save-AzureRmStorageAccountTable" -Color Green
     
-    if($ASMOnlyReport -ne $true){
-        Write-Log "Waiting: Save-AzureRmStorageAccountTable"
-        Save-AzureRmStorageAccountTable
-        Write-Log "Success: Save-AzureRmStorageAccountTable" -Color Green
-    }
-    
-    if($ARMOnlyReport -ne $true){
-        Write-Log "Waiting: Save-AzureDiskTable"
-        Save-AzureDiskTable
-        Write-Log "Success: Save-AzureDiskTable" -Color Green
-
-        Write-Log "Waiting: Save-AzureVMImageTable"
-        Save-AzureVMImageTable
-        Write-Log "Success: Save-AzureVMImageTable" -Color Green
-    }
-    
-    if($ASMOnlyReport -ne $true){
-        Write-Log "Waiting: Save-AzureRmDiskTable"
-        Save-AzureRmDiskTable
-        Write-Log "Success: Save-AzureRmDiskTable" -Color Green
-
-        Write-Log "Waiting: Save-AzureRmSnapshotTable"
-        Save-AzureRmSnapshotTable
-        Write-Log "Success: Save-AzureRmSnapshotTable" -Color Green
-
-        Write-Log "Waiting: Save-AzureRmImageTable"
-        Save-AzureRmImageTable
-        Write-Log "Success: Save-AzureRmImageTable" -Color Green
-    }
+    Write-Log "Waiting: Save-AzureRmDiskTable"
+    Save-AzureRmDiskTable
+    Write-Log "Success: Save-AzureRmDiskTable" -Color Green
+  
+    Write-Log "Waiting: Save-AzureRmSnapshotTable"
+    Save-AzureRmSnapshotTable
+    Write-Log "Success: Save-AzureRmSnapshotTable" -Color Green
+  
+    Write-Log "Waiting: Save-AzureRmImageTable"
+    Save-AzureRmImageTable
+    Write-Log "Success: Save-AzureRmImageTable" -Color Green
     
     Write-Log "Waiting: Save-AzureNetworkHeader"
     Save-AzureNetworkHeader
     Write-Log "Success: Save-AzureNetworkHeader" -Color Green
-
-    if($ARMOnlyReport -ne $true){
-        Write-Log "Waiting: Save-AzureVirtualNetworkSiteTable"
-        Save-AzureVirtualNetworkSiteTable
-        Write-Log "Success: Save-AzureVirtualNetworkSiteTable" -Color Green
-    }
     
-    if($ASMOnlyReport -ne $true){
-        Write-Log "Waiting: Save-AzureRmVirtualNetworkTable"
-        Save-AzureRmVirtualNetworkTable
-        Write-Log "Success: Save-AzureRmVirtualNetworkTable" -Color Green
-    }
+    Write-Log "Waiting: Save-AzureRmVirtualNetworkTable"
+    Save-AzureRmVirtualNetworkTable
+    Write-Log "Success: Save-AzureRmVirtualNetworkTable" -Color Green
     
     Write-Log "Waiting: Save-AzureVirtualNetworkGatewayTable"
     Save-AzureVirtualNetworkGatewayTable
     Write-Log "Success: Save-AzureVirtualNetworkGatewayTable" -Color Green
     
-    if($ASMOnlyReport -ne $true){
-        Write-Log "Waiting: Save-AzureRmVirtualNetworkGatewayTable"
-        Save-AzureRmVirtualNetworkGatewayTable
-        Write-Log "Success: Save-AzureRmVirtualNetworkGatewayTable" -Color Green
+    Write-Log "Waiting: Save-AzureRmVirtualNetworkGatewayTable"
+    Save-AzureRmVirtualNetworkGatewayTable
+    Write-Log "Success: Save-AzureRmVirtualNetworkGatewayTable" -Color Green
 
-        Write-Log "Waiting: Save-AzureRmVirtualNetworkGatewayConnection"
-        Save-AzureRmVirtualNetworkGatewayConnection
-        Write-Log "Success: Save-AzureRmVirtualNetworkGatewayConnection" -Color Green
-    }
+    Write-Log "Waiting: Save-AzureRmVirtualNetworkGatewayConnection"
+    Save-AzureRmVirtualNetworkGatewayConnection
+    Write-Log "Success: Save-AzureRmVirtualNetworkGatewayConnection" -Color Green
+    
+    Write-Log "Waiting: Save-AzureRmLocalNetworkGatewayTable"
+    Save-AzureRmLocalNetworkGatewayTable
+    Write-Log "Success: Save-AzureRmLocalNetworkGatewayTable" -Color Green
 
-    if($ARMOnlyReport -ne $true){
-        Write-Log "Waiting: Save-AzureLocalNetworkSiteTable"
-        Save-AzureLocalNetworkSiteTable
-        Write-Log "Success: Save-AzureLocalNetworkSiteTable" -Color Green
-    }
+    Write-Log "Waiting: Save-AzureRmApplicationGatewayTable"
+    Save-AzureRmApplicationGatewayTable
+    Write-Log "Success: Save-AzureRmApplicationGatewayTable" -Color Green
     
-    if($ASMOnlyReport -ne $true){
-        Write-Log "Waiting: Save-AzureRmLocalNetworkGatewayTable"
-        Save-AzureRmLocalNetworkGatewayTable
-        Write-Log "Success: Save-AzureRmLocalNetworkGatewayTable" -Color Green
-    }
-    
-    if($ARMOnlyReport -ne $true){
-        Write-Log "Waiting: Save-AzureApplicationGatewayTable"
-        Save-AzureApplicationGatewayTable
-        Write-Log "Success: Save-AzureApplicationGatewayTable" -Color Green
-    }
-    
-    if($ASMOnlyReport -ne $true){
-        Write-Log "Waiting: Save-AzureRmApplicationGatewayTable"
-        Save-AzureRmApplicationGatewayTable
-        Write-Log "Success: Save-AzureRmApplicationGatewayTable" -Color Green
-    }
+    Write-Log "Waiting: Save-AzureDedicatedCircuitTable"
+    Save-AzureDedicatedCircuitTable
+    Write-Log "Success: Save-AzureDedicatedCircuitTable" -Color Green
 
-    if($ARMOnlyReport -ne $true){
-        Write-Log "Waiting: Save-AzureDedicatedCircuitTable"
-        Save-AzureDedicatedCircuitTable
-        Write-Log "Success: Save-AzureDedicatedCircuitTable" -Color Green
-    }
+    Write-Log "Waiting: Save-AzureRmExpressRouteCircuitTable"
+    Save-AzureRmExpressRouteCircuitTable
+    Write-Log "Success: Save-AzureRmExpressRouteCircuitTable" -Color Green
     
-    if($ASMOnlyReport -ne $true){
-        Write-Log "Waiting: Save-AzureRmExpressRouteCircuitTable"
-        Save-AzureRmExpressRouteCircuitTable
-        Write-Log "Success: Save-AzureRmExpressRouteCircuitTable" -Color Green
-        
-        Write-Log "Waiting: Save-AzureRmRouteFilter"
-        Save-AzureRmRouteFilter
-        Write-Log "Success: Save-AzureRmRouteFilter" -Color Green
-    }
+    Write-Log "Waiting: Save-AzureRmRouteFilter"
+    Save-AzureRmRouteFilter
+    Write-Log "Success: Save-AzureRmRouteFilter" -Color Green
+    
+    Write-Log "Waiting: Save-AzureRmLoadBalancerTable"
+    Save-AzureRmLoadBalancerTable
+    Write-Log "Success: Save-AzureRmLoadBalancerTable" -Color Green
+    
+    Write-Log "Waiting: Save-AzureRmNetworkInterfaceTable"
+    Save-AzureRmNetworkInterfaceTable
+    Write-Log "Success: Save-AzureRmNetworkInterfaceTable" -Color Green
+    
+    Write-Log "Waiting: Save-AzureRmPublicIpAddressTable"
+    Save-AzureRmPublicIpAddressTable
+    Write-Log "Success: Save-AzureRmPublicIpAddressTable" -Color Green
 
-    if($ARMOnlyReport -ne $true){
-        Write-Log "Waiting: Save-AzureInternalLoadBalancerTable"
-        Save-AzureInternalLoadBalancerTable
-        Write-Log "Success: Save-AzureInternalLoadBalancerTable" -Color Green
-    }
-    
-    if($ASMOnlyReport -ne $true){
-        Write-Log "Waiting: Save-AzureRmLoadBalancerTable"
-        Save-AzureRmLoadBalancerTable
-        Write-Log "Success: Save-AzureRmLoadBalancerTable" -Color Green
+    Write-Log "Waiting: Save-AzureRmNetworkSecurityGroupTable"
+    Save-AzureRmNetworkSecurityGroupTable
+    Write-Log "Success: Save-AzureRmNetworkSecurityGroupTable" -Color Green
 
-        Write-Log "Waiting: Save-AzureRmNetworkInterfaceTable"
-        Save-AzureRmNetworkInterfaceTable
-        Write-Log "Success: Save-AzureRmNetworkInterfaceTable" -Color Green
-    }
+    Write-Log "Waiting: Save-AzureRmRouteTableTable"
+    Save-AzureRmRouteTableTable
+    Write-Log "Success: Save-AzureRmRouteTableTable" -Color Green
 
-    if($ARMOnlyReport -ne $true){
-        Write-Log "Waiting: Save-AzureReservedIPTable"
-        Save-AzureReservedIPTable
-        Write-Log "Success: Save-AzureReservedIPTable" -Color Green
-    }
-    
-    if($ASMOnlyReport -ne $true){
-        Write-Log "Waiting: Save-AzureRmPublicIpAddressTable"
-        Save-AzureRmPublicIpAddressTable
-        Write-Log "Success: Save-AzureRmPublicIpAddressTable" -Color Green
-    }
-    
-    if($ARMOnlyReport -ne $true){
-        Write-Log "Waiting: Save-AzureNetworkSecurityGroupTable"
-        Save-AzureNetworkSecurityGroupTable
-        Write-Log "Success: Save-AzureNetworkSecurityGroupTable" -Color Green
-    }
-    
-    if($ASMOnlyReport -ne $true){
-        Write-Log "Waiting: Save-AzureRmNetworkSecurityGroupTable"
-        Save-AzureRmNetworkSecurityGroupTable
-        Write-Log "Success: Save-AzureRmNetworkSecurityGroupTable" -Color Green
-    }
-    
-    if($ARMOnlyReport -ne $true){
-        Write-Log "Waiting: Save-AzureRouteTableTable"
-        Save-AzureRouteTableTable
-        Write-Log "Success: Save-AzureRouteTableTable" -Color Green
-    }
-    
-    if($ASMOnlyReport -ne $true){
-        Write-Log "Waiting: Save-AzureRmRouteTableTable"
-        Save-AzureRmRouteTableTable
-        Write-Log "Success: Save-AzureRmRouteTableTable" -Color Green
-    }
-
-    if($ARMOnlyReport -ne $true){
-        Write-Log "Waiting: Save-AzureDnsServerTable"
-        Save-AzureDnsServerTable
-        Write-Log "Success: Save-AzureDnsServerTable" -Color Green
-    }
-    
-    if($ASMOnlyReport -ne $true){
-        Write-Log "Waiting: Save-AzureRmDnsZoneTable"
-        Save-AzureRmDnsZoneTable
-        Write-Log "Success: Save-AzureRmDnsZoneTable" -Color Green
-    }    
+    Write-Log "Waiting: Save-AzureRmDnsZoneTable"
+    Save-AzureRmDnsZoneTable
+    Write-Log "Success: Save-AzureRmDnsZoneTable" -Color Green
 
     Write-Log "Waiting: Save-AzureSubscriptionHeader"
     Save-AzureSubscriptionHeader
     Write-Log "Success: Save-AzureSubscriptionHeader" -Color Green
     
-    if($ARMOnlyReport -ne $true){
-        Write-Log "Waiting: Save-AzureSubscriptionAccountsTable"
-        Save-AzureSubscriptionAccountsTable
-        Write-Log "Success: Save-AzureSubscriptionAccountsTable" -Color Green
-    }
-    
-    if($ASMOnlyReport -ne $true){
-        Write-Log "Waiting: Save-AzureRmContextTable"
-        Save-AzureRmContextTable
-        Write-Log "Success: Save-AzureRmContextTable" -Color Green
-
-        Write-Log "Waiting: Save-AzureRmRoleAssignmentTable"
-        Save-AzureRmRoleAssignmentTable
-        Write-Log "Success: Save-AzureRmRoleAssignmentTable" -Color Green
-
-        Write-Log "Waiting: Save-AzureRmRoleDefinitionTable"
-        Save-AzureRmRoleDefinitionTable
-        Write-Log "Success: Save-AzureRmRoleDefinitionTable" -Color Green
-
-        Write-Log "Waiting: Save-AzureRmResourceProviderTable"
-        Save-AzureRmResourceProviderTable
-        Write-Log "Success: Save-AzureRmResourceProviderTable" -Color Green
-
-        Write-Log "Waiting: Save-AzureRmProviderFeatureTable"
-        #Save-AzureRmProviderFeatureTable
-        Write-Log "Success: Save-AzureRmProviderFeatureTable" -Color Green
-    }
-
-    if($ARMOnlyReport -ne $true){
-        Write-Log "Waiting: Save-AzureLocationTable"
-        Save-AzureLocationTable
-        Write-Log "Success: Save-AzureLocationTable" -Color Green
-    }
-    
-    if($ASMOnlyReport -ne $true){
-        Write-Log "Waiting: Save-AzureRmVMSizeTable"
-        #Save-AzureRmVMSizeTable
-        Write-Log "Success: Save-AzureRmVMSizeTable" -Color Green
-    }
+    Write-Log "Waiting: Save-AzureRmContextTable"
+    Save-AzureRmContextTable
+    Write-Log "Success: Save-AzureRmContextTable" -Color Green
+ 
+    Write-Log "Waiting: Save-AzureRmRoleAssignmentTable"
+    Save-AzureRmRoleAssignmentTable
+    Write-Log "Success: Save-AzureRmRoleAssignmentTable" -Color Green
+ 
+    Write-Log "Waiting: Save-AzureRmRoleDefinitionTable"
+    Save-AzureRmRoleDefinitionTable
+    Write-Log "Success: Save-AzureRmRoleDefinitionTable" -Color Green
+ 
+    Write-Log "Waiting: Save-AzureRmResourceProviderTable"
+    Save-AzureRmResourceProviderTable
+    Write-Log "Success: Save-AzureRmResourceProviderTable" -Color Green
+ 
+    Write-Log "Waiting: Save-AzureRmProviderFeatureTable"
+    #Save-AzureRmProviderFeatureTable
+    Write-Log "Success: Save-AzureRmProviderFeatureTable" -Color Green
+ 
+    Write-Log "Waiting: Save-AzureRmVMSizeTable"
+    #Save-AzureRmVMSizeTable
+    Write-Log "Success: Save-AzureRmVMSizeTable" -Color Green
 
     Write-Log "Waiting: Save-AzureOperationHeader"
     Save-AzureOperationHeader
@@ -3751,6 +2861,5 @@ function Save-AzureReport{
 # Main method
 Initialize
 New-AzureSession
-Get-AsmInformation
 Get-ArmInformation
 Save-AzureReport
