@@ -2,23 +2,59 @@
 function Save-AzureRmRecoveryServicesVault{
     $script:AzureRmRecoveryServicesVaultTable = @()
     $script:AzureRmRecoveryServicesVaultDetailTable = @()
+    $script:AzureRmRecoveryServicesVaultContainerDetailTable = @()
     $script:AzureRmRecoveryServicesVault | foreach{
 
+        $script:Vault = $_
+        $script:AzureRmRecoveryServicesVaultContainer = Get-AzureRmRecoveryServicesBackupContainer -ContainerType AzureVM -VaultId $script:Vault.Id
+
+        $script:AzureRmRecoveryServicesVaultContainerDetailTable = @()
+        $script:AzureRmRecoveryServicesVaultContainerDetail = @()
+        
+        $script:AzureRmRecoveryServicesVaultContainer | ForEach-Object {
+            $script:Container = $_
+            $script:AzureRmRecoveryServicesVaultContainerDetail += [PSCustomObject]@{
+                "ResourceGroupName"         = $script:Container.ResourceGroupName
+                "FriendlyName"              = $script:Container.FriendlyName
+                "Status"                    = $script:Container.Status
+                "Name"                      = $script:Container.Name
+                "ContainerType"             = $script:Container.ContainerType
+                "BackupManagementType"      = $script:Container.BackupManagementType
+            }
+        }
+
+        $script:AzureRmRecoveryServicesVaultContainer = Get-AzureRmRecoveryServicesBackupContainer -ContainerType Windows -BackupManagementType MARS -VaultId $script:Vault.Id
+        
+        $script:AzureRmRecoveryServicesVaultContainer | ForEach-Object {
+            $script:Container = $_
+            $script:AzureRmRecoveryServicesVaultContainerDetail += [PSCustomObject]@{
+                "ResourceGroupName"         = $script:Container.ResourceGroupName
+                "FriendlyName"              = $script:Container.FriendlyName
+                "Status"                    = $script:Container.Status
+                "Name"                      = $script:Container.Name
+                "ContainerType"             = $script:Container.ContainerType
+                "BackupManagementType"      = $script:Container.BackupManagementType
+            }
+        }
+
+        $script:AzureRmRecoveryServicesVaultContainerDetailTable  = New-HTMLTable -InputObject $script:AzureRmRecoveryServicesVaultContainerDetail
+
         $script:AzureRmRecoveryServicesVaultDetail = [PSCustomObject]@{
-            "Name"                          = $_.Name
-            "ResourceGroupName"             = $_.ResourceGroupName
-            "Location"                      = $_.Location
-            "Id"                            = $_.Id
-            "Type"                          = $_.Type
-            "ProvisioningState"             = $_.Properties.ProvisioningState
+            "Name"                          = $script:Vault.Name
+            "ResourceGroupName"             = $script:Vault.ResourceGroupName
+            "Location"                      = $script:Vault.Location
+            "Id"                            = $script:Vault.Id
+            "Type"                          = $script:Vault.Type
+            "ProvisioningState"             = $script:Vault.Properties.ProvisioningState
+            "Container"                     = $script:AzureRmRecoveryServicesVaultContainerDetailTable
         }
         $script:AzureRmRecoveryServicesVaultDetailTable = New-HTMLTable -InputObject (ConvertTo-PropertyValue -InputObject $script:AzureRmRecoveryServicesVaultDetail) 
 
         $script:AzureRmRecoveryServicesVaultTable += [PSCustomObject]@{
-            "Name"                          = "<a name=`"$($_.Id.ToLower())`">$($_.Name)</a>"
-            "ResourceGroupName"             = $_.ResourceGroupName
-            "Location"                      = $_.Location
-            "ProvisioningState"             = $_.Properties.ProvisioningState
+            "Name"                          = "<a name=`"$($Vault.Id.ToLower())`">$($Vault.Name)</a>"
+            "ResourceGroupName"             = $script:Vault.ResourceGroupName
+            "Location"                      = $script:Vault.Location
+            "ProvisioningState"             = $script:Vault.Properties.ProvisioningState
             "Detail"                        = ConvertTo-DetailView -InputObject $script:AzureRmRecoveryServicesVaultDetailTable
         }        
     }
