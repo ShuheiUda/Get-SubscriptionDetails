@@ -6,7 +6,7 @@ Get-SubscriptionDetails collect your Azure Subscription's details.
 ## Usage
 1. Run PowerShell console
 2. Run GSD script (ex. Get-SubscriptionDetails -SubscriptionID 1b30dfe1-c2b7-468d-a5cd-b0662c94ec2f)
-3. login to azure  (ASM and ARM)
+3. login to azure
 4. wait for a while
 
 ## Parameter
@@ -16,7 +16,6 @@ Get-SubscriptionDetails collect your Azure Subscription's details.
 * Optional
     * SkipAuth: if you already logged in ASM & ARM, you can skip authorization popup.
     * OutputFolder: you can change output folder. (default: $env:USERPROFILE\desktop\Get-SubscriptionDetails\)
-    * ASMOnlyReport, ARMOnlyReport, FullReport: Select report mode.
 
 ## Sample
 [Sample Report](http://www.syuheiuda.com/wp-content/uploads/2017/04/Sample_0_9_1-676ba02b-eb02-4b62-885d-1116518ebd1f-20170408_192331.htm)
@@ -24,35 +23,6 @@ Get-SubscriptionDetails collect your Azure Subscription's details.
 !["Sample Image"](http://www.syuheiuda.com/wp-content/uploads/2017/04/Get-SubscriptionDetails_0_9_1.png)
 
 ## Features
-* Collect ASM Resource Information
-    * Compute
-        * ASM Cloud Service
-        * ASM Affinity Group
-        * ASM Windows VM
-        * ASM Linux VM
-    * Storage
-        * ASM Storage Account
-        * ASM VM Disk
-        * ASM OS Image
-    * Network
-        * ASM DNS Server
-        * ASM Local Network Site
-        * ASM Virtual Network Site
-        * ASM Virtual Network Gateway
-        * ASM Application Gateway
-        * ASM Dedicated Circuit (ExpressRoute)
-        * ASM Internal Load Balancer
-        * ASM Reserved IP Address
-        * ASM Network Security Group (NSG)
-        * ASM Route Table (UDR)
-    * Subscription
-        * ASM Subscription
-        * ASM Location
-    * Operation
-        * Microsoft.ClassicCompute Provider
-        * Microsoft.ClassicStorage Provider
-        * Microsoft.ClassicNetwork Provider
-        * Another Provider
         
 * Collect ARM Resource Information
     * Compute
