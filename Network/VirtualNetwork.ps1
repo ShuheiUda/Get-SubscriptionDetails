@@ -26,7 +26,7 @@ function Save-AzureRmVirtualNetworkTable{
             }
             $script:AzureRmVirtualNetworkSubnetsDetail += [PSCustomObject]@{
                 "Name"                      = $_.Name
-                "AddressPrefix"             = $_.AddressPrefix
+                "AddressPrefix"             = $_.AddressPrefix -join ""
                 "ProvisioningState"         = $_.ProvisioningState
                 "RouteTable"                = $script:AzureRmVirtualNetworkSubnetsRouteTableId
                 "NetworkSecurityGroup"      = $script:AzureRmVirtualNetworkSubnetsNetworkSecurityGroupId
