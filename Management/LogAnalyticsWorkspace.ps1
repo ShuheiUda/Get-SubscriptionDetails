@@ -5,36 +5,24 @@ function Save-AzureRmLogAnalytics {
 
             $script:AzureRmLogAnalyticsWorkspaceTableDetailTable = $null
 
-            $script:AzureRmLogAnalyticsWorkspaceFeaturesDetailTable = $null
-            if($_.Properties.features -ne $null){
-                $script:AzureRmLogAnalyticsWorkspaceFeaturesDetailTable = New-HTMLTable -InputObject $_.Properties.features
-            }
-
-            $script:AzureRmLogAnalyticsWorkspaceWorkspaceCappingDetailTable = $null
-            if($_.Properties.workspaceCapping -ne $null){
-                $script:AzureRmLogAnalyticsWorkspaceWorkspaceCappingDetailTable = New-HTMLTable -InputObject $_.Properties.workspaceCapping
-            }   
-
             $script:AzureRmLogAnalyticsWorkspaceTableDetail = [PSCustomObject]@{
                 "Name"                          = $_.Name
+                "Id"                            = $_.ResourceId
                 "ResourceGroupName"             = $_.ResourceGroupName
                 "Location"                      = $_.Location
-                "Id"                            = $_.ResourceId
-                "ProvisioningState"             = $_.Properties.ProvisioningState
-                "source"                        = $_.Properties.source
-                "customerId"                    = $_.Properties.customerId
-                "sku"                           = $_.Properties.sku.name
-                "retentionInDays"               = $_.Properties.retentionInDays
-                "features"                      = $script:AzureRmLogAnalyticsWorkspaceFeaturesDetailTable
-                "workspaceCapping"              = $script:AzureRmLogAnalyticsWorkspaceWorkspaceCappingDetailTable
+                "Sku"                           = $_.Sku
+                "retentionInDays"               = $_.retentionInDays
+                "customerId"                    = $_.CustomerId
+                "PortalUrl"                     = $_.PortalUrl
+                "ProvisioningState"             = $_.ProvisioningState
             }
             $script:AzureRmLogAnalyticsWorkspaceTableDetailTable = New-HTMLTable -InputObject (ConvertTo-PropertyValue -InputObject $script:AzureRmLogAnalyticsWorkspaceTableDetail) 
             
             $script:AzureRmLogAnalyticsWorkspaceTable += [PSCustomObject]@{
-                "Name"                          = "<a name=`"$($_.Id.ToLower())`">$($_.Name)</a>"
+                "Name"                          = "<a name=`"$($_.ResourceId.ToLower())`">$($_.Name)</a>"
                 "ResourceGroupName"             = $_.ResourceGroupName
                 "Location"                      = $_.Location
-                "ProvisioningState"             = $_.Properties.provisioningState
+                "ProvisioningState"             = $_.provisioningState
                 "Detail"                        = ConvertTo-DetailView -InputObject $script:AzureRmLogAnalyticsWorkspaceTableDetailTable
             }
         }

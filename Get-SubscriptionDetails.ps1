@@ -593,9 +593,9 @@ function Get-ArmInformation{
     $script:AzureRmRecoveryServicesVault = Get-AzureRmRecoveryServicesVault
     Write-Log "Success: Get-AzureRmRecoveryServicesVault" -Color Green
 
-    Write-Log "Waiting: Get-AzResource -ResourceType Microsoft.OperationalInsights/workspaces"
-    $script:AzureRmLogAnalyticsWorkspace = Get-AzResource -ResourceType Microsoft.OperationalInsights/workspaces -ExpandProperties
-    Write-Log "Success: Get-AzResource -ResourceType Microsoft.OperationalInsights/workspaces" -Color Green
+    Write-Log "Waiting: Get-AzureRmOperationalInsightsWorkspace"
+    $script:AzureRmLogAnalyticsWorkspace = Get-AzureRmOperationalInsightsWorkspace
+    Write-Log "Success: Get-AzureRmOperationalInsightsWorkspace" -Color Green
 }
 
 # Create new html data
