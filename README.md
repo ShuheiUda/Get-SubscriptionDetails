@@ -29,6 +29,7 @@ Get-SubscriptionDetails collect your Azure Subscription's details.
         * Availability Set
         * Windows VM
         * Linux VM
+        * VM Extension
     * Storage
         * Storage Account
         * VM Disk

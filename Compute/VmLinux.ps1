@@ -117,6 +117,30 @@ function Save-AzureRmVmLinuxTable{
             $script:AzureRmVmLinuxAvailabilitySetReference = "<a href=`"#$(($_.AvailabilitySetReference.Id).ToLower())`">$($_.AvailabilitySetReference.Id)</a>"
         }
 
+        $script:AzureRmVmLinuxVmExtensionsDetail = @()
+        $script:AzureRmVmLinuxVmExtensionsDetailTable = @()
+        $script:VmExtensions = Get-AzureRmVMExtension -ResourceGroupName $_.ResourceGroupName -VMName $_.Name
+        if ( $script:VmExtensions -ne $null ){
+            $script:VmExtensions | ForEach-Object {
+                $script:AzureRmVmLinuxVmExtensionsDetail += [PSCustomObject]@{
+                    "Name"                      = $_.Name
+                    "Location"                  = $_.Location
+                    "Publisher"                 = $_.Publisher
+                    "ExtensionType"             = $_.ExtensionType
+                    "TypeHandlerVersion"        = $_.TypeHandlerVersion
+                    "Id"                        = $_.Id
+                    "PublicSettings"            = $_.PublicSettings
+                    "ProtectedSettings"         = $_.ProtectedSettings
+                    "ProvisioningState"         = $_.ProvisioningState
+                    "Statuses"                  = $_.Statuses
+                    "SubStatuses"               = $_.SubStatuses
+                    "AutoUpgradeMinorVersion"   = $_.AutoUpgradeMinorVersion
+                    "ForceUpdateTag"            = $_.ForceUpdateTag
+                }
+            }
+        }
+        $script:AzureRmVmLinuxVmExtensionsDetailTable = New-HTMLTable -InputObject $script:AzureRmVmLinuxVmExtensionsDetail
+
         $script:AzureRmVmLinuxDetail = [PSCustomObject]@{
             "Name"                          = $_.Name
             "ResourceGroupName"             = $_.ResourceGroupName
@@ -140,6 +164,7 @@ function Save-AzureRmVmLinuxTable{
             "NetworkInterfaces"             = $script:AzureRmVmLinuxNetworkInterfaceIDsDetailTable
             "BootDiagnostics.Enabled"       = $_.DiagnosticsProfile.BootDiagnostics.Enabled
             "BootDiagnostics.StorageUri"    = $_.DiagnosticsProfile.BootDiagnostics.StorageUri
+            "VM Extension"                  = $script:AzureRmVmLinuxVmExtensionsDetailTable
         }
         $script:AzureRmVmLinuxDetailTable = New-HTMLTable -InputObject (ConvertTo-PropertyValue -InputObject $script:AzureRmVmLinuxDetail) 
 
