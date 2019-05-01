@@ -57,6 +57,9 @@ Param(
 .".\Storage\StorageAccount.ps1"
 .".\Storage\RecoveryServiceVault.ps1"
 
+# Management 
+.".\Management\LogAnalyticsWorkspace.ps1"
+
 # Header
 $script:Version = "0.9.3"
 $script:LatestVersionUrl = "https://raw.githubusercontent.com/ShuheiUda/Get-SubscriptionDetails/master/LatestVersion.txt"
@@ -590,13 +593,16 @@ function Get-ArmInformation{
     $script:AzureRmRecoveryServicesVault = Get-AzureRmRecoveryServicesVault
     Write-Log "Success: Get-AzureRmRecoveryServicesVault" -Color Green
 
+    Write-Log "Waiting: Get-AzResource -ResourceType Microsoft.OperationalInsights/workspaces"
+    $script:AzureRmLogAnalyticsWorkspace = Get-AzResource -ResourceType Microsoft.OperationalInsights/workspaces -ExpandProperties
+    Write-Log "Success: Get-AzResource -ResourceType Microsoft.OperationalInsights/workspaces" -Color Green
 }
 
 # Create new html data
 function Save-AzureReportHeader{
     $script:Report = New-HTMLHead -title "Get-SubscriptionDetails Report"
     $script:Report += "<h2>Get-SubscriptionDetails Report (Version: $script:Version)</h2>"
-    $script:Report += "<h3>Subscription ID: $SubscriptionID ( Executed on : $script:ExecutedDateString )<br><a href=`"#CRP`">Virtual Machine</a> | <a href=`"#SRP`">Storage</a> | <a href=`"#NRP`">Network</a> | <a href=`"#Sub`">Subscription Information</a> | <a href=`"#Ops`">Operation</a></h3>"
+    $script:Report += "<h3>Subscription ID: $SubscriptionID ( Executed on : $script:ExecutedDateString )<br><a href=`"#CRP`">Virtual Machine</a> | <a href=`"#SRP`">Storage</a> | <a href=`"#NRP`">Network</a> | <a href=`"#Management`">Management</a>| <a href=`"#Sub`">Subscription Information</a> | <a href=`"#Ops`">Operation</a></h3>"
     
     <#
     $script:Report += "<h2>Findings</h2>"
@@ -881,6 +887,10 @@ function Save-AzureNetworkHeader{
     $script:Report += "<a name=`"NRP`"><h2>Network</h2></a>"
 }
 
+function Save-AzureManagementHeader{
+    $script:Report += "<a name=`"Management`"><h2>Management</h2></a>"
+}
+
 function Save-AzureSubscriptionHeader{
     $script:Report += "<a name=`"Sub`"><h2>Subscription Information</h2></a>"
 }
@@ -1091,6 +1101,14 @@ function Save-AzureReport{
     Write-Log "Waiting: Save-AzureRmDnsZoneTable"
     Save-AzureRmDnsZoneTable
     Write-Log "Success: Save-AzureRmDnsZoneTable" -Color Green
+
+    Write-Log "Waiting: Save-AzureManagementHeader"
+    Save-AzureManagementHeader
+    Write-Log "Success: Save-AzureManagementHeader" -Color Green
+
+    Write-Log "Waiting: Save-AzureRmLogAnalytics"
+    Save-AzureRmLogAnalytics
+    Write-Log "Success: Save-AzureRmLogAnalytics" -Color Green
 
     Write-Log "Waiting: Save-AzureSubscriptionHeader"
     Save-AzureSubscriptionHeader

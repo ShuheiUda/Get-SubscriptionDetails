@@ -49,7 +49,7 @@ function Save-AzureRmDiskTable{
             "ProvisioningState"             = $_.ProvisioningState
             "OsType"                        = $_.OsType  
             "DiskSizeGB"                    = $_.DiskSizeGB
-            "Detail"                    = ConvertTo-DetailView -InputObject $script:AzureRmDiskDetailTable
+            "Detail"                        = ConvertTo-DetailView -InputObject $script:AzureRmDiskDetailTable
         }
     }
 
