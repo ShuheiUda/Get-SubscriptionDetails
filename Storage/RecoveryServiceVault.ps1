@@ -37,14 +37,16 @@ function Save-AzureRmRecoveryServicesVault{
             }
         }
 
-        $script:AzureRmRecoveryServicesVaultContainerDetailTable  = New-HTMLTable -InputObject $script:AzureRmRecoveryServicesVaultContainerDetail
+        $script:AzureRmRecoveryServicesBackupStorageRedundancy = (Get-AzureRmRecoveryServicesBackupProperties -Vault $script:Vault).BackupStorageRedundancy
 
+        $script:AzureRmRecoveryServicesVaultContainerDetailTable  = New-HTMLTable -InputObject $script:AzureRmRecoveryServicesVaultContainerDetail
         $script:AzureRmRecoveryServicesVaultDetail = [PSCustomObject]@{
             "Name"                          = $script:Vault.Name
             "ResourceGroupName"             = $script:Vault.ResourceGroupName
             "Location"                      = $script:Vault.Location
             "Id"                            = $script:Vault.Id
             "Type"                          = $script:Vault.Type
+            "BackupStorageRedundancy"       = $script:AzureRmRecoveryServicesBackupStorageRedundancy
             "ProvisioningState"             = $script:Vault.Properties.ProvisioningState
             "Container"                     = $script:AzureRmRecoveryServicesVaultContainerDetailTable
         }
@@ -54,6 +56,7 @@ function Save-AzureRmRecoveryServicesVault{
             "Name"                          = "<a name=`"$($Vault.Id.ToLower())`">$($Vault.Name)</a>"
             "ResourceGroupName"             = $script:Vault.ResourceGroupName
             "Location"                      = $script:Vault.Location
+            "BackupStorageRedundancy"       = $script:AzureRmRecoveryServicesBackupStorageRedundancy
             "ProvisioningState"             = $script:Vault.Properties.ProvisioningState
             "Detail"                        = ConvertTo-DetailView -InputObject $script:AzureRmRecoveryServicesVaultDetailTable
         }        
