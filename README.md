@@ -50,6 +50,8 @@ Get-SubscriptionDetails collect your Azure Subscription's details.
         * Network Security Group (NSG)
         * Route Table (UDR)
         * DNS Zone
+    * Management
+        * Log Analytics workspaces
     * Subscription
         * Context (Subscription)
         * Resource Provider
