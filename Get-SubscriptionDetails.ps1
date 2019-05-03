@@ -27,7 +27,11 @@ If a subscription ID is specified, subscription-wide information will be provide
 Param(
     [Parameter(Mandatory=$true)][string]$SubscriptionID,
     [string]$OutputFolder = "$env:USERPROFILE\Desktop\Get-SubscriptionDetails",
-    [switch]$SkipAuth
+    [switch]$SkipAuth,
+    [switch]$Compute,
+    [switch]$Network,
+    [switch]$Storage,
+    [switch]$Management
 )
 
 # Load Compute

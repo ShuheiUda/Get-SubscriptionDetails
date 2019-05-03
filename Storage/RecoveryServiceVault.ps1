@@ -2,44 +2,63 @@
 function Save-AzureRmRecoveryServicesVault{
     $script:AzureRmRecoveryServicesVaultTable = @()
     $script:AzureRmRecoveryServicesVaultDetailTable = @()
-    $script:AzureRmRecoveryServicesVaultContainerDetailTable = @()
+
     $script:AzureRmRecoveryServicesVault | foreach{
 
+        # Check AzureVM Backup
         $script:Vault = $_
         $script:AzureRmRecoveryServicesVaultContainer = Get-AzureRmRecoveryServicesBackupContainer -ContainerType AzureVM -VaultId $script:Vault.Id
 
-        $script:AzureRmRecoveryServicesVaultContainerDetailTable = @()
-        $script:AzureRmRecoveryServicesVaultContainerDetail = @()
-        
+        $script:AzureRmRecoveryServicesVaultBackupItemDetail = @()
+        $script:AzureRmRecoveryServicesVaultBackupItemDetailTable = @()
+
         $script:AzureRmRecoveryServicesVaultContainer | ForEach-Object {
-            $script:Container = $_
-            $script:AzureRmRecoveryServicesVaultContainerDetail += [PSCustomObject]@{
-                "ResourceGroupName"         = $script:Container.ResourceGroupName
-                "FriendlyName"              = $script:Container.FriendlyName
-                "Status"                    = $script:Container.Status
-                "Name"                      = $script:Container.Name
-                "ContainerType"             = $script:Container.ContainerType
-                "BackupManagementType"      = $script:Container.BackupManagementType
+            $script:Container = $_            
+
+            $script:AzureRmRecoveryServicesBackupItem = Get-AzureRmRecoveryServicesBackupItem -WorkloadType AzureVM -VaultId $script:Vault.Id -Container $script:Container
+
+            $script:AzureRmRecoveryServicesBackupItem | ForEach-Object {
+                $script:BackupItem = $_
+                $script:AzureRmRecoveryServicesVaultBackupItemDetail += [PSCustomObject]@{
+                    "Name"                      = "<a href=`"#$($script:BackupItem.VirtualMachineId.ToLower())`">$($script:BackupItem.Name)</a>"
+                    "ContainerType"             = $script:BackupItem.ContainerType
+                    "ContainerName"             = $script:BackupItem.ContainerName
+                    "WorkloadType"              = $script:BackupItem.WorkloadType
+                    "ProtectionPolicyName"      = $script:BackupItem.ProtectionPolicyName
+                    "ProtectionStatus"          = $script:BackupItem.ProtectionStatus
+                }
             }
+
         }
 
+        <#
+        # TODO:https://github.com/Azure/azure-powershell/issues/6595
+        # Check Azure Agent Backup
         $script:AzureRmRecoveryServicesVaultContainer = Get-AzureRmRecoveryServicesBackupContainer -ContainerType Windows -BackupManagementType MARS -VaultId $script:Vault.Id
-        
+
         $script:AzureRmRecoveryServicesVaultContainer | ForEach-Object {
-            $script:Container = $_
-            $script:AzureRmRecoveryServicesVaultContainerDetail += [PSCustomObject]@{
-                "ResourceGroupName"         = $script:Container.ResourceGroupName
-                "FriendlyName"              = $script:Container.FriendlyName
-                "Status"                    = $script:Container.Status
-                "Name"                      = $script:Container.Name
-                "ContainerType"             = $script:Container.ContainerType
-                "BackupManagementType"      = $script:Container.BackupManagementType
+            $script:Container = $_            
+
+            $script:AzureRmRecoveryServicesBackupItem = Get-AzureRmRecoveryServicesBackupItem -WorkloadType AzureVM -VaultId $script:Vault.Id -Container $script:Container
+ $script:Container
+            $script:AzureRmRecoveryServicesBackupItem | ForEach-Object {
+                $script:BackupItem = $_
+                $script:AzureRmRecoveryServicesVaultBackupItemDetail += [PSCustomObject]@{
+                    "VirtualMachineId"          = "<a name=`"$($_.Id.ToLower())`">$($_.Name)</a>"
+                    "Name"                      = $script:BackupItem.Name
+                    "ContainerType"             = $script:BackupItem.ContainerType
+                    "ContainerUniqueName"       = $script:BackupItem.ContainerUniqueName
+                    "WorkloadType"              = $script:BackupItem.WorkloadType
+                    "ProtectionStatus"          = $script:BackupItem.ProtectionStatus
+                }
             }
+
         }
+        #>
 
         $script:AzureRmRecoveryServicesBackupStorageRedundancy = (Get-AzureRmRecoveryServicesBackupProperties -Vault $script:Vault).BackupStorageRedundancy
 
-        $script:AzureRmRecoveryServicesVaultContainerDetailTable  = New-HTMLTable -InputObject $script:AzureRmRecoveryServicesVaultContainerDetail
+        $script:AzureRmRecoveryServicesVaultBackupItemDetailTable  = New-HTMLTable -InputObject $script:AzureRmRecoveryServicesVaultBackupItemDetail
         $script:AzureRmRecoveryServicesVaultDetail = [PSCustomObject]@{
             "Name"                          = $script:Vault.Name
             "ResourceGroupName"             = $script:Vault.ResourceGroupName
@@ -48,7 +67,7 @@ function Save-AzureRmRecoveryServicesVault{
             "Type"                          = $script:Vault.Type
             "BackupStorageRedundancy"       = $script:AzureRmRecoveryServicesBackupStorageRedundancy
             "ProvisioningState"             = $script:Vault.Properties.ProvisioningState
-            "Container"                     = $script:AzureRmRecoveryServicesVaultContainerDetailTable
+            "Container"                     = $script:AzureRmRecoveryServicesVaultBackupItemDetailTable
         }
         $script:AzureRmRecoveryServicesVaultDetailTable = New-HTMLTable -InputObject (ConvertTo-PropertyValue -InputObject $script:AzureRmRecoveryServicesVaultDetail) 
 
