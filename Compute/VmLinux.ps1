@@ -128,7 +128,7 @@ function Save-AzureRmVmLinuxTable{
                     "Publisher"                 = $_.Publisher
                     "ExtensionType"             = $_.ExtensionType
                     "TypeHandlerVersion"        = $_.TypeHandlerVersion
-                    "Id"                        = $_.Id
+                    #"Id"                        = $_.Id
                     "PublicSettings"            = $_.PublicSettings
                     "ProtectedSettings"         = $_.ProtectedSettings
                     "ProvisioningState"         = $_.ProvisioningState
