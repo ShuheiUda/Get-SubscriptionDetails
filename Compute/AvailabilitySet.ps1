@@ -3,9 +3,12 @@ function Save-AzureRmAvailabilitySetTable{
     $script:AzureRmAvailabilitySet | foreach{
         $script:AzureRmAvailabilitySetVirtualMachineReferences = @()
         
-        $_.VirtualMachinesReferences.id | foreach{
-            $script:AzureRmAvailabilitySetVirtualMachineReferences += "<a href=`"#$($_.ToLower())`">$_</a>"
+        if ( $_.VirtualMachinesReferences.id -ne $null ){
+            $_.VirtualMachinesReferences.id | foreach{
+                $script:AzureRmAvailabilitySetVirtualMachineReferences += "<a href=`"#$($_.ToLower())`">$_</a>"
+            }
         }
+
         $script:AzureRmAvailabilitySetDetail = [PSCustomObject]@{
             "Name"                      = $_.Name
             "ResourceGroupName"         = $_.ResourceGroupName
