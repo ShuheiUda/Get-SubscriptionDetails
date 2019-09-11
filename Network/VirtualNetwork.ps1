@@ -58,7 +58,7 @@ function Save-AzVirtualNetworkTable{
                     "AllowGatewayTransit"               = $_.AllowGatewayTransit
                     "UseRemoteGateways"                 = $_.UseRemoteGateways
                     "RemoteGateways"                    = $_.RemoteGateways
-                    "RemoteVirtualNetworkAddressSpace"  = $_.RemoteVirtualNetworkAddressSpace
+                    "RemoteVirtualNetworkAddressSpace"  = $_.RemoteVirtualNetworkAddressSpace.AddressPrefixes -join "<br>"
                 }
                 $script:AzVirtualNetworkPeeringsDetailTable = New-HTMLTable -InputObject $script:AzVirtualNetworkPeeringsDetail
             }

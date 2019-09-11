@@ -1,5 +1,3 @@
-
-
 function Save-AzDnsZoneTable{
     $script:AzDnsZoneTable = @()
     $script:AzDnsZone | foreach{

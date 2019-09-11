@@ -1,22 +1,22 @@
 
-function Save-AzureRmExpressRouteCircuitTable{
-    $script:AzureRmExpressRouteCircuitTable = @()
-    if($script:AzureRmExpressRouteCircuit -ne $null){
-        $script:AzureRmExpressRouteCircuit | foreach{
-            $AzureRmExpressRouteCircuitName = $_.Name
-            $AzureRmExpressRouteCircuitResourceGroupName = $_.ResourceGroupName
-            $script:AzureRmExpressRouteCircuitPeeringsDetail = @()
+function Save-AzExpressRouteCircuitTable{
+    $script:AzExpressRouteCircuitTable = @()
+    if($script:AzExpressRouteCircuit -ne $null){
+        $script:AzExpressRouteCircuit | foreach{
+            $AzExpressRouteCircuitName = $_.Name
+            $AzExpressRouteCircuitResourceGroupName = $_.ResourceGroupName
+            $script:AzExpressRouteCircuitPeeringsDetail = @()
             if($_.peerings -ne $null){
                 $_.Peerings | foreach{
-                    $script:AzureRmExpressRouteCircuitPeeringARPTablePrimaryDetail = @()
-                    $script:AzureRmExpressRouteCircuitPeeringARPTableSecondaryDetail = @()
-                    $script:AzureRmExpressRouteCircuitPeeringARPTablePrimaryDetailTable = $null
-                    $script:AzureRmExpressRouteCircuitPeeringARPTableSecondaryDetailTable = $null
-                    $script:AzureRmExpressRouteCircuitPeeringARPTablePrimary = Get-AzureRmExpressRouteCircuitARPTable -ExpressRouteCircuitName $AzureRmExpressRouteCircuitName -ResourceGroupName $AzureRmExpressRouteCircuitResourceGroupName -PeeringType $_.PeeringType -DevicePath Primary
-                    $script:AzureRmExpressRouteCircuitPeeringARPTableSecondary = Get-AzureRmExpressRouteCircuitARPTable -ExpressRouteCircuitName $AzureRmExpressRouteCircuitName -ResourceGroupName $AzureRmExpressRouteCircuitResourceGroupName -PeeringType $_.PeeringType -DevicePath Secondary
+                    $script:AzExpressRouteCircuitPeeringARPTablePrimaryDetail = @()
+                    $script:AzExpressRouteCircuitPeeringARPTableSecondaryDetail = @()
+                    $script:AzExpressRouteCircuitPeeringARPTablePrimaryDetailTable = $null
+                    $script:AzExpressRouteCircuitPeeringARPTableSecondaryDetailTable = $null
+                    $script:AzExpressRouteCircuitPeeringARPTablePrimary = Get-AzExpressRouteCircuitARPTable -ExpressRouteCircuitName $AzExpressRouteCircuitName -ResourceGroupName $AzExpressRouteCircuitResourceGroupName -PeeringType $_.PeeringType -DevicePath Primary
+                    $script:AzExpressRouteCircuitPeeringARPTableSecondary = Get-AzExpressRouteCircuitARPTable -ExpressRouteCircuitName $AzExpressRouteCircuitName -ResourceGroupName $AzExpressRouteCircuitResourceGroupName -PeeringType $_.PeeringType -DevicePath Secondary
 
-                    $script:AzureRmExpressRouteCircuitPeeringARPTablePrimary | foreach{
-                        $script:AzureRmExpressRouteCircuitPeeringARPTablePrimaryDetail += [PSCustomObject]@{
+                    $script:AzExpressRouteCircuitPeeringARPTablePrimary | foreach{
+                        $script:AzExpressRouteCircuitPeeringARPTablePrimaryDetail += [PSCustomObject]@{
                             "DevicePath"                    = "Primary"
                             "Age"                           = $_.Age
                             "InterfaceProperty"             = $_.InterfaceProperty
@@ -24,10 +24,10 @@ function Save-AzureRmExpressRouteCircuitTable{
                             "MacAddress"                    = $_.MacAddress
                         }
                     }
-                    $script:AzureRmExpressRouteCircuitPeeringARPTablePrimaryDetailTable = New-HTMLTable -InputObject $script:AzureRmExpressRouteCircuitPeeringARPTablePrimaryDetail
+                    $script:AzExpressRouteCircuitPeeringARPTablePrimaryDetailTable = New-HTMLTable -InputObject $script:AzExpressRouteCircuitPeeringARPTablePrimaryDetail
 
-                    $script:AzureRmExpressRouteCircuitPeeringARPTableSecondary | foreach{
-                        $script:AzureRmExpressRouteCircuitPeeringARPTableSecondaryDetail += [PSCustomObject]@{
+                    $script:AzExpressRouteCircuitPeeringARPTableSecondary | foreach{
+                        $script:AzExpressRouteCircuitPeeringARPTableSecondaryDetail += [PSCustomObject]@{
                             "DevicePath"                    = "Secondary"
                             "Age"                           = $_.Age
                             "InterfaceProperty"             = $_.InterfaceProperty
@@ -35,17 +35,17 @@ function Save-AzureRmExpressRouteCircuitTable{
                             "MacAddress"                    = $_.MacAddress
                         }
                     }
-                    $script:AzureRmExpressRouteCircuitPeeringARPTableSecondaryDetailTable = New-HTMLTable -InputObject $script:AzureRmExpressRouteCircuitPeeringARPTableSecondaryDetail
+                    $script:AzExpressRouteCircuitPeeringARPTableSecondaryDetailTable = New-HTMLTable -InputObject $script:AzExpressRouteCircuitPeeringARPTableSecondaryDetail
 
-                    $script:AzureRmExpressRouteCircuitPeeringRouteTablePrimaryDetail = @()
-                    $script:AzureRmExpressRouteCircuitPeeringRouteTableSecondaryDetail = @()
-                    $script:AzureRmExpressRouteCircuitPeeringRouteTablePrimaryDetailTable = $null
-                    $script:AzureRmExpressRouteCircuitPeeringRouteTableSecondaryDetailTable = $null
-                    $script:AzureRmExpressRouteCircuitPeeringRouteTablePrimary = Get-AzureRmExpressRouteCircuitRouteTable -ExpressRouteCircuitName $AzureRmExpressRouteCircuitName -ResourceGroupName $AzureRmExpressRouteCircuitResourceGroupName -PeeringType $_.PeeringType -DevicePath Primary
-                    $script:AzureRmExpressRouteCircuitPeeringRouteTableSecondary = Get-AzureRmExpressRouteCircuitRouteTable -ExpressRouteCircuitName $AzureRmExpressRouteCircuitName -ResourceGroupName $AzureRmExpressRouteCircuitResourceGroupName -PeeringType $_.PeeringType -DevicePath Secondary
+                    $script:AzExpressRouteCircuitPeeringRouteTablePrimaryDetail = @()
+                    $script:AzExpressRouteCircuitPeeringRouteTableSecondaryDetail = @()
+                    $script:AzExpressRouteCircuitPeeringRouteTablePrimaryDetailTable = $null
+                    $script:AzExpressRouteCircuitPeeringRouteTableSecondaryDetailTable = $null
+                    $script:AzExpressRouteCircuitPeeringRouteTablePrimary = Get-AzExpressRouteCircuitRouteTable -ExpressRouteCircuitName $AzExpressRouteCircuitName -ResourceGroupName $AzExpressRouteCircuitResourceGroupName -PeeringType $_.PeeringType -DevicePath Primary
+                    $script:AzExpressRouteCircuitPeeringRouteTableSecondary = Get-AzExpressRouteCircuitRouteTable -ExpressRouteCircuitName $AzExpressRouteCircuitName -ResourceGroupName $AzExpressRouteCircuitResourceGroupName -PeeringType $_.PeeringType -DevicePath Secondary
 
-                    $script:AzureRmExpressRouteCircuitPeeringRouteTablePrimary | foreach{
-                        $script:AzureRmExpressRouteCircuitPeeringRouteTablePrimaryDetail += [PSCustomObject]@{
+                    $script:AzExpressRouteCircuitPeeringRouteTablePrimary | foreach{
+                        $script:AzExpressRouteCircuitPeeringRouteTablePrimaryDetail += [PSCustomObject]@{
                             "DevicePath"                    = "Primary"
                             "Network"                       = $_.Network
                             "NextHop"                       = $_.NextHop
@@ -54,10 +54,10 @@ function Save-AzureRmExpressRouteCircuitTable{
                             "Weight"                        = $_.Weight
                         }
                     }
-                    $script:AzureRmExpressRouteCircuitPeeringRouteTablePrimaryDetailTable = New-HTMLTable -InputObject $script:AzureRmExpressRouteCircuitPeeringRouteTablePrimaryDetail
+                    $script:AzExpressRouteCircuitPeeringRouteTablePrimaryDetailTable = New-HTMLTable -InputObject $script:AzExpressRouteCircuitPeeringRouteTablePrimaryDetail
 
-                    $script:AzureRmExpressRouteCircuitPeeringRouteTableSecondary | foreach{
-                        $script:AzureRmExpressRouteCircuitPeeringRouteTableSecondaryDetail += [PSCustomObject]@{
+                    $script:AzExpressRouteCircuitPeeringRouteTableSecondary | foreach{
+                        $script:AzExpressRouteCircuitPeeringRouteTableSecondaryDetail += [PSCustomObject]@{
                             "DevicePath"                    = "Secondary"
                             "Network"                       = $_.Network
                             "NextHop"                       = $_.NextHop
@@ -66,9 +66,9 @@ function Save-AzureRmExpressRouteCircuitTable{
                             "Weight"                        = $_.Weight
                         }
                     }
-                    $script:AzureRmExpressRouteCircuitPeeringRouteTableSecondaryDetailTable = New-HTMLTable -InputObject $script:AzureRmExpressRouteCircuitPeeringRouteTableSecondaryDetail
+                    $script:AzExpressRouteCircuitPeeringRouteTableSecondaryDetailTable = New-HTMLTable -InputObject $script:AzExpressRouteCircuitPeeringRouteTableSecondaryDetail
 
-                    $script:AzureRmExpressRouteCircuitPeeringsDetail += [PSCustomObject]@{
+                    $script:AzExpressRouteCircuitPeeringsDetail += [PSCustomObject]@{
                         "Name"                                            = $_.Name
                         "ProvisioningState"                               = $_.ProvisioningState
                         "PeeringType"                                     = $_.PeeringType
@@ -86,29 +86,29 @@ function Save-AzureRmExpressRouteCircuitTable{
                         "MicrosoftPeeringConfig.AdvertisedPublicPrefixes" = $_.MicrosoftPeeringConfig.AdvertisedPublicPrefixes
                         "MicrosoftPeeringConfig.LegacyMode"               = $_.MicrosoftPeeringConfig.LegacyMode
                         "LastModifiedBy"                                  = $_.LastModifiedBy
-                        "ARPTable.Primary"                                = $script:AzureRmExpressRouteCircuitPeeringARPTablePrimaryDetailTable
-                        "ARPTable.Secondary"                              = $script:AzureRmExpressRouteCircuitPeeringARPTableSecondaryDetailTable
-                        "RouteTable.Primary"                              = $script:AzureRmExpressRouteCircuitPeeringRouteTablePrimaryDetailTable
-                        "RouteTable.Secondary"                            = $script:AzureRmExpressRouteCircuitPeeringRouteTableSecondaryDetailTable
+                        "ARPTable.Primary"                                = $script:AzExpressRouteCircuitPeeringARPTablePrimaryDetailTable
+                        "ARPTable.Secondary"                              = $script:AzExpressRouteCircuitPeeringARPTableSecondaryDetailTable
+                        "RouteTable.Primary"                              = $script:AzExpressRouteCircuitPeeringRouteTablePrimaryDetailTable
+                        "RouteTable.Secondary"                            = $script:AzExpressRouteCircuitPeeringRouteTableSecondaryDetailTable
                     }
                 }
-                $script:AzureRmExpressRouteCircuitPeeringsDetailTable = New-HTMLTable -InputObject $script:AzureRmExpressRouteCircuitPeeringsDetail
+                $script:AzExpressRouteCircuitPeeringsDetailTable = New-HTMLTable -InputObject $script:AzExpressRouteCircuitPeeringsDetail
             }
 
-            $script:AzureRmExpressRouteCircuitAuthorizationDetail = @()
-            $script:AzureRmExpressRouteCircuitAuthorizationDetailTable = $null
+            $script:AzExpressRouteCircuitAuthorizationDetail = @()
+            $script:AzExpressRouteCircuitAuthorizationDetailTable = $null
             $_.Authorizations | foreach{
-                $script:AzureRmExpressRouteCircuitAuthorizationDetail += [PSCustomObject]@{
+                $script:AzExpressRouteCircuitAuthorizationDetail += [PSCustomObject]@{
                     "Name"                      = $_.Name
                     "ProvisioningState"         = $_.ProvisioningState
                     "AuthorizationKey"          = $_.AuthorizationKey
                     "AuthorizationUseStatus"    = $_.AuthorizationUseStatus
                     "Id"                        = $_.Id
                 }
-                $script:AzureRmExpressRouteCircuitAuthorizationDetailTable = New-HTMLTable -InputObject $script:AzureRmExpressRouteCircuitAuthorizationDetail
+                $script:AzExpressRouteCircuitAuthorizationDetailTable = New-HTMLTable -InputObject $script:AzExpressRouteCircuitAuthorizationDetail
             }
 
-            $script:AzureRmExpressRouteCircuitDetail = [PSCustomObject]@{
+            $script:AzExpressRouteCircuitDetail = [PSCustomObject]@{
                 "Name"                              = $_.Name
                 "ResourceGroupName"                 = $_.ResourceGroupName
                 "ServiceKey"                        = $_.ServiceKey
@@ -123,13 +123,13 @@ function Save-AzureRmExpressRouteCircuitTable{
                 "BandwidthInMbps"                   = $_.ServiceProviderProperties.BandwidthInMbps
                 "ServiceProviderNotes"              = $_.ServiceProviderNotes
                 "AllowClassicOperations"            = $_.AllowClassicOperations
-                "Stats"                             = New-HTMLTable -InputObject ($_ | Get-AzureRmExpressRouteCircuitStats)
-                "Authorization"                     = $script:AzureRmExpressRouteCircuitAuthorizationDetailTable
-                "Peerings"                          = ConvertTo-DetailView -InputObject $script:AzureRmExpressRouteCircuitPeeringsDetailTable
+                "Stats"                             = New-HTMLTable -InputObject ($_ | Get-AzExpressRouteCircuitStats)
+                "Authorization"                     = $script:AzExpressRouteCircuitAuthorizationDetailTable
+                "Peerings"                          = ConvertTo-DetailView -InputObject $script:AzExpressRouteCircuitPeeringsDetailTable
             }
-            $script:AzureRmExpressRouteCircuitDetailTable = New-HTMLTable -InputObject (ConvertTo-PropertyValue -InputObject $script:AzureRmExpressRouteCircuitDetail)
+            $script:AzExpressRouteCircuitDetailTable = New-HTMLTable -InputObject (ConvertTo-PropertyValue -InputObject $script:AzExpressRouteCircuitDetail)
 
-            $script:AzureRmExpressRouteCircuitTable += [PSCustomObject]@{
+            $script:AzExpressRouteCircuitTable += [PSCustomObject]@{
                 "Name"                              = "<a name=`"$($_.Id.ToLower())`">$($_.Name)</a>"
                 "ResourceGroupName"                 = $_.ResourceGroupName
                 "ServiceKey"                        = $_.ServiceKey
@@ -141,10 +141,10 @@ function Save-AzureRmExpressRouteCircuitTable{
                 "PeeringLocation"                   = $_.ServiceProviderProperties.PeeringLocation
                 "BandwidthInMbps"                   = $_.ServiceProviderProperties.BandwidthInMbps
                 "AllowClassicOperations"            = $_.AllowClassicOperations
-                "Detail"                            = ConvertTo-DetailView -InputObject $script:AzureRmExpressRouteCircuitDetailTable
+                "Detail"                            = ConvertTo-DetailView -InputObject $script:AzExpressRouteCircuitDetailTable
             }
         }
     }
     $script:Report += "<h3>ExpressRoute Circuit</h3>"
-    $script:Report += ConvertTo-SummaryView -InputObject (Add-ProvisioningStateColor(New-ResourceHTMLTable -InputObject $script:AzureRmExpressRouteCircuitTable))
+    $script:Report += ConvertTo-SummaryView -InputObject (Add-ProvisioningStateColor(New-ResourceHTMLTable -InputObject $script:AzExpressRouteCircuitTable))
 }

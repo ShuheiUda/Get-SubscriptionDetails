@@ -26,7 +26,7 @@ If a subscription ID is specified, subscription-wide information will be provide
 
 Param(
     [Parameter(Mandatory=$true)][string]$SubscriptionID,
-    [string]$OutputFolder = "$HOME\Get-SubscriptionDetails",
+    [string]$OutputFolder = "$HOME\output\Get-SubscriptionDetails",
     [switch]$SkipAuth,
     [switch]$Compute,
     [switch]$Network,
@@ -769,6 +769,7 @@ function Save-AzureReportFooter{
     $Date = (Get-Date -Format yyyyMMdd_HHmmss)
     $global:ReportPath = "$OutputFolder\$SubscriptionID-$Date.htm"
     Set-Content $global:ReportPath $script:Report
+    . $global:ReportPath
 }
 
 # Call save function
