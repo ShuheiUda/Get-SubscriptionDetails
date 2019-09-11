@@ -26,7 +26,7 @@ If a subscription ID is specified, subscription-wide information will be provide
 
 Param(
     [Parameter(Mandatory=$true)][string]$SubscriptionID,
-    [string]$OutputFolder = "$env:USERPROFILE\Desktop\Get-SubscriptionDetails",
+    [string]$OutputFolder = "$env:USERPROFILE\Get-SubscriptionDetails",
     [switch]$SkipAuth,
     [switch]$Compute,
     [switch]$Network,
@@ -35,7 +35,7 @@ Param(
 )
 
 # Load Compute
-."Compute\AvailabilitySet.ps1"
+.".\Compute\AvailabilitySet.ps1"
 .".\Compute\VmLinux.ps1"
 .".\Compute\VmWindows.ps1"
 
@@ -477,13 +477,6 @@ function Initialize{
     }
     Write-Log "Success: Version Check" -Color Green
 
-    # Module Check
-    if(Test-Path "C:\Program Files (x86)\Microsoft SDKs\Azure\PowerShell\ServiceManagement\Azure\Azure.psd1"){
-        Import-Module "C:\Program Files (x86)\Microsoft SDKs\Azure\PowerShell\ServiceManagement\Azure\Azure.psd1"
-    }
-    if(Test-Path "C:\Program Files (x86)\Microsoft SDKs\Azure\PowerShell\ServiceManagement\Azure\ExpressRoute\ExpressRoute.psd1"){
-        Import-Module "C:\Program Files (x86)\Microsoft SDKs\Azure\PowerShell\ServiceManagement\Azure\ExpressRoute\ExpressRoute.psd1"
-    }
 }
 
 # Get Information
