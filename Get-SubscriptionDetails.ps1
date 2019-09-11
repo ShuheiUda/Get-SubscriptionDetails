@@ -26,7 +26,7 @@ If a subscription ID is specified, subscription-wide information will be provide
 
 Param(
     [Parameter(Mandatory=$true)][string]$SubscriptionID,
-    [string]$OutputFolder = "$env:USERPROFILE\Get-SubscriptionDetails",
+    [string]$OutputFolder = "$HOME\Get-SubscriptionDetails",
     [switch]$SkipAuth,
     [switch]$Compute,
     [switch]$Network,
