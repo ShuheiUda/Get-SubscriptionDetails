@@ -20,7 +20,7 @@ function Save-AzNetworkSecurityGroupTable{
             }
         }
         if($_.SecurityRules -ne $null){
-            $_.SecurityRules | foreach{
+            $_.SecurityRules | Sort-Object -Property Direction,Priority | foreach{
                 $script:AzNetworkSecurityGroupSecurityRulesDetail += [PSCustomObject]@{
                     "Name"                                  = $_.Name
                     "ProvisioningState"                     = $_.ProvisioningState
@@ -40,7 +40,7 @@ function Save-AzNetworkSecurityGroupTable{
         }
         
         if($_.DefaultSecurityRules -ne $null){
-            $_.DefaultSecurityRules | foreach{
+            $_.DefaultSecurityRules | Sort-Object -Property Direction,Priority | foreach{
                 $script:AzNetworkSecurityGroupDefaultSecurityRulesDetail += [PSCustomObject]@{
                     "Name"                                  = $_.Name
                     "ProvisioningState"                     = $_.ProvisioningState
