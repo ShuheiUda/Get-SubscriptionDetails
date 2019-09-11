@@ -1,11 +1,11 @@
 
-function Save-AzureRmImageTable{
-    $script:AzureRmImageTable = @()
-    if($script:AzureRmImage -ne $null){
-        $script:AzureRmImage | foreach{
-            $script:AzureRmImageStorageProfileOsDiskDetail = @()
-            $script:AzureRmImageStorageProfileOsDiskDetailTable = @()
-            $script:AzureRmImageStorageProfileOsDiskDetail = [PSCustomObject]@{
+function Save-AzImageTable{
+    $script:AzImageTable = @()
+    if($script:AzImage -ne $null){
+        $script:AzImage | foreach{
+            $script:AzImageStorageProfileOsDiskDetail = @()
+            $script:AzImageStorageProfileOsDiskDetailTable = @()
+            $script:AzImageStorageProfileOsDiskDetail = [PSCustomObject]@{
                 "OsType"                    = $_.StorageProfile.OsDisk.OsType
                 "OsState"                   = $_.StorageProfile.OsDisk.OsState
                 "StorageAccountType"        = $_.StorageProfile.OsDisk.StorageAccountType
@@ -15,13 +15,13 @@ function Save-AzureRmImageTable{
                 "ManagedDisk"               = $_.StorageProfile.OsDisk.ManagedDisk.Id
                 "BlobUri"                   = $_.StorageProfile.OsDisk.BlobUri
             }
-            $script:AzureRmImageStorageProfileOsDiskDetailTable = New-HTMLTable -InputObject $script:AzureRmImageStorageProfileOsDiskDetail
+            $script:AzImageStorageProfileOsDiskDetailTable = New-HTMLTable -InputObject $script:AzImageStorageProfileOsDiskDetail
         
-            $script:AzureRmImageStorageProfileDataDisksDetail = @()
-            $script:AzureRmImageStorageProfileDataDisksDetailTable = @()
+            $script:AzImageStorageProfileDataDisksDetail = @()
+            $script:AzImageStorageProfileDataDisksDetailTable = @()
             if($_.StorageProfile.DataDisks -ne $null){
                 $_.StorageProfile.DataDisks | foreach{
-                    $script:AzureRmImageStorageProfileDataDisksDetail += [PSCustomObject]@{
+                    $script:AzImageStorageProfileDataDisksDetail += [PSCustomObject]@{
                     "Lun"                       = $_.Lun
                     "StorageAccountType"        = $_.StorageAccountType
                     "Caching"                   = $_.Caching
@@ -31,10 +31,10 @@ function Save-AzureRmImageTable{
                     "BlobUri"                   = $_.BlobUri
                     }
                 }
-                $script:AzureRmImageStorageProfileDataDisksDetailTable = New-HTMLTable -InputObject $script:AzureRmImageStorageProfileDataDisksDetail
+                $script:AzImageStorageProfileDataDisksDetailTable = New-HTMLTable -InputObject $script:AzImageStorageProfileDataDisksDetail
             }
 
-            $script:AzureRmImageDetail = [PSCustomObject]@{
+            $script:AzImageDetail = [PSCustomObject]@{
                 "Name"                          = $_.Name
                 "ResourceGroupName"             = $_.ResourceGroupName
                 "Location"                      = $_.Location
@@ -42,21 +42,21 @@ function Save-AzureRmImageTable{
                 "ProvisioningState"             = $_.ProvisioningState
                 "Type"                          = $_.Type
                 "SourceVirtualMachine"          = $_.SourceVirtualMachine.Id
-                "OsDisk"                        = ConvertTo-DetailView -InputObject $script:AzureRmImageStorageProfileOsDiskDetailTable
-                "DataDisks"                     = ConvertTo-DetailView -InputObject $script:AzureRmImageStorageProfileDataDisksDetailTable
+                "OsDisk"                        = ConvertTo-DetailView -InputObject $script:AzImageStorageProfileOsDiskDetailTable
+                "DataDisks"                     = ConvertTo-DetailView -InputObject $script:AzImageStorageProfileDataDisksDetailTable
             }
-            $script:AzureRmImageDetailTable = New-HTMLTable -InputObject (ConvertTo-PropertyValue -InputObject $script:AzureRmImageDetail) 
+            $script:AzImageDetailTable = New-HTMLTable -InputObject (ConvertTo-PropertyValue -InputObject $script:AzImageDetail) 
 
-            $script:AzureRmImageTable += [PSCustomObject]@{
+            $script:AzImageTable += [PSCustomObject]@{
                 "Name"                          = "<a name=`"$($_.Id.ToLower())`">$($_.Name)</a>"
                 "ResourceGroupName"             = $_.ResourceGroupName
                 "Location"                      = $_.Location
                 "ProvisioningState"             = $_.ProvisioningState
-                "Detail"                        = ConvertTo-DetailView -InputObject $script:AzureRmImageDetailTable
+                "Detail"                        = ConvertTo-DetailView -InputObject $script:AzImageDetailTable
             }
         }
     }
 
     $script:Report += "<h3>Managed Disk (Image)</h3>"
-    $script:Report += ConvertTo-SummaryView -InputObject (Add-ProvisioningStateColor(New-ResourceHTMLTable -InputObject $Script:AzureRmImageTable))
+    $script:Report += ConvertTo-SummaryView -InputObject (Add-ProvisioningStateColor(New-ResourceHTMLTable -InputObject $Script:AzImageTable))
 }

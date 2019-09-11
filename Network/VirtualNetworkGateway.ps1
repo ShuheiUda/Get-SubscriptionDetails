@@ -1,8 +1,8 @@
 
-function Save-AzureRmVirtualNetworkGatewayTable{
-    $script:AzureRmVirtualNetworkGatewayTable = @()
-    $script:AzureRmVirtualNetworkGateway | foreach{
-        $script:AzureRmVirtualNetworkGatewayDetail = [PSCustomObject]@{
+function Save-AzVirtualNetworkGatewayTable{
+    $script:AzVirtualNetworkGatewayTable = @()
+    $script:AzVirtualNetworkGateway | foreach{
+        $script:AzVirtualNetworkGatewayDetail = [PSCustomObject]@{
             "Name"                          = $_.Name
             "ResourceGroupName"             = $_.ResourceGroupName
             "Location"                      = $_.Location
@@ -24,18 +24,18 @@ function Save-AzureRmVirtualNetworkGatewayTable{
             "BgpPeeringAddress"             = $_.BgpSettings.BgpPeeringAddress
             "PeerWeight"                    = $_.BgpSettings.PeerWeight
         }
-        $script:AzureRmVirtualNetworkGatewayDetailTable = New-HTMLTable -InputObject (ConvertTo-PropertyValue -InputObject $script:AzureRmVirtualNetworkGatewayDetail)
+        $script:AzVirtualNetworkGatewayDetailTable = New-HTMLTable -InputObject (ConvertTo-PropertyValue -InputObject $script:AzVirtualNetworkGatewayDetail)
 
-        $script:AzureRmVirtualNetworkGatewayTable += [PSCustomObject]@{
+        $script:AzVirtualNetworkGatewayTable += [PSCustomObject]@{
             "Name"                          = "<a name=`"$($_.Id.ToLower())`">$($_.Name)</a>"
             "ResourceGroupName"             = $_.ResourceGroupName
             "Location"                      = $_.Location
             "ProvisioningState"             = $_.ProvisioningState
             "GatewayType"                   = $_.GatewayType
             "VpnType"                       = $_.VpnType
-            "Detail"                        = ConvertTo-DetailView -InputObject $script:AzureRmVirtualNetworkGatewayDetailTable
+            "Detail"                        = ConvertTo-DetailView -InputObject $script:AzVirtualNetworkGatewayDetailTable
         }
     }
     $script:Report += "<h3>Virtual Network Gateway</h3>"
-    $script:Report += ConvertTo-SummaryView -InputObject (Add-ProvisioningStateColor(New-ResourceHTMLTable -InputObject $script:AzureRmVirtualNetworkGatewayTable))
+    $script:Report += ConvertTo-SummaryView -InputObject (Add-ProvisioningStateColor(New-ResourceHTMLTable -InputObject $script:AzVirtualNetworkGatewayTable))
 }

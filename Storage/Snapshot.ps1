@@ -1,16 +1,16 @@
 
 
-function Save-AzureRmSnapshotTable{
-    $script:AzureRmSnapshotTable = @()
-    $script:AzureRmSnapshot | foreach{
-        $script:AzureRmSnapshotSkuDetailTable = $null
-        $script:AzureRmSnapshotCreationDataDetailTable = $null
+function Save-AzSnapshotTable{
+    $script:AzSnapshotTable = @()
+    $script:AzSnapshot | foreach{
+        $script:AzSnapshotSkuDetailTable = $null
+        $script:AzSnapshotCreationDataDetailTable = $null
 
         if($_.Sku -ne $null){
-            $script:AzureRmSnapshotSkuDetailTable = New-HTMLTable -InputObject $_.Sku
+            $script:AzSnapshotSkuDetailTable = New-HTMLTable -InputObject $_.Sku
         }
         if($_.CreationData -ne $null){
-            $script:AzureRmSnapshotCreationDataDetail = [PSCustomObject]@{
+            $script:AzSnapshotCreationDataDetail = [PSCustomObject]@{
                 "CreateOption"                      = $_.CreationData.CreateOption
                 "StorageAccountId"                  = $_.CreationData.StorageAccountId
                 "ImageReference.Lun"                = $_.CreationData.ImageReference.Lun
@@ -18,14 +18,14 @@ function Save-AzureRmSnapshotTable{
                 "SourceUri"                         = $_.CreationData.SourceUri
                 "SourceResourceId"                  = $_.CreationData.SourceResourceId
             }
-            $script:AzureRmSnapshotCreationDataDetailTable = New-HTMLTable -InputObject $script:AzureRmSnapshotCreationDataDetail
+            $script:AzSnapshotCreationDataDetailTable = New-HTMLTable -InputObject $script:AzSnapshotCreationDataDetail
         }
         
-        $script:AzureRmSnapshotManagedBy = $null
+        $script:AzSnapshotManagedBy = $null
         if($_.ManagedBy -ne $null){
-            $script:AzureRmSnapshotManagedBy = "<a href=`"#$(($_.ManagedBy).ToLower())`">$($_.ManagedBy)</a>"
+            $script:AzSnapshotManagedBy = "<a href=`"#$(($_.ManagedBy).ToLower())`">$($_.ManagedBy)</a>"
         }
-        $script:AzureRmSnapshotDetail = [PSCustomObject]@{
+        $script:AzSnapshotDetail = [PSCustomObject]@{
             "Name"                          = $_.Name
             "ResourceGroupName"             = $_.ResourceGroupName
             "Location"                      = $_.Location
@@ -33,26 +33,26 @@ function Save-AzureRmSnapshotTable{
             "ProvisioningState"             = $_.ProvisioningState
             "TimeCreated"                   = $_.TimeCreated
             "Type"                          = $_.Type
-            "Sku"                           = $script:AzureRmSnapshotSkuDetailTable
+            "Sku"                           = $script:AzSnapshotSkuDetailTable
             "OsType"                        = $_.OsType  
             "DiskSizeGB"                    = $_.DiskSizeGB
-            "CreationData"                  = $script:AzureRmSnapshotCreationDataDetailTable
+            "CreationData"                  = $script:AzSnapshotCreationDataDetailTable
             "EncryptionSettings"            = $_.EncryptionSettings
-            "ManagedBy"                     = $script:AzureRmSnapshotManagedBy
+            "ManagedBy"                     = $script:AzSnapshotManagedBy
         }
-        $script:AzureRmSnapshotDetailTable = New-HTMLTable -InputObject (ConvertTo-PropertyValue -InputObject $script:AzureRmSnapshotDetail) 
+        $script:AzSnapshotDetailTable = New-HTMLTable -InputObject (ConvertTo-PropertyValue -InputObject $script:AzSnapshotDetail) 
 
-        $script:AzureRmSnapshotTable += [PSCustomObject]@{
+        $script:AzSnapshotTable += [PSCustomObject]@{
             "Name"                          = "<a name=`"$($_.Id.ToLower())`">$($_.Name)</a>"
             "ResourceGroupName"             = $_.ResourceGroupName
             "Location"                      = $_.Location
             "ProvisioningState"             = $_.ProvisioningState
             "OsType"                        = $_.OsType  
             "DiskSizeGB"                    = $_.DiskSizeGB
-            "Detail"                    = ConvertTo-DetailView -InputObject $script:AzureRmSnapshotDetailTable
+            "Detail"                    = ConvertTo-DetailView -InputObject $script:AzSnapshotDetailTable
         }
     }
 
     $script:Report += "<h3>Managed Disk (Snapshot)</h3>"
-    $script:Report += ConvertTo-SummaryView -InputObject (Add-ProvisioningStateColor(New-ResourceHTMLTable -InputObject $Script:AzureRmSnapshotTable))
+    $script:Report += ConvertTo-SummaryView -InputObject (Add-ProvisioningStateColor(New-ResourceHTMLTable -InputObject $Script:AzSnapshotTable))
 }

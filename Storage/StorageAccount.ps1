@@ -1,36 +1,36 @@
 
 
-function Save-AzureRmStorageAccountTable{
-    $script:AzureRmStorageAccountTable = @()
-    $script:AzureRmStorageAccount | foreach{
-        $script:AzureRmStorageSkuDetailTable = $null
-        $script:AzureRmStorageNetworkRuleSetDetailTable = $null
-        $script:AzureRmStorageEncryptionDetail = $null
-        $script:AzureRmStorageEncryptionDetailTable = $null
+function Save-AzStorageAccountTable{
+    $script:AzStorageAccountTable = @()
+    $script:AzStorageAccount | foreach{
+        $script:AzStorageSkuDetailTable = $null
+        $script:AzStorageNetworkRuleSetDetailTable = $null
+        $script:AzStorageEncryptionDetail = $null
+        $script:AzStorageEncryptionDetailTable = $null
     
         if($_.Sku -ne $null){
-            $script:AzureRmStorageSkuDetailTable = New-HTMLTable -InputObject $_.Sku
+            $script:AzStorageSkuDetailTable = New-HTMLTable -InputObject $_.Sku
         }
         if($_.NetworkRuleSet -ne $null){
-            $script:AzureRmStorageNetworkRuleSetDetail = [PSCustomObject]@{
+            $script:AzStorageNetworkRuleSetDetail = [PSCustomObject]@{
                 "DefaultAction"             = $_.NetworkRuleSet.DefaultAction
                 "Bypass"                    = $_.NetworkRuleSet.Bypass
                 "VirtualNetworkRules"       = $_.NetworkRuleSet.VirtualNetworkRules
                 "IpRules"                   = $_.NetworkRuleSet.IpRules
             }
-            $script:AzureRmStorageNetworkRuleSetDetailTable = New-HTMLTable -InputObject $script:AzureRmStorageNetworkRuleSetDetail
+            $script:AzStorageNetworkRuleSetDetailTable = New-HTMLTable -InputObject $script:AzStorageNetworkRuleSetDetail
         }
         if($_.Encryption -ne $null){
-            $script:AzureRmStorageEncryptionDetail = [PSCustomObject]@{
+            $script:AzStorageEncryptionDetail = [PSCustomObject]@{
                 "Blob.Enabled"              = $_.Encryption.Services.Blob.Enabled
                 "Blob.LastEnabledTime"      = $_.Encryption.Services.Blob.LastEnabledTime
                 "File.Enabled"              = $_.Encryption.Services.File.Enabled
                 "File.LastEnabledTime"      = $_.Encryption.Services.File.LastEnabledTime
             }
-            $script:AzureRmStorageEncryptionDetailTable = New-HTMLTable -InputObject $script:AzureRmStorageEncryptionDetail
+            $script:AzStorageEncryptionDetailTable = New-HTMLTable -InputObject $script:AzStorageEncryptionDetail
         }
 
-        $script:AzureRmStorageAccountDetail = [PSCustomObject]@{
+        $script:AzStorageAccountDetail = [PSCustomObject]@{
             "StorageAccountName"            = $_.StorageAccountName
             "ResourceGroupName"             = $_.ResourceGroupName
             "Location"                      = $_.Location
@@ -39,12 +39,12 @@ function Save-AzureRmStorageAccountTable{
             "CreationTime"                  = $_.CreationTime
             "LastGeoFailoverTime"           = $_.LastGeoFailoverTime
             "CustomDomain"                  = $_.CustomDomain.Name
-            "Sku"                           = $script:AzureRmStorageSkuDetailTable
+            "Sku"                           = $script:AzStorageSkuDetailTable
             "Kind"                          = $_.Kind
             "AccessTier"                    = $_.AccessTier
             "EnableHttpsTrafficOnly"        = $_.EnableHttpsTrafficOnly
-            "Encryption"                    = $script:AzureRmStorageEncryptionDetailTable
-            "NetworkRuleSet"                = $script:AzureRmStorageNetworkRuleSetDetailTable
+            "Encryption"                    = $script:AzStorageEncryptionDetailTable
+            "NetworkRuleSet"                = $script:AzStorageNetworkRuleSetDetailTable
             "PrimaryLocation"               = $_.PrimaryLocation
             "PrimaryEndpoints"              = $_.PrimaryEndpoints.Blob
             "StatusOfPrimary"               = $_.StatusOfPrimary
@@ -52,18 +52,18 @@ function Save-AzureRmStorageAccountTable{
             "SecondaryEndpoints"            = $_.SecondaryEndpoints.Blob
             "StatusOfSecondary"             = $_.StatusOfSecondary;            
         }
-        $script:AzureRmStorageAccountDetailTable = New-HTMLTable -InputObject (ConvertTo-PropertyValue -InputObject $script:AzureRmStorageAccountDetail) 
+        $script:AzStorageAccountDetailTable = New-HTMLTable -InputObject (ConvertTo-PropertyValue -InputObject $script:AzStorageAccountDetail) 
 
-        $script:AzureRmStorageAccountTable += [PSCustomObject]@{
+        $script:AzStorageAccountTable += [PSCustomObject]@{
             "StorageAccountName"        = "<a name=`"$($_.Id.ToLower())`">$($_.StorageAccountName)</a>"
             "ResourceGroupName"         = $_.ResourceGroupName
             "Sku"                       = $_.Sku.Name
             "StatusOfPrimary"           = $_.StatusOfPrimary
             "Location"                  = $_.Location
             "ProvisioningState"         = $_.ProvisioningState
-            "Detail"                    = ConvertTo-DetailView -InputObject $script:AzureRmStorageAccountDetailTable
+            "Detail"                    = ConvertTo-DetailView -InputObject $script:AzStorageAccountDetailTable
         }
     }
     $script:Report += "<h3>StorageAccount</h3>"
-    $script:Report += ConvertTo-SummaryView -InputObject (Add-ProvisioningStateColor(New-ResourceHTMLTable -InputObject $script:AzureRmStorageAccountTable))
+    $script:Report += ConvertTo-SummaryView -InputObject (Add-ProvisioningStateColor(New-ResourceHTMLTable -InputObject $script:AzStorageAccountTable))
 }

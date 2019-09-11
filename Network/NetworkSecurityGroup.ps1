@@ -1,8 +1,8 @@
-function Save-AzureRmNetworkSecurityGroupTable{
-    $script:AzureRmNetworkSecurityGroupTable = @()
-    $script:AzureRmNetworkSecurityGroup | foreach{
-        $script:AzureRmNetworkSecurityGroupSecurityRulesDetail = @()
-        $script:AzureRmNetworkSecurityGroupDefaultSecurityRulesDetail = @()
+function Save-AzNetworkSecurityGroupTable{
+    $script:AzNetworkSecurityGroupTable = @()
+    $script:AzNetworkSecurityGroup | foreach{
+        $script:AzNetworkSecurityGroupSecurityRulesDetail = @()
+        $script:AzNetworkSecurityGroupDefaultSecurityRulesDetail = @()
         $NetworkInterfaces = @()
         $Subnets = @()
         $VirtualNetwork = $null
@@ -21,7 +21,7 @@ function Save-AzureRmNetworkSecurityGroupTable{
         }
         if($_.SecurityRules -ne $null){
             $_.SecurityRules | foreach{
-                $script:AzureRmNetworkSecurityGroupSecurityRulesDetail += [PSCustomObject]@{
+                $script:AzNetworkSecurityGroupSecurityRulesDetail += [PSCustomObject]@{
                     "Name"                                  = $_.Name
                     "ProvisioningState"                     = $_.ProvisioningState
                     "Access"                                = $_.Access
@@ -36,12 +36,12 @@ function Save-AzureRmNetworkSecurityGroupTable{
                     "DestinationApplicationSecurityGroups"  = $_.DestinationApplicationSecurityGroups -join ", "
                 }
             }
-        $script:AzureRmNetworkSecurityGroupSecurityRulesDetailTable = New-HTMLTable -InputObject $script:AzureRmNetworkSecurityGroupSecurityRulesDetail
+        $script:AzNetworkSecurityGroupSecurityRulesDetailTable = New-HTMLTable -InputObject $script:AzNetworkSecurityGroupSecurityRulesDetail
         }
         
         if($_.DefaultSecurityRules -ne $null){
             $_.DefaultSecurityRules | foreach{
-                $script:AzureRmNetworkSecurityGroupDefaultSecurityRulesDetail += [PSCustomObject]@{
+                $script:AzNetworkSecurityGroupDefaultSecurityRulesDetail += [PSCustomObject]@{
                     "Name"                                  = $_.Name
                     "ProvisioningState"                     = $_.ProvisioningState
                     "Access"                                = $_.Access
@@ -56,45 +56,45 @@ function Save-AzureRmNetworkSecurityGroupTable{
                     "DestinationApplicationSecurityGroups"  = $_.DestinationApplicationSecurityGroups -join ", "
                 }
             }
-        $script:AzureRmNetworkSecurityGroupDefaultSecurityRulesDetailTable = New-HTMLTable -InputObject $script:AzureRmNetworkSecurityGroupDefaultSecurityRulesDetail
+        $script:AzNetworkSecurityGroupDefaultSecurityRulesDetailTable = New-HTMLTable -InputObject $script:AzNetworkSecurityGroupDefaultSecurityRulesDetail
         }
         
-        $script:AzureRmNetworkSecurityGroupNetworkInterfacesId = @()
+        $script:AzNetworkSecurityGroupNetworkInterfacesId = @()
         if($_.NetworkInterfaces.Id -ne $null){
             $_.NetworkInterfaces.Id | foreach{
-                $script:AzureRmNetworkSecurityGroupNetworkInterfacesId += "<a href=`"#$($_.ToLower())`">$_</a>"
+                $script:AzNetworkSecurityGroupNetworkInterfacesId += "<a href=`"#$($_.ToLower())`">$_</a>"
             }
         }
-        $script:AzureRmNetworkSecurityGroupSubnetsId = @()
+        $script:AzNetworkSecurityGroupSubnetsId = @()
         if($_.Subnets.Id -ne $null){
             $_.Subnets.Id | foreach{
-                $script:AzureRmNetworkSecurityGroupSubnetsId += "<a href=`"#$(($_ -Replace `"/subnets/.*$`",`"`").ToLower())`">$_</a>"
+                $script:AzNetworkSecurityGroupSubnetsId += "<a href=`"#$(($_ -Replace `"/subnets/.*$`",`"`").ToLower())`">$_</a>"
             }
         }
-        $script:AzureRmNetworkSecurityGroupDetail = [PSCustomObject]@{
+        $script:AzNetworkSecurityGroupDetail = [PSCustomObject]@{
         "Name"                      = $_.Name
         "ResourceGroupName"         = $_.ResourceGroupName
         "Location"                  = $_.Location
         "Id"                        = $_.Id
         "ResourceGuid"              = $_.ResourceGuid
         "ProvisioningState"         = $_.ProvisioningState
-        "NetworkInterfaces"         = $script:AzureRmNetworkSecurityGroupNetworkInterfacesId -join "<br>"
-        "Subnets"                   = $script:AzureRmNetworkSecurityGroupSubnetsId -join "<br>"
-        "SecurityRules"             = ConvertTo-DetailView -InputObject $script:AzureRmNetworkSecurityGroupSecurityRulesDetailTable
-        "DefaultSecurityRules"      = ConvertTo-DetailView -InputObject $script:AzureRmNetworkSecurityGroupDefaultSecurityRulesDetailTable
+        "NetworkInterfaces"         = $script:AzNetworkSecurityGroupNetworkInterfacesId -join "<br>"
+        "Subnets"                   = $script:AzNetworkSecurityGroupSubnetsId -join "<br>"
+        "SecurityRules"             = ConvertTo-DetailView -InputObject $script:AzNetworkSecurityGroupSecurityRulesDetailTable
+        "DefaultSecurityRules"      = ConvertTo-DetailView -InputObject $script:AzNetworkSecurityGroupDefaultSecurityRulesDetailTable
         }
-        $script:AzureRmNetworkSecurityGroupDetailTable = New-HTMLTable -InputObject (ConvertTo-PropertyValue -InputObject $script:AzureRmNetworkSecurityGroupDetail)
+        $script:AzNetworkSecurityGroupDetailTable = New-HTMLTable -InputObject (ConvertTo-PropertyValue -InputObject $script:AzNetworkSecurityGroupDetail)
 
-        $script:AzureRmNetworkSecurityGroupTable += [PSCustomObject]@{
+        $script:AzNetworkSecurityGroupTable += [PSCustomObject]@{
             "Name"                      = "<a name=`"$($_.Id.ToLower())`">$($_.Name)</a>"
             "ResourceGroupName"         = $_.ResourceGroupName
             "Location"                  = $_.Location
             "ProvisioningState"         = $_.ProvisioningState
             "NetworkInterfaces"         = $NetworkInterfaces -join ", "
             "Subnets"                   = $Subnets -join ", "
-            "Detail"                    = ConvertTo-DetailView -InputObject $script:AzureRmNetworkSecurityGroupDetailTable
+            "Detail"                    = ConvertTo-DetailView -InputObject $script:AzNetworkSecurityGroupDetailTable
         }
     }
     $script:Report += "<h3>Network Security Group</h3>"
-    $script:Report += ConvertTo-SummaryView -InputObject (Add-ProvisioningStateColor(New-ResourceHTMLTable -InputObject $script:AzureRmNetworkSecurityGroupTable))
+    $script:Report += ConvertTo-SummaryView -InputObject (Add-ProvisioningStateColor(New-ResourceHTMLTable -InputObject $script:AzNetworkSecurityGroupTable))
 }

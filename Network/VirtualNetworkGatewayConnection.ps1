@@ -1,23 +1,23 @@
-function Save-AzureRmVirtualNetworkGatewayConnection{
-    $script:AzureRmVirtualNetworkGatewayConnectionTable = @()
-    $script:AzureRmVirtualNetworkGatewayConnection | foreach{
-        $script:AzureRmVirtualNetworkGatewayConnectionVirtualNetworkGateway1Id = $null
+function Save-AzVirtualNetworkGatewayConnection{
+    $script:AzVirtualNetworkGatewayConnectionTable = @()
+    $script:AzVirtualNetworkGatewayConnection | foreach{
+        $script:AzVirtualNetworkGatewayConnectionVirtualNetworkGateway1Id = $null
         if($_.VirtualNetworkGateway1.Id -ne $null){
-            $script:AzureRmVirtualNetworkGatewayConnectionVirtualNetworkGateway1Id = "<a href=`"#$(($_.VirtualNetworkGateway1.Id).ToLower())`">$($_.VirtualNetworkGateway1.Id)</a>"
+            $script:AzVirtualNetworkGatewayConnectionVirtualNetworkGateway1Id = "<a href=`"#$(($_.VirtualNetworkGateway1.Id).ToLower())`">$($_.VirtualNetworkGateway1.Id)</a>"
         }
-        $script:AzureRmVirtualNetworkGatewayConnectionVirtualNetworkGateway2Id = $null
+        $script:AzVirtualNetworkGatewayConnectionVirtualNetworkGateway2Id = $null
         if($_.VirtualNetworkGateway2.Id -ne $null){
-            $script:AzureRmVirtualNetworkGatewayConnectionVirtualNetworkGateway2Id = "<a href=`"#$(($_.VirtualNetworkGateway2.Id).ToLower())`">$($_.VirtualNetworkGateway2.Id)</a>"
+            $script:AzVirtualNetworkGatewayConnectionVirtualNetworkGateway2Id = "<a href=`"#$(($_.VirtualNetworkGateway2.Id).ToLower())`">$($_.VirtualNetworkGateway2.Id)</a>"
         }
-        $script:AzureRmVirtualNetworkGatewayConnectionLocalNetworkGateway2Id = $null
+        $script:AzVirtualNetworkGatewayConnectionLocalNetworkGateway2Id = $null
         if($_.LocalNetworkGateway2.Id -ne $null){
-            $script:AzureRmVirtualNetworkGatewayConnectionLocalNetworkGateway2Id = "<a href=`"#$(($_.LocalNetworkGateway2.Id).ToLower())`">$($_.LocalNetworkGateway2.Id)</a>"
+            $script:AzVirtualNetworkGatewayConnectionLocalNetworkGateway2Id = "<a href=`"#$(($_.LocalNetworkGateway2.Id).ToLower())`">$($_.LocalNetworkGateway2.Id)</a>"
         }
-        $script:AzureRmVirtualNetworkGatewayConnectionPeerId = $null
+        $script:AzVirtualNetworkGatewayConnectionPeerId = $null
         if($_.Peer.Id -ne $null){
-            $script:AzureRmVirtualNetworkGatewayConnectionPeerId = "<a href=`"#$(($_.Peer.Id).ToLower())`">$($_.Peer.Id)</a>"
+            $script:AzVirtualNetworkGatewayConnectionPeerId = "<a href=`"#$(($_.Peer.Id).ToLower())`">$($_.Peer.Id)</a>"
         }
-        $script:AzureRmVirtualNetworkGatewayConnectionDetail = [PSCustomObject]@{
+        $script:AzVirtualNetworkGatewayConnectionDetail = [PSCustomObject]@{
             "Name"                      = $_.Name
             "ResourceGroupName"         = $_.ResourceGroupName
             "Location"                  = $_.Location
@@ -25,10 +25,10 @@ function Save-AzureRmVirtualNetworkGatewayConnection{
             "Id"                        = $_.Id
             "ResourceGuid"              = $_.ResourceGuid
             "AuthorizationKey"          = $_.AuthorizationKey
-            "VirtualNetworkGateway1"    = $script:AzureRmVirtualNetworkGatewayConnectionVirtualNetworkGateway1Id
-            "VirtualNetworkGateway2"    = $script:AzureRmVirtualNetworkGatewayConnectionVirtualNetworkGateway2Id
-            "LocalNetworkGateway2"      = $script:AzureRmVirtualNetworkGatewayConnectionLocalNetworkGateway2Id
-            "Peer"                      = $script:AzureRmVirtualNetworkGatewayConnectionPeerId
+            "VirtualNetworkGateway1"    = $script:AzVirtualNetworkGatewayConnectionVirtualNetworkGateway1Id
+            "VirtualNetworkGateway2"    = $script:AzVirtualNetworkGatewayConnectionVirtualNetworkGateway2Id
+            "LocalNetworkGateway2"      = $script:AzVirtualNetworkGatewayConnectionLocalNetworkGateway2Id
+            "Peer"                      = $script:AzVirtualNetworkGatewayConnectionPeerId
             "RoutingWeight"             = $_.RoutingWeight
             "SharedKey"                 = $_.SharedKey
             "ConnectionStatus"          = $_.ConnectionStatus
@@ -36,16 +36,16 @@ function Save-AzureRmVirtualNetworkGatewayConnection{
             "IngressBytesTransferred"   = $_.IngressBytesTransferred
             "TunnelConnectionStatus"    = $_.TunnelConnectionStatus
         }
-        $script:AzureRmVirtualNetworkGatewayConnectionDetailTable = New-HTMLTable -InputObject (ConvertTo-PropertyValue -InputObject $script:AzureRmVirtualNetworkGatewayConnectionDetail)
+        $script:AzVirtualNetworkGatewayConnectionDetailTable = New-HTMLTable -InputObject (ConvertTo-PropertyValue -InputObject $script:AzVirtualNetworkGatewayConnectionDetail)
 
-        $script:AzureRmVirtualNetworkGatewayConnectionTable += [PSCustomObject]@{
+        $script:AzVirtualNetworkGatewayConnectionTable += [PSCustomObject]@{
             "Name"                      = "<a name=`"$($_.Id.ToLower())`">$($_.Name)</a>"
             "ResourceGroupName"         = $_.ResourceGroupName
             "Location"                  = $_.Location
             "ProvisioningState"         = $_.ProvisioningState
-            "Detail"                    = ConvertTo-DetailView -InputObject $script:AzureRmVirtualNetworkGatewayConnectionDetailTable
+            "Detail"                    = ConvertTo-DetailView -InputObject $script:AzVirtualNetworkGatewayConnectionDetailTable
         }
     }
     $script:Report += "<h3>Virtual Network Gateway Connection</h3>"
-    $script:Report += ConvertTo-SummaryView -InputObject (Add-ProvisioningStateColor(New-ResourceHTMLTable -InputObject $script:AzureRmVirtualNetworkGatewayConnectionTable))
+    $script:Report += ConvertTo-SummaryView -InputObject (Add-ProvisioningStateColor(New-ResourceHTMLTable -InputObject $script:AzVirtualNetworkGatewayConnectionTable))
 }

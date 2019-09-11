@@ -1,12 +1,12 @@
 
-function Save-AzureRmPublicIpAddressTable{
-    $script:AzureRmPublicIpAddressTable = @()
-    $script:AzureRmPublicIpAddress | foreach{
-        $script:AzureRmPublicIpAddress = $null
+function Save-AzPublicIpAddressTable{
+    $script:AzPublicIpAddressTable = @()
+    $script:AzPublicIpAddress | foreach{
+        $script:AzPublicIpAddress = $null
         if($_.IpConfiguration.Id -ne $null){
-            $script:AzureRmPublicIpAddress = "<a href=`"#$((($_.IpConfiguration.Id) -Replace `"/[frontend]*IPConfigurations/.*$`",`"`").ToLower())`">$($_.IpConfiguration.Id)</a>"
+            $script:AzPublicIpAddress = "<a href=`"#$((($_.IpConfiguration.Id) -Replace `"/[frontend]*IPConfigurations/.*$`",`"`").ToLower())`">$($_.IpConfiguration.Id)</a>"
         }
-        $script:AzureRmPublicIpAddressDetail = [PSCustomObject]@{
+        $script:AzPublicIpAddressDetail = [PSCustomObject]@{
             "Name"                      = $_.Name
             "ResourceGroupName"         = $_.ResourceGroupName
             "Location"                  = $_.Location
@@ -19,14 +19,14 @@ function Save-AzureRmPublicIpAddressTable{
             "IpAddress"                 = $_.IpAddress
             "PublicIpAddressVersion"    = $_.PublicIpAddressVersion
             "IdleTimeoutInMinutes"      = $_.IdleTimeoutInMinutes
-            "IpConfiguration"           = $script:AzureRmPublicIpAddress
+            "IpConfiguration"           = $script:AzPublicIpAddress
             "DomainNameLabel"           = $_.DnsSettings.DomainNameLabel -join "<br>"
             "Fqdn"                      = $_.DnsSettings.Fqdn -join "<br>"
             "ReverseFqdn"               = $_.DnsSettings.ReverseFqdn -join "<br>"
         }
-        $script:AzureRmPublicIpAddressDetailTable = New-HTMLTable -InputObject (ConvertTo-PropertyValue -InputObject $script:AzureRmPublicIpAddressDetail)
+        $script:AzPublicIpAddressDetailTable = New-HTMLTable -InputObject (ConvertTo-PropertyValue -InputObject $script:AzPublicIpAddressDetail)
 
-        $script:AzureRmPublicIpAddressTable += [PSCustomObject]@{
+        $script:AzPublicIpAddressTable += [PSCustomObject]@{
             "Name"                      = "<a name=`"$($_.Id.ToLower())`">$($_.Name)</a>"
             "ResourceGroupName"         = $_.ResourceGroupName
             "Location"                  = $_.Location
@@ -34,9 +34,9 @@ function Save-AzureRmPublicIpAddressTable{
             "PublicIpAllocationMethod"  = $_.PublicIpAllocationMethod
             "IpAddress"                 = $_.IpAddress
             "IdleTimeoutInMinutes"      = $_.IdleTimeoutInMinutes
-            "Detail"                    = ConvertTo-DetailView -InputObject $script:AzureRmPublicIpAddressDetailTable
+            "Detail"                    = ConvertTo-DetailView -InputObject $script:AzPublicIpAddressDetailTable
         }
     }
     $script:Report += "<h3>Public IP Address</h3>"
-    $script:Report += ConvertTo-SummaryView -InputObject (Add-ProvisioningStateColor(New-ResourceHTMLTable -InputObject $script:AzureRmPublicIpAddressTable))
+    $script:Report += ConvertTo-SummaryView -InputObject (Add-ProvisioningStateColor(New-ResourceHTMLTable -InputObject $script:AzPublicIpAddressTable))
 }

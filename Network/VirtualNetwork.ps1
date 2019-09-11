@@ -1,58 +1,58 @@
-function Save-AzureRmVirtualNetworkTable{
-    $script:AzureRmVirtualNetworkTable = @()
-    $script:AzureRmVirtualNetwork | foreach{
-        $script:AzureRmVirtualNetworkSubnetsDetail = @()
+function Save-AzVirtualNetworkTable{
+    $script:AzVirtualNetworkTable = @()
+    $script:AzVirtualNetwork | foreach{
+        $script:AzVirtualNetworkSubnetsDetail = @()
         $_.Subnets | foreach{
-            $script:AzureRmVirtualNetworkSubnetServiceEndpointsDetail = @()
-            $script:AzureRmVirtualNetworkSubnetServiceEndpointsDetailTable = $null
+            $script:AzVirtualNetworkSubnetServiceEndpointsDetail = @()
+            $script:AzVirtualNetworkSubnetServiceEndpointsDetailTable = $null
             if($_.ServiceEndpoints -ne $null){
                 $_.ServiceEndpoints | foreach{
-                    $script:AzureRmVirtualNetworkSubnetServiceEndpointsDetail += [PSCustomObject]@{
+                    $script:AzVirtualNetworkSubnetServiceEndpointsDetail += [PSCustomObject]@{
                         "Service"               = $_.Service
                         "ProvisioningState"     = $_.ProvisioningState
                         "Locations"             = $_.Locations -join ", "
                     }
                 }
-                $script:AzureRmVirtualNetworkSubnetServiceEndpointsDetailTable = New-HTMLTable -InputObject $script:AzureRmVirtualNetworkSubnetServiceEndpointsDetail
+                $script:AzVirtualNetworkSubnetServiceEndpointsDetailTable = New-HTMLTable -InputObject $script:AzVirtualNetworkSubnetServiceEndpointsDetail
             }
 
-            $script:AzureRmVirtualNetworkSubnetsRouteTableId = $null
+            $script:AzVirtualNetworkSubnetsRouteTableId = $null
             if($_.RouteTable.Id -ne $null){
-                $script:AzureRmVirtualNetworkSubnetsRouteTableId = "<a href=`"#$(($_.RouteTable.Id).ToLower())`">$($_.RouteTable.Id)</a>"
+                $script:AzVirtualNetworkSubnetsRouteTableId = "<a href=`"#$(($_.RouteTable.Id).ToLower())`">$($_.RouteTable.Id)</a>"
             }
-            $script:AzureRmVirtualNetworkSubnetsNetworkSecurityGroupId = $null
+            $script:AzVirtualNetworkSubnetsNetworkSecurityGroupId = $null
             if($_.NetworkSecurityGroup.Id -ne $null){
-                $script:AzureRmVirtualNetworkSubnetsNetworkSecurityGroupId = "<a href=`"#$(($_.NetworkSecurityGroup.Id).ToLower())`">$($_.NetworkSecurityGroup.Id)</a>"
+                $script:AzVirtualNetworkSubnetsNetworkSecurityGroupId = "<a href=`"#$(($_.NetworkSecurityGroup.Id).ToLower())`">$($_.NetworkSecurityGroup.Id)</a>"
             }
-            $script:AzureRmVirtualNetworkSubnetsDetail += [PSCustomObject]@{
+            $script:AzVirtualNetworkSubnetsDetail += [PSCustomObject]@{
                 "Name"                      = $_.Name
                 "AddressPrefix"             = $_.AddressPrefix -join ""
                 "ProvisioningState"         = $_.ProvisioningState
-                "RouteTable"                = $script:AzureRmVirtualNetworkSubnetsRouteTableId
-                "NetworkSecurityGroup"      = $script:AzureRmVirtualNetworkSubnetsNetworkSecurityGroupId
-                "ServiceEndpoints"          = $script:AzureRmVirtualNetworkSubnetServiceEndpointsDetailTable
+                "RouteTable"                = $script:AzVirtualNetworkSubnetsRouteTableId
+                "NetworkSecurityGroup"      = $script:AzVirtualNetworkSubnetsNetworkSecurityGroupId
+                "ServiceEndpoints"          = $script:AzVirtualNetworkSubnetServiceEndpointsDetailTable
                 "IpConfigurations"          = $_.IpConfigurations.Id -join  "<br>"
             }
-            $script:AzureRmVirtualNetworkSubnetsDetailTable = New-HTMLTable -InputObject $script:AzureRmVirtualNetworkSubnetsDetail
+            $script:AzVirtualNetworkSubnetsDetailTable = New-HTMLTable -InputObject $script:AzVirtualNetworkSubnetsDetail
         }
         
-        $script:AzureRmVirtualNetworkPeering = Get-AzureRmVirtualNetworkPeering -VirtualNetworkName $_.Name -ResourceGroupName $_.ResourceGroupName
+        $script:AzVirtualNetworkPeering = Get-AzVirtualNetworkPeering -VirtualNetworkName $_.Name -ResourceGroupName $_.ResourceGroupName
 
-        $script:AzureRmVirtualNetworkPeeringsDetail = @()
-        $script:AzureRmVirtualNetworkPeeringsDetailTable = $null
-        $script:AzureRmVirtualNetworkPeeringRemoteVirtualNetworkId = @()
-        if($script:AzureRmVirtualNetworkPeering -ne $null){
-            $script:AzureRmVirtualNetworkPeering | foreach{
+        $script:AzVirtualNetworkPeeringsDetail = @()
+        $script:AzVirtualNetworkPeeringsDetailTable = $null
+        $script:AzVirtualNetworkPeeringRemoteVirtualNetworkId = @()
+        if($script:AzVirtualNetworkPeering -ne $null){
+            $script:AzVirtualNetworkPeering | foreach{
                 $_.RemoteVirtualNetwork.id | foreach{
-                    $script:AzureRmVirtualNetworkPeeringRemoteVirtualNetworkId += "<a href=`"#$($_.ToLower())`">$_</a>"
+                    $script:AzVirtualNetworkPeeringRemoteVirtualNetworkId += "<a href=`"#$($_.ToLower())`">$_</a>"
                 }
-                $script:AzureRmVirtualNetworkPeeringsDetail += [PSCustomObject]@{
+                $script:AzVirtualNetworkPeeringsDetail += [PSCustomObject]@{
                     "Name"                              = $_.Name
                     "ResourceGroupName"                 = $_.ResourceGroupName
                     "ProvisioningState"                 = $_.ProvisioningState
                     "PeeringState"                      = $_.PeeringState
                     "VirtualNetworkName"                = $_.VirtualNetworkName
-                    "RemoteVirtualNetwork"              = $script:AzureRmVirtualNetworkPeeringRemoteVirtualNetworkId -join "<br>"
+                    "RemoteVirtualNetwork"              = $script:AzVirtualNetworkPeeringRemoteVirtualNetworkId -join "<br>"
                     "AllowVirtualNetworkAccess"         = $_.AllowVirtualNetworkAccess
                     "AllowForwardedTraffic"             = $_.AllowForwardedTraffic
                     "AllowGatewayTransit"               = $_.AllowGatewayTransit
@@ -60,11 +60,11 @@ function Save-AzureRmVirtualNetworkTable{
                     "RemoteGateways"                    = $_.RemoteGateways
                     "RemoteVirtualNetworkAddressSpace"  = $_.RemoteVirtualNetworkAddressSpace
                 }
-                $script:AzureRmVirtualNetworkPeeringsDetailTable = New-HTMLTable -InputObject $script:AzureRmVirtualNetworkPeeringsDetail
+                $script:AzVirtualNetworkPeeringsDetailTable = New-HTMLTable -InputObject $script:AzVirtualNetworkPeeringsDetail
             }
         }
 
-        $script:AzureRmVirtualNetworkDetail = [PSCustomObject]@{
+        $script:AzVirtualNetworkDetail = [PSCustomObject]@{
             "Name"                      = $_.Name
             "ResourceGroupName"         = $_.ResourceGroupName
             "Location"                  = $_.Location
@@ -72,15 +72,15 @@ function Save-AzureRmVirtualNetworkTable{
             "Id"                        = $_.Id
             "ResourceGuid"              = $_.ResourceGuid
             "AddressSpace"              = $_.AddressSpace.AddressPrefixes -join "<br>"
-            "Subnets"                   = ConvertTo-DetailView -InputObject $script:AzureRmVirtualNetworkSubnetsDetailTable
+            "Subnets"                   = ConvertTo-DetailView -InputObject $script:AzVirtualNetworkSubnetsDetailTable
             "DnsServers"                = $_.DhcpOptions.DnsServers -join ", "
-            "VirtualNetworkPeerings"    = ConvertTo-DetailView -InputObject $script:AzureRmVirtualNetworkPeeringsDetailTable
+            "VirtualNetworkPeerings"    = ConvertTo-DetailView -InputObject $script:AzVirtualNetworkPeeringsDetailTable
             "EnableDDoSProtection"      = $_.EnableDDoSProtection
             "EnableVmProtection"        = $_.EnableVmProtection
         }
-        $script:AzureRmVirtualNetworkDetailTable = New-HTMLTable -InputObject (ConvertTo-PropertyValue -InputObject $script:AzureRmVirtualNetworkDetail)
+        $script:AzVirtualNetworkDetailTable = New-HTMLTable -InputObject (ConvertTo-PropertyValue -InputObject $script:AzVirtualNetworkDetail)
 
-        $script:AzureRmVirtualNetworkTable += [PSCustomObject]@{
+        $script:AzVirtualNetworkTable += [PSCustomObject]@{
             "Name"                      = "<a name=`"$($_.Id.ToLower())`">$($_.Name)</a>"
             "ResourceGroupName"         = $_.ResourceGroupName
             "Location"                  = $_.Location
@@ -88,9 +88,9 @@ function Save-AzureRmVirtualNetworkTable{
             "Address Space"             = $_.AddressSpace.AddressPrefixes -join ", "
             "Subnets"                   = $_.Subnets.AddressPrefix -join ", "
             "DnsServers"                = $_.DhcpOptions.DnsServers -join ", "
-            "Detail"                    = ConvertTo-DetailView -InputObject $script:AzureRmVirtualNetworkDetailTable
+            "Detail"                    = ConvertTo-DetailView -InputObject $script:AzVirtualNetworkDetailTable
         }
     }
     $script:Report += "<h3>Virtual Network</h3>"
-    $script:Report += ConvertTo-SummaryView -InputObject (Add-ProvisioningStateColor(New-ResourceHTMLTable -InputObject $script:AzureRmVirtualNetworkTable))
+    $script:Report += ConvertTo-SummaryView -InputObject (Add-ProvisioningStateColor(New-ResourceHTMLTable -InputObject $script:AzVirtualNetworkTable))
 }

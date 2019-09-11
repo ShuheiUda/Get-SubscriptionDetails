@@ -1,15 +1,15 @@
-function Save-AzureRmAvailabilitySetTable{
-    $script:AzureRmAvailabilitySetTable = @()
-    $script:AzureRmAvailabilitySet | foreach{
-        $script:AzureRmAvailabilitySetVirtualMachineReferences = @()
+function Save-AzAvailabilitySetTable{
+    $script:AzAvailabilitySetTable = @()
+    $script:AzAvailabilitySet | foreach{
+        $script:AzAvailabilitySetVirtualMachineReferences = @()
         
         if ( $_.VirtualMachinesReferences.id -ne $null ){
             $_.VirtualMachinesReferences.id | foreach{
-                $script:AzureRmAvailabilitySetVirtualMachineReferences += "<a href=`"#$($_.ToLower())`">$_</a>"
+                $script:AzAvailabilitySetVirtualMachineReferences += "<a href=`"#$($_.ToLower())`">$_</a>"
             }
         }
 
-        $script:AzureRmAvailabilitySetDetail = [PSCustomObject]@{
+        $script:AzAvailabilitySetDetail = [PSCustomObject]@{
             "Name"                      = $_.Name
             "ResourceGroupName"         = $_.ResourceGroupName
             "Location"                  = $_.Location
@@ -20,16 +20,16 @@ function Save-AzureRmAvailabilitySetTable{
             "Sku"                       = $_.Sku
             "FaultDomainCount"          = $_.PlatformFaultDomainCount
             "UpdateDomainCount"         = $_.PlatformUpdateDomainCount
-            "VirtualMachineReferences"  = $script:AzureRmAvailabilitySetVirtualMachineReferences -join "<br>"
+            "VirtualMachineReferences"  = $script:AzAvailabilitySetVirtualMachineReferences -join "<br>"
         }
-        $script:AzureRmAvailabilitySetDetailTable = New-HTMLTable -InputObject (ConvertTo-PropertyValue -InputObject $script:AzureRmAvailabilitySetDetail)
+        $script:AzAvailabilitySetDetailTable = New-HTMLTable -InputObject (ConvertTo-PropertyValue -InputObject $script:AzAvailabilitySetDetail)
         $VirtualMachines = @()
         $_.VirtualMachinesReferences.Id | foreach{
             if($_ -match "/providers/Microsoft.Compute/virtualMachines/.{1,15}$"){
                 $VirtualMachines += $Matches[0] -replace "/providers/Microsoft.Compute/virtualMachines/", ""
             }
         }
-        $script:AzureRmAvailabilitySetTable += [PSCustomObject]@{
+        $script:AzAvailabilitySetTable += [PSCustomObject]@{
             "Name"                      = "<a name=`"$($_.Id.ToLower())`">$($_.Name)</a>"
             "ResourceGroupName"         = $_.ResourceGroupName
             "Location"                  = $_.Location
@@ -38,9 +38,9 @@ function Save-AzureRmAvailabilitySetTable{
             "FaultDomainCount"          = $_.PlatformFaultDomainCount
             "UpdateDomainCount"         = $_.PlatformUpdateDomainCount
             "VirtualMachineReferences"  = $VirtualMachines -join ", "
-            "Detail"                    = $script:AzureRmAvailabilitySetDetailTable
+            "Detail"                    = $script:AzAvailabilitySetDetailTable
         }
     }
     $script:Report += "<h3>Availability Sets</h3>"
-    $script:Report += ConvertTo-SummaryView -InputObject (New-ResourceHTMLTable -InputObject $script:AzureRmAvailabilitySetTable)
+    $script:Report += ConvertTo-SummaryView -InputObject (New-ResourceHTMLTable -InputObject $script:AzAvailabilitySetTable)
 }

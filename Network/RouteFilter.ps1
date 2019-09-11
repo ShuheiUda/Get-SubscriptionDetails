@@ -1,39 +1,39 @@
-function Save-AzureRmRouteFilter{
-    $script:AzureRmRouteFilterTable = @()
-    $script:AzureRmRouteFilter | foreach{
+function Save-AzRouteFilter{
+    $script:AzRouteFilterTable = @()
+    $script:AzRouteFilter | foreach{
         if($_.Rules -ne $null){
-            $script:AzureRmRouteFilterRulesDetail = @()
-            $script:AzureRmRouteFilterRulesDetailTable = $null
+            $script:AzRouteFilterRulesDetail = @()
+            $script:AzRouteFilterRulesDetailTable = $null
             $_.Rules | foreach{
-                $script:AzureRmRouteFilterRulesDetail += [PSCustomObject]@{
+                $script:AzRouteFilterRulesDetail += [PSCustomObject]@{
                     "Name"              = $_.Name
                     "Access"            = $_.Access
                     "Communities"       = $_.Communities -join "<br>"
                 }
             }
-            $script:AzureRmRouteFilterRulesDetailTable = New-HTMLTable -InputObject $script:AzureRmRouteFilterRulesDetail
+            $script:AzRouteFilterRulesDetailTable = New-HTMLTable -InputObject $script:AzRouteFilterRulesDetail
         }
 
-        $script:AzureRmRouteFilterDetail = [PSCustomObject]@{
+        $script:AzRouteFilterDetail = [PSCustomObject]@{
             "Name"                      = $_.Name
             "ResourceGroupName"         = $_.ResourceGroupName
             "Location"                  = $_.Location
             "ProvisioningState"         = $_.ProvisioningState
             "Id"                        = $_.Id
-            "Rules"                     = $script:AzureRmRouteFilterRulesDetailTable
+            "Rules"                     = $script:AzRouteFilterRulesDetailTable
             "Peerings.AzureASN"         = $_.Peerings.AzureASN -join "<br>"
             "Peerings.Id"               = $_.Peerings.Id -join "<br>"
         }
-        $script:AzureRmRouteFilterDetailTable = New-HTMLTable -InputObject (ConvertTo-PropertyValue -InputObject $script:AzureRmRouteFilterDetail)
+        $script:AzRouteFilterDetailTable = New-HTMLTable -InputObject (ConvertTo-PropertyValue -InputObject $script:AzRouteFilterDetail)
 
-        $script:AzureRmRouteFilterTable += [PSCustomObject]@{
+        $script:AzRouteFilterTable += [PSCustomObject]@{
             "Name"                      = "<a name=`"$($_.Id.ToLower())`">$($_.Name)</a>"
             "ResourceGroupName"         = $_.ResourceGroupName
             "Location"                  = $_.Location
             "ProvisioningState"         = $_.ProvisioningState
-            "Detail"                    = ConvertTo-DetailView -InputObject $script:AzureRmRouteFilterDetailTable
+            "Detail"                    = ConvertTo-DetailView -InputObject $script:AzRouteFilterDetailTable
         }
     }
     $script:Report += "<h3>Route Filter</h3>"
-    $script:Report += ConvertTo-SummaryView -InputObject (Add-ProvisioningStateColor(New-ResourceHTMLTable -InputObject $script:AzureRmRouteFilterTable))
+    $script:Report += ConvertTo-SummaryView -InputObject (Add-ProvisioningStateColor(New-ResourceHTMLTable -InputObject $script:AzRouteFilterTable))
 }

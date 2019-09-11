@@ -1,6 +1,6 @@
-function Save-AzureRmNetworkInterfaceTable{
-    $script:AzureRmNetworkInterfaceTable = @()
-    $Script:AzureRmNetworkInterface | foreach{
+function Save-AzNetworkInterfaceTable{
+    $script:AzNetworkInterfaceTable = @()
+    $Script:AzNetworkInterface | foreach{
         $VirtualMachine = $null
         $NetworkSecurityGroup = $null
         if($_.VirtualMachine.Id -match "/providers/Microsoft.Compute/virtualMachines/.{1,15}$"){
@@ -10,7 +10,7 @@ function Save-AzureRmNetworkInterfaceTable{
             $NetworkSecurityGroup = $Matches[0] -replace "/providers/Microsoft.Network/networkSecurityGroups/", ""
         }
 
-        $script:AzureRmNetworkInterfaceIpConfigurationsDetail = @()
+        $script:AzNetworkInterfaceIpConfigurationsDetail = @()
         if($_.IpConfigurations -ne $null){
             $_.IpConfigurations | foreach{
                 $TempSubnetId = $null
@@ -22,37 +22,37 @@ function Save-AzureRmNetworkInterfaceTable{
                     $Subnet = $TempSubnetId[6]
                 }
                 
-                $script:AzureRmNetworkInterfaceIpConfigurationsPublicIpAddressId = $null
+                $script:AzNetworkInterfaceIpConfigurationsPublicIpAddressId = $null
                 if($_.PublicIpAddress.Id -ne $null){
-                    $script:AzureRmNetworkInterfaceIpConfigurationsPublicIpAddressId = "<a href=`"#$(($_.PublicIpAddress.Id).ToLower())`">$($_.PublicIpAddress.Id)</a>"
+                    $script:AzNetworkInterfaceIpConfigurationsPublicIpAddressId = "<a href=`"#$(($_.PublicIpAddress.Id).ToLower())`">$($_.PublicIpAddress.Id)</a>"
                 }
                 <#
-                $script:AzureRmNetworkInterfaceIpConfigurationsServiceEndpointsId = $null
+                $script:AzNetworkInterfaceIpConfigurationsServiceEndpointsId = $null
                 if($_.Subnet.ServiceEndpoints.Id -ne $null){
-                    $script:AzureRmNetworkInterfaceIpConfigurationsServiceEndpointsId = "<a href=`"#$((($_.Subnet.ServiceEndpoints.Id) -Replace `"/subnets/.*$`",`"`").ToLower())`">$($_.Subnet.ServiceEndpoints.Id)</a>"
+                    $script:AzNetworkInterfaceIpConfigurationsServiceEndpointsId = "<a href=`"#$((($_.Subnet.ServiceEndpoints.Id) -Replace `"/subnets/.*$`",`"`").ToLower())`">$($_.Subnet.ServiceEndpoints.Id)</a>"
                 }
-                $script:AzureRmNetworkInterfaceIpConfigurationsResourceNavigationLinksId = $null
+                $script:AzNetworkInterfaceIpConfigurationsResourceNavigationLinksId = $null
                 if($_.Subnet.ResourceNavigationLinks.Id -ne $null){
-                    $script:AzureRmNetworkInterfaceIpConfigurationsResourceNavigationLinksId = "<a href=`"#$(($_.Subnet.ResourceNavigationLinks.Id).ToLower())`">$($_.Subnet.ResourceNavigationLinks.Id)</a>"
+                    $script:AzNetworkInterfaceIpConfigurationsResourceNavigationLinksId = "<a href=`"#$(($_.Subnet.ResourceNavigationLinks.Id).ToLower())`">$($_.Subnet.ResourceNavigationLinks.Id)</a>"
                 }
                 #>
-                $script:AzureRmNetworkInterfaceIpConfigurationsLoadBalancerBackendAddressPoolsId = $null
+                $script:AzNetworkInterfaceIpConfigurationsLoadBalancerBackendAddressPoolsId = $null
                 if($_.LoadBalancerBackendAddressPools.Id -ne $null){
-                    $script:AzureRmNetworkInterfaceIpConfigurationsLoadBalancerBackendAddressPoolsId = "<a href=`"#$((($_.LoadBalancerBackendAddressPools.Id) -Replace `"/backendAddressPools/.*$`",`"`").ToLower())`">$($_.LoadBalancerBackendAddressPools.Id)</a>"
+                    $script:AzNetworkInterfaceIpConfigurationsLoadBalancerBackendAddressPoolsId = "<a href=`"#$((($_.LoadBalancerBackendAddressPools.Id) -Replace `"/backendAddressPools/.*$`",`"`").ToLower())`">$($_.LoadBalancerBackendAddressPools.Id)</a>"
                 }
-                $script:AzureRmNetworkInterfaceIpConfigurationsLoadBalancerInboundNatRulesId = $null
+                $script:AzNetworkInterfaceIpConfigurationsLoadBalancerInboundNatRulesId = $null
                 if($_.LoadBalancerInboundNatRules.Id -ne $null){
-                    $script:AzureRmNetworkInterfaceIpConfigurationsLoadBalancerInboundNatRulesId = "<a href=`"#$((($_.LoadBalancerInboundNatRules.Id) -Replace `"/inboundNatRules/.*$`",`"`").ToLower())`">$($_.LoadBalancerInboundNatRules.Id)</a>"
+                    $script:AzNetworkInterfaceIpConfigurationsLoadBalancerInboundNatRulesId = "<a href=`"#$((($_.LoadBalancerInboundNatRules.Id) -Replace `"/inboundNatRules/.*$`",`"`").ToLower())`">$($_.LoadBalancerInboundNatRules.Id)</a>"
                 }
-                $script:AzureRmNetworkInterfaceIpConfigurationsApplicationGatewayBackendAddressPoolsId = $null
+                $script:AzNetworkInterfaceIpConfigurationsApplicationGatewayBackendAddressPoolsId = $null
                 if($_.ApplicationGatewayBackendAddressPools.Id -ne $null){
-                    $script:AzureRmNetworkInterfaceIpConfigurationsApplicationGatewayBackendAddressPoolsId = "<a href=`"#$((($_.ApplicationGatewayBackendAddressPools.Id) -Replace `"/backendAddressPools/.*$`",`"`").ToLower())`">$($_.ApplicationGatewayBackendAddressPools.Id)</a>"
+                    $script:AzNetworkInterfaceIpConfigurationsApplicationGatewayBackendAddressPoolsId = "<a href=`"#$((($_.ApplicationGatewayBackendAddressPools.Id) -Replace `"/backendAddressPools/.*$`",`"`").ToLower())`">$($_.ApplicationGatewayBackendAddressPools.Id)</a>"
                 }
-                $script:AzureRmNetworkInterfaceIpConfigurationsApplicationSecurityGroupsId = $null
+                $script:AzNetworkInterfaceIpConfigurationsApplicationSecurityGroupsId = $null
                 if($_.ApplicationSecurityGroups.Id -ne $null){
-                    $script:AzureRmNetworkInterfaceIpConfigurationsApplicationSecurityGroupsId = "<a href=`"#$(($_.ApplicationSecurityGroups.Id).ToLower())`">$($_.ApplicationSecurityGroups.Id)</a>"
+                    $script:AzNetworkInterfaceIpConfigurationsApplicationSecurityGroupsId = "<a href=`"#$(($_.ApplicationSecurityGroups.Id).ToLower())`">$($_.ApplicationSecurityGroups.Id)</a>"
                 }
-                $script:AzureRmNetworkInterfaceIpConfigurationsDetail += [PSCustomObject]@{
+                $script:AzNetworkInterfaceIpConfigurationsDetail += [PSCustomObject]@{
                     "Name"                      = $_.Name
                     "ProvisioningState"         = $_.ProvisioningState
                     "Primary"                   = $_.Primary
@@ -61,47 +61,47 @@ function Save-AzureRmNetworkInterfaceTable{
                     "PrivateIpAllocationMethod" = $_.PrivateIpAllocationMethod
                     "VirtualNetwork"            = $VirtualNetwork
                     "Subnet"                    = $Subnet
-                    "PublicIpAddress"           = $script:AzureRmNetworkInterfaceIpConfigurationsPublicIpAddressId
-                    #"ServiceEndpoints"          = $script:AzureRmNetworkInterfaceIpConfigurationsServiceEndpointsId
-                    #"ResourceNavigationLinks"   = $script:AzureRmNetworkInterfaceIpConfigurationsResourceNavigationLinksId
-                    "LoadBalancerBackendAddressPools" = $script:AzureRmNetworkInterfaceIpConfigurationsLoadBalancerBackendAddressPoolsId
-                    "LoadBalancerInboundNatRules" = $script:AzureRmNetworkInterfaceIpConfigurationsLoadBalancerInboundNatRulesId
-                    "ApplicationGatewayBackendAddressPools" = $script:AzureRmNetworkInterfaceIpConfigurationsApplicationGatewayBackendAddressPoolsId
-                    "ApplicationSecurityGroups" = $script:AzureRmNetworkInterfaceIpConfigurationsApplicationSecurityGroupsId
+                    "PublicIpAddress"           = $script:AzNetworkInterfaceIpConfigurationsPublicIpAddressId
+                    #"ServiceEndpoints"          = $script:AzNetworkInterfaceIpConfigurationsServiceEndpointsId
+                    #"ResourceNavigationLinks"   = $script:AzNetworkInterfaceIpConfigurationsResourceNavigationLinksId
+                    "LoadBalancerBackendAddressPools" = $script:AzNetworkInterfaceIpConfigurationsLoadBalancerBackendAddressPoolsId
+                    "LoadBalancerInboundNatRules" = $script:AzNetworkInterfaceIpConfigurationsLoadBalancerInboundNatRulesId
+                    "ApplicationGatewayBackendAddressPools" = $script:AzNetworkInterfaceIpConfigurationsApplicationGatewayBackendAddressPoolsId
+                    "ApplicationSecurityGroups" = $script:AzNetworkInterfaceIpConfigurationsApplicationSecurityGroupsId
                 }
             }
-            $script:AzureRmNetworkInterfaceIpConfigurationsDetailTable = New-HTMLTable -InputObject $script:AzureRmNetworkInterfaceIpConfigurationsDetail
+            $script:AzNetworkInterfaceIpConfigurationsDetailTable = New-HTMLTable -InputObject $script:AzNetworkInterfaceIpConfigurationsDetail
 
         }
         
-        $script:AzureRmNetworkInterfaceVirtualMachineId = $null
+        $script:AzNetworkInterfaceVirtualMachineId = $null
         if($_.VirtualMachine.Id -ne $null){
-            $script:AzureRmNetworkInterfaceVirtualMachineId = "<a href=`"#$(($_.VirtualMachine.Id).ToLower())`">$($_.VirtualMachine.Id)</a>"
+            $script:AzNetworkInterfaceVirtualMachineId = "<a href=`"#$(($_.VirtualMachine.Id).ToLower())`">$($_.VirtualMachine.Id)</a>"
         }
-        $script:AzureRmNetworkInterfaceNetworkSecurityGroupId = $null
+        $script:AzNetworkInterfaceNetworkSecurityGroupId = $null
         if($_.NetworkSecurityGroup.Id -ne $null){
-            $script:AzureRmNetworkInterfaceNetworkSecurityGroupId = "<a href=`"#$(($_.NetworkSecurityGroup.Id).ToLower())`">$($_.NetworkSecurityGroup.Id)</a>"
+            $script:AzNetworkInterfaceNetworkSecurityGroupId = "<a href=`"#$(($_.NetworkSecurityGroup.Id).ToLower())`">$($_.NetworkSecurityGroup.Id)</a>"
         }
-        $script:AzureRmNetworkInterfaceDetail = [PSCustomObject]@{
+        $script:AzNetworkInterfaceDetail = [PSCustomObject]@{
             "Name"                          = $_.Name
             "ResourceGroupName"             = $_.ResourceGroupName
             "Location"                      = $_.Location
             "ProvisioningState"             = $_.ProvisioningState
             "Id"                            = $_.Id
             "ResourceGuid"                  = $_.ResourceGuid
-            "Virtual Machine"               = $script:AzureRmNetworkInterfaceVirtualMachineId
-            "IpConfigurations"              = ConvertTo-DetailView -InputObject $script:AzureRmNetworkInterfaceIpConfigurationsDetailTable
+            "Virtual Machine"               = $script:AzNetworkInterfaceVirtualMachineId
+            "IpConfigurations"              = ConvertTo-DetailView -InputObject $script:AzNetworkInterfaceIpConfigurationsDetailTable
             "MacAddress"                    = $_.MacAddress
             "DnsServers"                    = $_.DnsSettings.DnsServers -join "<br>"
             "AppliedDnsServers"             = $_.DnsSettings.AppliedDnsServers -join "<br>"
-            "NetworkSecurityGroup"          = $script:AzureRmNetworkInterfaceNetworkSecurityGroupId
+            "NetworkSecurityGroup"          = $script:AzNetworkInterfaceNetworkSecurityGroupId
             "EnableIPForwarding"            = $_.EnableIPForwarding
             "EnableAcceleratedNetworking"   = $_.EnableAcceleratedNetworking
             "Primary"                       = $_.Primary
         }
-        $script:AzureRmNetworkInterfaceDetailTable = New-HTMLTable -InputObject (ConvertTo-PropertyValue -InputObject $script:AzureRmNetworkInterfaceDetail)
+        $script:AzNetworkInterfaceDetailTable = New-HTMLTable -InputObject (ConvertTo-PropertyValue -InputObject $script:AzNetworkInterfaceDetail)
 
-        $script:AzureRmNetworkInterfaceTable += [PSCustomObject]@{
+        $script:AzNetworkInterfaceTable += [PSCustomObject]@{
             "Name"                          = "<a name=`"$($_.Id.ToLower())`">$($_.Name)</a>"
             "ResourceGroupName"             = $_.ResourceGroupName
             "Location"                      = $_.Location
@@ -113,9 +113,9 @@ function Save-AzureRmNetworkInterfaceTable{
             "PrivateIpAllocationMethod"     = $_.IpConfigurations.PrivateIpAllocationMethod -join ", "
             "CustomeDnsSettings"            = $_.DnsSettings.DnsServers -join ", "
             "NetworkSecurityGroup"          = $NetworkSecurityGroup
-            "Detail"                        = ConvertTo-DetailView -InputObject $script:AzureRmNetworkInterfaceDetailTable
+            "Detail"                        = ConvertTo-DetailView -InputObject $script:AzNetworkInterfaceDetailTable
         }
     }
     $script:Report += "<h3>Network Interface</h3>"
-    $script:Report += ConvertTo-SummaryView -InputObject (Add-ProvisioningStateColor(New-ResourceHTMLTable -InputObject $script:AzureRmNetworkInterfaceTable))
+    $script:Report += ConvertTo-SummaryView -InputObject (Add-ProvisioningStateColor(New-ResourceHTMLTable -InputObject $script:AzNetworkInterfaceTable))
 }

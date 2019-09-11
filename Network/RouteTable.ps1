@@ -1,10 +1,10 @@
-function Save-AzureRmRouteTableTable{
-    $script:AzureRmRouteTableTable= @()
-    $script:AzureRmRouteTable | foreach{
-        $script:AzureRmRouteTableRoutesDetail = @()
+function Save-AzRouteTableTable{
+    $script:AzRouteTableTable= @()
+    $script:AzRouteTable | foreach{
+        $script:AzRouteTableRoutesDetail = @()
         if($_.Routes -ne $null){
             $_.Routes | foreach{
-                $script:AzureRmRouteTableRoutesDetail += [PSCustomObject]@{
+                $script:AzRouteTableRoutesDetail += [PSCustomObject]@{
                     "Name"                      = $_.Name
                     "ProvisioningState"         = $_.ProvisioningState
                     "AddressPrefix"             = $_.AddressPrefix
@@ -12,36 +12,36 @@ function Save-AzureRmRouteTableTable{
                     "NextHopIpAddress"          = $_.NextHopIpAddress
                 }
             }
-        $script:AzureRmRouteTableRoutesDetailTable = New-HTMLTable -InputObject $script:AzureRmRouteTableRoutesDetail
+        $script:AzRouteTableRoutesDetailTable = New-HTMLTable -InputObject $script:AzRouteTableRoutesDetail
         }
         
-        $script:AzureRmRouteTableSubnetsId = @()
+        $script:AzRouteTableSubnetsId = @()
         if($_.Subnets.Id -ne $null){
             $_.Subnets.Id | foreach{
-                $script:AzureRmRouteTableSubnetsId += "<a href=`"#$(($_ -Replace `"/subnets/.*$`",`"`").ToLower())`">$_</a>"
+                $script:AzRouteTableSubnetsId += "<a href=`"#$(($_ -Replace `"/subnets/.*$`",`"`").ToLower())`">$_</a>"
             }
         }
-        $script:AzureRmRouteTableDetail = [PSCustomObject]@{
+        $script:AzRouteTableDetail = [PSCustomObject]@{
         "Name"                      = $_.Name
         "ResourceGroupName"         = $_.ResourceGroupName
         "Location"                  = $_.Location
         "Id"                        = $_.Id
         "ProvisioningState"         = $_.ProvisioningState
-        "Routes"                    = ConvertTo-DetailView -InputObject $script:AzureRmRouteTableRoutesDetailTable
-        "Subnets"                   = $script:AzureRmRouteTableSubnetsId -join "<br>"
+        "Routes"                    = ConvertTo-DetailView -InputObject $script:AzRouteTableRoutesDetailTable
+        "Subnets"                   = $script:AzRouteTableSubnetsId -join "<br>"
         "ResourceNavigationLinks"   = $_.Subnets.ResourceNavigationLinks -join "<br>"
         "ServiceEndpoints"          = $_.Subnets.ServiceEndpoints -join "<br>"
         }
-        $script:AzureRmRouteTableDetailTable = New-HTMLTable -InputObject (ConvertTo-PropertyValue -InputObject $script:AzureRmRouteTableDetail)
+        $script:AzRouteTableDetailTable = New-HTMLTable -InputObject (ConvertTo-PropertyValue -InputObject $script:AzRouteTableDetail)
 
-        $script:AzureRmRouteTableTable += [PSCustomObject]@{
+        $script:AzRouteTableTable += [PSCustomObject]@{
             "Name"                      = "<a name=`"$($_.Id.ToLower())`">$($_.Name)</a>"
             "ResourceGroupName"         = $_.ResourceGroupName
             "Location"                  = $_.Location
             "ProvisioningState"         = $_.ProvisioningState
-            "Detail"                    = ConvertTo-DetailView -InputObject $script:AzureRmRouteTableDetailTable
+            "Detail"                    = ConvertTo-DetailView -InputObject $script:AzRouteTableDetailTable
         }
     }
     $script:Report += "<h3>Route Table</h3>"
-    $script:Report += ConvertTo-SummaryView -InputObject (Add-ProvisioningStateColor(New-ResourceHTMLTable -InputObject $script:AzureRmRouteTableTable))
+    $script:Report += ConvertTo-SummaryView -InputObject (Add-ProvisioningStateColor(New-ResourceHTMLTable -InputObject $script:AzRouteTableTable))
 }

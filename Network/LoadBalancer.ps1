@@ -1,55 +1,55 @@
-function Save-AzureRmLoadBalancerTable{
-    $script:AzureRmLoadBalancerTable = @()
-    $script:AzureRmLoadBalancer | foreach{
-        $script:AzureRmLoadBalancerFrontendIpConfigurationsDetail = @()
-        $script:AzureRmLoadBalancerBackendAddressPoolsDetail = @()
-        $script:AzureRmLoadBalancerLoadBalancingRulesDetail = @()
-        $script:AzureRmLoadBalancerProbesDetail = @()
-        $script:AzureRmLoadBalancerInboundNatRulesDetail = @()
-        $script:AzureRmLoadBalancerInboundNatPoolsDetail = @()
+function Save-AzLoadBalancerTable{
+    $script:AzLoadBalancerTable = @()
+    $script:AzLoadBalancer | foreach{
+        $script:AzLoadBalancerFrontendIpConfigurationsDetail = @()
+        $script:AzLoadBalancerBackendAddressPoolsDetail = @()
+        $script:AzLoadBalancerLoadBalancingRulesDetail = @()
+        $script:AzLoadBalancerProbesDetail = @()
+        $script:AzLoadBalancerInboundNatRulesDetail = @()
+        $script:AzLoadBalancerInboundNatPoolsDetail = @()
 
         if($_.FrontendIpConfigurations -ne $null){
             $_.FrontendIpConfigurations | foreach{
-                $script:AzureRmLoadBalancerFrontendIpConfigurationsPublicIpAddressId = $null
+                $script:AzLoadBalancerFrontendIpConfigurationsPublicIpAddressId = $null
                 if($_.PublicIpAddress.Id -ne $null){
-                    $script:AzureRmLoadBalancerFrontendIpConfigurationsPublicIpAddressId = "<a href=`"#$(($_.PublicIpAddress.Id).ToLower())`">$($_.PublicIpAddress.Id)</a>"
+                    $script:AzLoadBalancerFrontendIpConfigurationsPublicIpAddressId = "<a href=`"#$(($_.PublicIpAddress.Id).ToLower())`">$($_.PublicIpAddress.Id)</a>"
                 }
-                $script:AzureRmLoadBalancerFrontendIpConfigurationsSubnetId = $null
+                $script:AzLoadBalancerFrontendIpConfigurationsSubnetId = $null
                 if($_.Subnet.Id -ne $null){
-                    $script:AzureRmLoadBalancerFrontendIpConfigurationsSubnetId = "<a href=`"#$((($_.Subnet.Id) -Replace `"/subnets/.*$`",`"`").ToLower())`">$($_.Subnet.Id)</a>"
+                    $script:AzLoadBalancerFrontendIpConfigurationsSubnetId = "<a href=`"#$((($_.Subnet.Id) -Replace `"/subnets/.*$`",`"`").ToLower())`">$($_.Subnet.Id)</a>"
                 }
-                $script:AzureRmLoadBalancerFrontendIpConfigurationsDetail += [PSCustomObject]@{
+                $script:AzLoadBalancerFrontendIpConfigurationsDetail += [PSCustomObject]@{
                     "Name"                      = $_.Name
                     "Zones"                     = $_.Zones -join "<br>"
                     "ProvisioningState"         = $_.ProvisioningState
                     "PublicIpAddress"           = $_.PublicIpAddress.IpAddress
-                    "PublicIpAddress.Id"        = $script:AzureRmLoadBalancerFrontendIpConfigurationsPublicIpAddressId
+                    "PublicIpAddress.Id"        = $script:AzLoadBalancerFrontendIpConfigurationsPublicIpAddressId
                     "PrivateIpAddress"          = $_.PrivateIpAddress
                     "PrivateIpAllocationMethod" = $_.PrivateIpAllocationMethod
-                    "Subnet.Id"                 = $script:AzureRmLoadBalancerFrontendIpConfigurationsSubnetId
+                    "Subnet.Id"                 = $script:AzLoadBalancerFrontendIpConfigurationsSubnetId
                     "LoadBalancingRules.Id"     = $_.LoadBalancingRules.Id -join "<br>"
                     "InboundNatRules.Id"        = $_.InboundNatRules.Id -join "<br>"
                     "InboundNatPools.Id"        = $_.InboundNatPools.Id -join "<br>"
                 }
             }
-            $script:AzureRmLoadBalancerFrontendIpConfigurationsDetailTable = New-HTMLTable -InputObject $script:AzureRmLoadBalancerFrontendIpConfigurationsDetail
+            $script:AzLoadBalancerFrontendIpConfigurationsDetailTable = New-HTMLTable -InputObject $script:AzLoadBalancerFrontendIpConfigurationsDetail
         }
 
         if($_.BackendAddressPools -ne $null){
             $_.BackendAddressPools | foreach{
-                $script:AzureRmLoadBalancerBackendAddressPoolsDetail += [PSCustomObject]@{
+                $script:AzLoadBalancerBackendAddressPoolsDetail += [PSCustomObject]@{
                     "Name"                      = $_.Name
                     "ProvisioningState"         = $_.ProvisioningState
                     "BackendIpConfigurations"   = $_.BackendIpConfigurations.Id -join "<br>"
                     "LoadBalancingRules"        = $_.LoadBalancingRules.Id -join "<br>"
                 }
             }
-            $script:AzureRmLoadBalancerBackendAddressPoolsDetailTable = New-HTMLTable -InputObject $script:AzureRmLoadBalancerBackendAddressPoolsDetail
+            $script:AzLoadBalancerBackendAddressPoolsDetailTable = New-HTMLTable -InputObject $script:AzLoadBalancerBackendAddressPoolsDetail
         }
         
         if($_.InboundNatPools -ne $null){
             $_.InboundNatPools | foreach{
-                $script:AzureRmLoadBalancerInboundNatPoolsDetail += [PSCustomObject]@{
+                $script:AzLoadBalancerInboundNatPoolsDetail += [PSCustomObject]@{
                     "Name"                      = $_.Name
                     "ProvisioningState"         = $_.ProvisioningState
                     "Protocol"                  = $_.Protocol
@@ -59,12 +59,12 @@ function Save-AzureRmLoadBalancerTable{
                     "Capacity"                  = $_.Capacity
                 }
             }
-            $script:AzureRmLoadBalancerDetailTable = New-HTMLTable -InputObject $script:AzureRmLoadBalancerInboundNatPoolsDetail
+            $script:AzLoadBalancerDetailTable = New-HTMLTable -InputObject $script:AzLoadBalancerInboundNatPoolsDetail
         }
 
         if($_.Probes -ne $null){
             $_.Probes | foreach{
-                $script:AzureRmLoadBalancerProbesDetail += [PSCustomObject]@{
+                $script:AzLoadBalancerProbesDetail += [PSCustomObject]@{
                     "Name"                      = $_.Name
                     "ProvisioningState"         = $_.ProvisioningState
                     "Protocol"                  = $_.Protocol
@@ -75,12 +75,12 @@ function Save-AzureRmLoadBalancerTable{
                     "LoadBalancingRules"        = $_.LoadBalancingRules.Id
                 }
             }
-            $script:AzureRmLoadBalancerProbesDetailTable = New-HTMLTable -InputObject $script:AzureRmLoadBalancerProbesDetail
+            $script:AzLoadBalancerProbesDetailTable = New-HTMLTable -InputObject $script:AzLoadBalancerProbesDetail
         }
 
         if($_.LoadBalancingRules -ne $null){
             $_.LoadBalancingRules | foreach{
-                $script:AzureRmLoadBalancerLoadBalancingRulesDetail += [PSCustomObject]@{
+                $script:AzLoadBalancerLoadBalancingRulesDetail += [PSCustomObject]@{
                     "Name"                      = $_.Name
                     "ProvisioningState"         = $_.ProvisioningState
                     "Protocol"                  = $_.Protocol
@@ -94,12 +94,12 @@ function Save-AzureRmLoadBalancerTable{
                     "Probe"                     = $_.Probe.Id
                 }
             }
-            $script:AzureRmLoadBalancerLoadBalancingRulesDetailTable = New-HTMLTable -InputObject $script:AzureRmLoadBalancerLoadBalancingRulesDetail
+            $script:AzLoadBalancerLoadBalancingRulesDetailTable = New-HTMLTable -InputObject $script:AzLoadBalancerLoadBalancingRulesDetail
         }
         
         if($_.InboundNatRules -ne $null){
             $_.InboundNatRules | foreach{
-                $script:AzureRmLoadBalancerInboundNatRulesDetail += [PSCustomObject]@{
+                $script:AzLoadBalancerInboundNatRulesDetail += [PSCustomObject]@{
                     "Name"                      = $_.Name
                     "ProvisioningState"         = $_.ProvisioningState
                     "Protocol"                  = $_.Protocol
@@ -111,10 +111,10 @@ function Save-AzureRmLoadBalancerTable{
                     "BackendIPConfiguration"    = $_.BackendIPConfiguration.Id
                 }
             }
-            $script:AzureRmLoadBalancerInboundNatRulesDetailTable = New-HTMLTable -InputObject $script:AzureRmLoadBalancerInboundNatRulesDetail
+            $script:AzLoadBalancerInboundNatRulesDetailTable = New-HTMLTable -InputObject $script:AzLoadBalancerInboundNatRulesDetail
         }
 
-        $script:AzureRmLoadBalancerDetail = [PSCustomObject]@{
+        $script:AzLoadBalancerDetail = [PSCustomObject]@{
             "Name"                      = $_.Name
             "ResourceGroupName"         = $_.ResourceGroupName
             "Location"                  = $_.Location
@@ -122,16 +122,16 @@ function Save-AzureRmLoadBalancerTable{
             "ResourceGuid"              = $_.ResourceGuid
             "ProvisioningState"         = $_.ProvisioningState
             "Sku"                       = $_.Sku.Name
-            "FrontendIpConfigurations"  = ConvertTo-DetailView -InputObject $script:AzureRmLoadBalancerFrontendIpConfigurationsDetailTable
-            "BackendAddresspools"       = ConvertTo-DetailView -InputObject $script:AzureRmLoadBalancerBackendAddressPoolsDetailTable
-            "InboundNatPools"           = ConvertTo-DetailView -InputObject $script:AzureRmLoadBalancerInboundNatPoolsDetailTable
-            "Probes"                    = ConvertTo-DetailView -InputObject $script:AzureRmLoadBalancerProbesDetailTable
-            "LoadBalancingRules"        = ConvertTo-DetailView -InputObject $script:AzureRmLoadBalancerLoadBalancingRulesDetailTable
-            "InboundNatRules"           = ConvertTo-DetailView -InputObject $script:AzureRmLoadBalancerInboundNatRulesDetailTable
+            "FrontendIpConfigurations"  = ConvertTo-DetailView -InputObject $script:AzLoadBalancerFrontendIpConfigurationsDetailTable
+            "BackendAddresspools"       = ConvertTo-DetailView -InputObject $script:AzLoadBalancerBackendAddressPoolsDetailTable
+            "InboundNatPools"           = ConvertTo-DetailView -InputObject $script:AzLoadBalancerInboundNatPoolsDetailTable
+            "Probes"                    = ConvertTo-DetailView -InputObject $script:AzLoadBalancerProbesDetailTable
+            "LoadBalancingRules"        = ConvertTo-DetailView -InputObject $script:AzLoadBalancerLoadBalancingRulesDetailTable
+            "InboundNatRules"           = ConvertTo-DetailView -InputObject $script:AzLoadBalancerInboundNatRulesDetailTable
         }
-        $script:AzureRmLoadBalancerDetailTable = New-HTMLTable -InputObject (ConvertTo-PropertyValue -InputObject $script:AzureRmLoadBalancerDetail)
+        $script:AzLoadBalancerDetailTable = New-HTMLTable -InputObject (ConvertTo-PropertyValue -InputObject $script:AzLoadBalancerDetail)
 
-        $script:AzureRmLoadBalancerTable += [PSCustomObject]@{
+        $script:AzLoadBalancerTable += [PSCustomObject]@{
             "Name"                      = "<a name=`"$($_.Id.ToLower())`">$($_.Name)</a>"
             "ResourceGroupName"         = $_.ResourceGroupName
             "Location"                  = $_.Location
@@ -142,10 +142,10 @@ function Save-AzureRmLoadBalancerTable{
             "Probes"                    = $_.Probes.Name -join ", "
             "LoadBalancingRules"        = $_.LoadBalancingRules.Name -join ", "
             "InboundNatRules"           = $_.InboundNatRules.Name -join ", "
-            "Detail"                    = ConvertTo-DetailView -InputObject $script:AzureRmLoadBalancerDetailTable
+            "Detail"                    = ConvertTo-DetailView -InputObject $script:AzLoadBalancerDetailTable
 
         }
     }
     $script:Report += "<h3>Load Balancer</h3>"
-    $script:Report += ConvertTo-SummaryView -InputObject (Add-ProvisioningStateColor(New-ResourceHTMLTable -InputObject $script:AzureRmLoadBalancerTable))
+    $script:Report += ConvertTo-SummaryView -InputObject (Add-ProvisioningStateColor(New-ResourceHTMLTable -InputObject $script:AzLoadBalancerTable))
 }

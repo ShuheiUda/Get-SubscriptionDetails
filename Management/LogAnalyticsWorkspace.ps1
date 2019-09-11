@@ -1,11 +1,11 @@
-function Save-AzureRmLogAnalytics {
-    $script:AzureRmLogAnalyticsWorkspaceTable = @()
-    if($script:AzureRmLogAnalyticsWorkspace -ne $null){
-        $script:AzureRmLogAnalyticsWorkspace | foreach{
+function Save-AzLogAnalytics {
+    $script:AzLogAnalyticsWorkspaceTable = @()
+    if($script:AzLogAnalyticsWorkspace -ne $null){
+        $script:AzLogAnalyticsWorkspace | foreach{
 
-            $script:AzureRmLogAnalyticsWorkspaceTableDetailTable = $null
+            $script:AzLogAnalyticsWorkspaceTableDetailTable = $null
 
-            $script:AzureRmLogAnalyticsWorkspaceTableDetail = [PSCustomObject]@{
+            $script:AzLogAnalyticsWorkspaceTableDetail = [PSCustomObject]@{
                 "Name"                          = $_.Name
                 "Id"                            = $_.ResourceId
                 "ResourceGroupName"             = $_.ResourceGroupName
@@ -16,18 +16,18 @@ function Save-AzureRmLogAnalytics {
                 "PortalUrl"                     = $_.PortalUrl
                 "ProvisioningState"             = $_.ProvisioningState
             }
-            $script:AzureRmLogAnalyticsWorkspaceTableDetailTable = New-HTMLTable -InputObject (ConvertTo-PropertyValue -InputObject $script:AzureRmLogAnalyticsWorkspaceTableDetail) 
+            $script:AzLogAnalyticsWorkspaceTableDetailTable = New-HTMLTable -InputObject (ConvertTo-PropertyValue -InputObject $script:AzLogAnalyticsWorkspaceTableDetail) 
             
-            $script:AzureRmLogAnalyticsWorkspaceTable += [PSCustomObject]@{
+            $script:AzLogAnalyticsWorkspaceTable += [PSCustomObject]@{
                 "Name"                          = "<a name=`"$($_.ResourceId.ToLower())`">$($_.Name)</a>"
                 "ResourceGroupName"             = $_.ResourceGroupName
                 "Location"                      = $_.Location
                 "ProvisioningState"             = $_.provisioningState
-                "Detail"                        = ConvertTo-DetailView -InputObject $script:AzureRmLogAnalyticsWorkspaceTableDetailTable
+                "Detail"                        = ConvertTo-DetailView -InputObject $script:AzLogAnalyticsWorkspaceTableDetailTable
             }
         }
     }
 
     $script:Report += "<h3>Log Analytics workspaces</h3>"
-    $script:Report += ConvertTo-SummaryView -InputObject (Add-ProvisioningStateColor(New-ResourceHTMLTable -InputObject $Script:AzureRmLogAnalyticsWorkspaceTable))
+    $script:Report += ConvertTo-SummaryView -InputObject (Add-ProvisioningStateColor(New-ResourceHTMLTable -InputObject $Script:AzLogAnalyticsWorkspaceTable))
 }

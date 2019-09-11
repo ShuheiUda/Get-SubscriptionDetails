@@ -1,31 +1,31 @@
 
-function Save-AzureRmVmWindowsTable{
-    $script:AzureRmVmWindowsTable = @()
-    $AzureRmVmWindows = $Script:AzureRmVm | where{$_.StorageProfile.OsDisk.OsType -eq "Windows"}
-    $AzureRmVmWindows | foreach{
+function Save-AzVmWindowsTable{
+    $script:AzVmWindowsTable = @()
+    $AzVmWindows = $Script:AzVm | where{$_.StorageProfile.OsDisk.OsType -eq "Windows"}
+    $AzVmWindows | foreach{
         $ResourceGroupName = $_.ResourceGroupName
         $AvailabilitySet = ($_.AvailabilitySetReference.Id -replace "/subscriptions/$SubscriptionID/resourceGroups/$ResourceGroupName/providers/Microsoft.Compute/availabilitySets/", "")
         
-        $script:AzureRmVmWindowsNetworkInterfaceIDsDetail = @()
+        $script:AzVmWindowsNetworkInterfaceIDsDetail = @()
         if($_.NetworkProfile.NetworkInterfaces -ne $null){
             $_.NetworkProfile.NetworkInterfaces | foreach{
-                $script:AzureRmVmWindowsNetworkInterfaceIDsDetail += [PSCustomObject]@{
+                $script:AzVmWindowsNetworkInterfaceIDsDetail += [PSCustomObject]@{
                     "Primary"   = $_.Primary
                     "Id"        = "<a href=`"#$($_.Id.ToLower())`">$($_.Id)</a>"
                 }
             }
-        $script:AzureRmVmWindowsNetworkInterfaceIDsDetailTable = New-HTMLTable -InputObject $script:AzureRmVmWindowsNetworkInterfaceIDsDetail
+        $script:AzVmWindowsNetworkInterfaceIDsDetailTable = New-HTMLTable -InputObject $script:AzVmWindowsNetworkInterfaceIDsDetail
         }
 
         if($_.StorageProfile.ImageReference -ne $null){
-            $script:AzureRmVmWindowsImageReferenceDetailTable = New-HTMLTable -InputObject $_.StorageProfile.ImageReference
+            $script:AzVmWindowsImageReferenceDetailTable = New-HTMLTable -InputObject $_.StorageProfile.ImageReference
         }
         if($_.StorageProfile.OsDisk -ne $null){
-            $script:AzureRmVmWindowsOsDisksManagedDiskId = $null
+            $script:AzVmWindowsOsDisksManagedDiskId = $null
             if($_.StorageProfile.OsDisk.ManagedDisk.Id -ne $null){
-                $script:AzureRmVmWindowsOsDisksManagedDiskId = "<a href=`"#$(($_.StorageProfile.OsDisk.ManagedDisk.Id).ToLower())`">$($_.StorageProfile.OsDisk.ManagedDisk.Id)</a>"
+                $script:AzVmWindowsOsDisksManagedDiskId = "<a href=`"#$(($_.StorageProfile.OsDisk.ManagedDisk.Id).ToLower())`">$($_.StorageProfile.OsDisk.ManagedDisk.Id)</a>"
             }
-            $script:AzureRmVmWindowsOsDiskDetail = [PSCustomObject]@{
+            $script:AzVmWindowsOsDiskDetail = [PSCustomObject]@{
                 "Name"                              = $_.StorageProfile.OsDisk.Name
                 "OsType"                            = $_.StorageProfile.OsDisk.OsType
                 "EncryptionSettings"                = $_.StorageProfile.OsDisk.EncryptionSettings
@@ -34,19 +34,19 @@ function Save-AzureRmVmWindowsTable{
                 "CreateOption"                      = $_.StorageProfile.OsDisk.CreateOption
                 "DiskSizeGB"                        = $_.StorageProfile.OsDisk.DiskSizeGB
                 "ManagedDisk.StorageAccountType"    = $_.StorageProfile.OsDisk.ManagedDisk.StorageAccountType
-                "ManagedDisk.Id"                    = $script:AzureRmVmWindowsOsDisksManagedDiskId
+                "ManagedDisk.Id"                    = $script:AzVmWindowsOsDisksManagedDiskId
                 "Vhd"                               = $_.StorageProfile.OsDisk.Vhd.Uri
             }
-            $script:AzureRmVmWindowsOsDiskDetailTable = New-HTMLTable -InputObject $script:AzureRmVmWindowsOsDiskDetail
+            $script:AzVmWindowsOsDiskDetailTable = New-HTMLTable -InputObject $script:AzVmWindowsOsDiskDetail
         }
         if($_.StorageProfile.DataDisks -ne $null){
-            $script:AzureRmVmWindowsDataDisksDetail = @()
+            $script:AzVmWindowsDataDisksDetail = @()
             $_.StorageProfile.DataDisks | foreach{
-                $script:AzureRmVmWindowsDataDisksManagedDiskId = $null
+                $script:AzVmWindowsDataDisksManagedDiskId = $null
                 if($_.ManagedDisk.Id -ne $null){
-                    $script:AzureRmVmWindowsDataDisksManagedDiskId = "<a href=`"#$(($_.ManagedDisk.Id).ToLower())`">$($_.ManagedDisk.Id)</a>"
+                    $script:AzVmWindowsDataDisksManagedDiskId = "<a href=`"#$(($_.ManagedDisk.Id).ToLower())`">$($_.ManagedDisk.Id)</a>"
                 }
-                $script:AzureRmVmWindowsDataDisksDetail += [PSCustomObject]@{
+                $script:AzVmWindowsDataDisksDetail += [PSCustomObject]@{
                     "Lun"                               = $_.Lun
                     "Name"                              = $_.Name
                     "Image"                             = $_.Image
@@ -54,21 +54,21 @@ function Save-AzureRmVmWindowsTable{
                     "CreateOption"                      = $_.CreateOption
                     "DiskSizeGB"                        = $_.DiskSizeGB
                     "ManagedDisk.StorageAccountType"    = $_.ManagedDisk.StorageAccountType
-                    "ManagedDisk.Id"                    = $script:AzureRmVmWindowsDataDisksManagedDiskId
+                    "ManagedDisk.Id"                    = $script:AzVmWindowsDataDisksManagedDiskId
                     "Vhd"                               = $_.Vhd.Uri
                 }
             }
-            $script:AzureRmVmWindowsDataDisksDetailTable = New-HTMLTable -InputObject $script:AzureRmVmWindowsDataDisksDetail
+            $script:AzVmWindowsDataDisksDetailTable = New-HTMLTable -InputObject $script:AzVmWindowsDataDisksDetail
         }
 
 
         if($_.Plan -ne $null){
-            $script:AzureRmVmWindowsPlanDetailTable = New-HTMLTable -InputObject $_.Plan
+            $script:AzVmWindowsPlanDetailTable = New-HTMLTable -InputObject $_.Plan
         }
         
         if($_.NetworkProfile.NetworkInterfaces[0].Id -match "/providers/Microsoft.Network/networkInterfaces/.{1,80}$"){
             $NetworkInterface = $Matches[0] -replace "/providers/Microsoft.Network/networkInterfaces/", ""
-            $script:AzureRmNetworkInterface | foreach{
+            $script:AzNetworkInterface | foreach{
                 if($_.Name -eq $NetworkInterface){
                     $VirtualMachine = $null
                     $PrivateIpAddress = @()
@@ -84,7 +84,7 @@ function Save-AzureRmVmWindowsTable{
                         $_.IpConfigurations.PublicIpAddress.Id | foreach{
                             if($_ -match "/providers/Microsoft.Network/publicIPAddresses/.{1,80}$"){
                                 $PublicIpAddressName = $Matches[0] -replace "/providers/Microsoft.Network/publicIPAddresses/", ""
-                                $script:AzureRmPublicIpAddress | foreach{
+                                $script:AzPublicIpAddress | foreach{
                                     if($_.Name -eq $PublicIpAddressName){
                                         $PublicIpAddress += $_.IpAddress
                                     }
@@ -112,17 +112,17 @@ function Save-AzureRmVmWindowsTable{
             }
         }
         
-        $script:AzureRmVmWindowsAvailabilitySetReference = $null
+        $script:AzVmWindowsAvailabilitySetReference = $null
         if($_.AvailabilitySetReference.Id -ne $null){
-            $script:AzureRmVmWindowsAvailabilitySetReference = "<a href=`"#$(($_.AvailabilitySetReference.Id).ToLower())`">$($_.AvailabilitySetReference.Id)</a>"
+            $script:AzVmWindowsAvailabilitySetReference = "<a href=`"#$(($_.AvailabilitySetReference.Id).ToLower())`">$($_.AvailabilitySetReference.Id)</a>"
         }
 
-        $script:AzureRmVmWindowsVmExtensionsDetail = @()
-        $script:AzureRmVmWindowsVmExtensionsDetailTable = @()
-        $script:VmExtensions = Get-AzureRmVMExtension -ResourceGroupName $_.ResourceGroupName -VMName $_.Name
+        $script:AzVmWindowsVmExtensionsDetail = @()
+        $script:AzVmWindowsVmExtensionsDetailTable = @()
+        $script:VmExtensions = Get-AzVMExtension -ResourceGroupName $_.ResourceGroupName -VMName $_.Name
         if ( $script:VmExtensions -ne $null ){
             $script:VmExtensions | ForEach-Object {
-                $script:AzureRmVmWindowsVmExtensionsDetail += [PSCustomObject]@{
+                $script:AzVmWindowsVmExtensionsDetail += [PSCustomObject]@{
                     "Name"                      = $_.Name
                     "Location"                  = $_.Location
                     "Publisher"                 = $_.Publisher
@@ -139,36 +139,36 @@ function Save-AzureRmVmWindowsTable{
                 }
             }
         }
-        $script:AzureRmVmWindowsVmExtensionsDetailTable = New-HTMLTable -InputObject $script:AzureRmVmWindowsVmExtensionsDetail
+        $script:AzVmWindowsVmExtensionsDetailTable = New-HTMLTable -InputObject $script:AzVmWindowsVmExtensionsDetail
 
-        $script:AzureRmVmWindowsDetail = [PSCustomObject]@{
+        $script:AzVmWindowsDetail = [PSCustomObject]@{
             "Name"                          = $_.Name
             "ResourceGroupName"             = $_.ResourceGroupName
             "Location"                      = $_.Location
             "Id"                            = $_.Id
             "VmId"                          = $_.VmId
             "Type"                          = $_.Type
-            "AvailabilitySetReference"      = $script:AzureRmVmWindowsAvailabilitySetReference
+            "AvailabilitySetReference"      = $script:AzVmWindowsAvailabilitySetReference
             "Zones"                         = $_.Zones
             "ProvisioningState"             = $_.ProvisioningState
             "StatusCode"                    = $_.StatusCode
             "VmSize"                        = $_.HardwareProfile.VmSize
             "LicenseType"                   = $_.LicenseType
-            "Plan"                          = $script:AzureRmVmWindowsPlanDetailTable
+            "Plan"                          = $script:AzVmWindowsPlanDetailTable
             "ComputerName"                  = $_.OSProfile.ComputerName
             "AdminUsername"                 = $_.OSProfile.AdminUsername
             "ProvisionVMAgent"              = $_.OSProfile.WindowsConfiguration.ProvisionVMAgent
-            "ImageReference"                = $script:AzureRmVmWindowsImageReferenceDetailTable
-            "OsDisk"                        = $script:AzureRmVmWindowsOsDiskDetailTable
-            "DataDisks"                     = $script:AzureRmVmWindowsDataDisksDetailTable
-            "NetworkInterfaces"             = $script:AzureRmVmWindowsNetworkInterfaceIDsDetailTable
+            "ImageReference"                = $script:AzVmWindowsImageReferenceDetailTable
+            "OsDisk"                        = $script:AzVmWindowsOsDiskDetailTable
+            "DataDisks"                     = $script:AzVmWindowsDataDisksDetailTable
+            "NetworkInterfaces"             = $script:AzVmWindowsNetworkInterfaceIDsDetailTable
             "BootDiagnostics.Enabled"       = $_.DiagnosticsProfile.BootDiagnostics.Enabled
             "BootDiagnostics.StorageUri"    = $_.DiagnosticsProfile.BootDiagnostics.StorageUri
-            "VM Extension"                  = $script:AzureRmVmWindowsVmExtensionsDetailTable
+            "VM Extension"                  = $script:AzVmWindowsVmExtensionsDetailTable
         }
-        $script:AzureRmVmWindowsDetailTable = New-HTMLTable -InputObject (ConvertTo-PropertyValue -InputObject $script:AzureRmVmWindowsDetail) 
+        $script:AzVmWindowsDetailTable = New-HTMLTable -InputObject (ConvertTo-PropertyValue -InputObject $script:AzVmWindowsDetail) 
 
-        $script:AzureRmVmWindowsTable += [PSCustomObject]@{
+        $script:AzVmWindowsTable += [PSCustomObject]@{
             "Name"                          = "<a name=`"$($_.Id.ToLower())`">$($_.Name)</a>"
             "ComputerName"                  = $_.OSProfile.ComputerName
             "ResourceGroupName"             = $ResourceGroupName
@@ -180,9 +180,9 @@ function Save-AzureRmVmWindowsTable{
             "PrivateIpAddress"              = $PrivateIpAddress -join "<br>"
             "PublicIPAddress"               = $PublicIpAddress -join "<br>"
             "NetworkSecurityGroup"          = $NetworkSecurityGroup
-            "Detail"                        = ConvertTo-DetailView -InputObject $script:AzureRmVmWindowsDetailTable
+            "Detail"                        = ConvertTo-DetailView -InputObject $script:AzVmWindowsDetailTable
         }
     }
     $script:Report += "<h3>Windows VM</h3>"
-    $script:Report += ConvertTo-SummaryView -InputObject (Add-ProvisioningStateColor(New-ResourceHTMLTable -InputObject $script:AzureRmVmWindowsTable))
+    $script:Report += ConvertTo-SummaryView -InputObject (Add-ProvisioningStateColor(New-ResourceHTMLTable -InputObject $script:AzVmWindowsTable))
 }

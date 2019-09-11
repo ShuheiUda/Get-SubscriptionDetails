@@ -1,15 +1,15 @@
 
-function Save-AzureRmDiskTable{
-    $script:AzureRmDiskTable = @()
-    $script:AzureRmDisk | foreach{
-        $script:AzureRmDiskSkuDetailTable = $null
-        $script:AzureRmDiskCreationDataDetailTable = $null
+function Save-AzDiskTable{
+    $script:AzDiskTable = @()
+    $script:AzDisk | foreach{
+        $script:AzDiskSkuDetailTable = $null
+        $script:AzDiskCreationDataDetailTable = $null
 
         if($_.Sku -ne $null){
-            $script:AzureRmDiskSkuDetailTable = New-HTMLTable -InputObject $_.Sku
+            $script:AzDiskSkuDetailTable = New-HTMLTable -InputObject $_.Sku
         }
         if($_.CreationData -ne $null){
-            $script:AzureRmDiskCreationDataDetail = [PSCustomObject]@{
+            $script:AzDiskCreationDataDetail = [PSCustomObject]@{
                 "CreateOption"                      = $_.CreationData.CreateOption
                 "StorageAccountId"                  = $_.CreationData.StorageAccountId
                 "ImageReference.Lun"                = $_.CreationData.ImageReference.Lun
@@ -17,14 +17,14 @@ function Save-AzureRmDiskTable{
                 "SourceUri"                         = $_.CreationData.SourceUri
                 "SourceResourceId"                  = $_.CreationData.SourceResourceId
             }
-            $script:AzureRmDiskCreationDataDetailTable = New-HTMLTable -InputObject $script:AzureRmDiskCreationDataDetail
+            $script:AzDiskCreationDataDetailTable = New-HTMLTable -InputObject $script:AzDiskCreationDataDetail
         }
 
-        $script:AzureRmDiskManagedBy = $null
+        $script:AzDiskManagedBy = $null
         if($_.ManagedBy -ne $null){
-            $script:AzureRmDiskManagedBy = "<a href=`"#$(($_.ManagedBy).ToLower())`">$($_.ManagedBy)</a>"
+            $script:AzDiskManagedBy = "<a href=`"#$(($_.ManagedBy).ToLower())`">$($_.ManagedBy)</a>"
         }
-        $script:AzureRmDiskDetail = [PSCustomObject]@{
+        $script:AzDiskDetail = [PSCustomObject]@{
             "Name"                          = $_.Name
             "ResourceGroupName"             = $_.ResourceGroupName
             "Location"                      = $_.Location
@@ -33,26 +33,26 @@ function Save-AzureRmDiskTable{
             "ProvisioningState"             = $_.ProvisioningState
             "TimeCreated"                   = $_.TimeCreated
             "Type"                          = $_.Type
-            "Sku"                           = $script:AzureRmDiskSkuDetailTable
+            "Sku"                           = $script:AzDiskSkuDetailTable
             "OsType"                        = $_.OsType  
             "DiskSizeGB"                    = $_.DiskSizeGB
-            "CreationData"                  = $script:AzureRmDiskCreationDataDetailTable
+            "CreationData"                  = $script:AzDiskCreationDataDetailTable
             "EncryptionSettings"            = $_.EncryptionSettings
-            "ManagedBy"                     = $script:AzureRmDiskManagedBy
+            "ManagedBy"                     = $script:AzDiskManagedBy
         }
-        $script:AzureRmDiskDetailTable = New-HTMLTable -InputObject (ConvertTo-PropertyValue -InputObject $script:AzureRmDiskDetail) 
+        $script:AzDiskDetailTable = New-HTMLTable -InputObject (ConvertTo-PropertyValue -InputObject $script:AzDiskDetail) 
 
-        $script:AzureRmDiskTable += [PSCustomObject]@{
+        $script:AzDiskTable += [PSCustomObject]@{
             "Name"                          = "<a name=`"$($_.Id.ToLower())`">$($_.Name)</a>"
             "ResourceGroupName"             = $_.ResourceGroupName
             "Location"                      = $_.Location
             "ProvisioningState"             = $_.ProvisioningState
             "OsType"                        = $_.OsType  
             "DiskSizeGB"                    = $_.DiskSizeGB
-            "Detail"                        = ConvertTo-DetailView -InputObject $script:AzureRmDiskDetailTable
+            "Detail"                        = ConvertTo-DetailView -InputObject $script:AzDiskDetailTable
         }
     }
 
     $script:Report += "<h3>Managed Disk</h3>"
-    $script:Report += ConvertTo-SummaryView -InputObject (Add-ProvisioningStateColor(New-ResourceHTMLTable -InputObject $Script:AzureRmDiskTable))
+    $script:Report += ConvertTo-SummaryView -InputObject (Add-ProvisioningStateColor(New-ResourceHTMLTable -InputObject $Script:AzDiskTable))
 }
