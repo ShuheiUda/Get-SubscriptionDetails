@@ -1,84 +1,84 @@
-function Save-AzureRmApplicationGatewayTable{
-    $script:AzureRmApplicationGatewayTable = @()
-    $script:AzureRmApplicationGateway | foreach{
+function Save-AzApplicationGatewayTable{
+    $script:AzApplicationGatewayTable = @()
+    $script:AzApplicationGateway | foreach{
         if($_.FrontendIPConfigurations.publicIPAddress.Id -match "/providers/Microsoft.Network/publicIPAddresses/[a-zA-Z0-9_.-]{1,80}$"){
             $FrontendPublicIPAddress = $Matches[0] -replace "/providers/Microsoft.Network/publicIPAddresses/", ""
         }
         
-        $script:AzureRmApplicationGatewayAuthenticationCertificatesDetail = @()
+        $script:AzApplicationGatewayAuthenticationCertificatesDetail = @()
         if($_.AuthenticationCertificates -ne $null){
             $_.AuthenticationCertificates | foreach{
-                $script:AzureRmApplicationGatewayAuthenticationCertificatesDetail += [PSCustomObject]@{
+                $script:AzApplicationGatewayAuthenticationCertificatesDetail += [PSCustomObject]@{
                     "Name"                      = $_.Name
                     "ProvisioningState"         = $_.ProvisioningState
                 }
             }
-            $script:AzureRmApplicationGatewayAuthenticationCertificatesDetailTable = New-HTMLTable -InputObject $script:AzureRmApplicationGatewayAuthenticationCertificatesDetail
+            $script:AzApplicationGatewayAuthenticationCertificatesDetailTable = New-HTMLTable -InputObject $script:AzApplicationGatewayAuthenticationCertificatesDetail
         }
         
-        $script:AzureRmApplicationGatewaySslCertificatesDetail = @()
+        $script:AzApplicationGatewaySslCertificatesDetail = @()
         if($_.SslCertificates -ne $null){
             $_.SslCertificates | foreach{
-                $script:AzureRmApplicationGatewaySslCertificatesDetail += [PSCustomObject]@{
+                $script:AzApplicationGatewaySslCertificatesDetail += [PSCustomObject]@{
                     "Name"                      = $_.Name
                     "ProvisioningState"         = $_.ProvisioningState
                     "PublicCertData"            = $_.PublicCertData
                 }
             }
-            $script:AzureRmApplicationGatewaySslCertificatesDetailTable = New-HTMLTable -InputObject $script:AzureRmApplicationGatewaySslCertificatesDetail
+            $script:AzApplicationGatewaySslCertificatesDetailTable = New-HTMLTable -InputObject $script:AzApplicationGatewaySslCertificatesDetail
         }
         
-        $script:AzureRmApplicationGatewayGatewayIPConfigurationsDetail = @()
+        $script:AzApplicationGatewayGatewayIPConfigurationsDetail = @()
         if($_.GatewayIPConfigurations -ne $null){
             $_.GatewayIPConfigurations | foreach{
-                $script:AzureRmApplicationGatewayGatewayIPConfigurationsSubnetId = $null
+                $script:AzApplicationGatewayGatewayIPConfigurationsSubnetId = $null
                 if($_.Subnet.Id -ne $null){
-                    $script:AzureRmApplicationGatewayGatewayIPConfigurationsSubnetId = "<a href=`"#$((($_.Subnet.Id) -Replace `"/subnets/.*$`",`"`").ToLower())`">$($_.Subnet.Id)</a>"
+                    $script:AzApplicationGatewayGatewayIPConfigurationsSubnetId = "<a href=`"#$((($_.Subnet.Id) -Replace `"/subnets/.*$`",`"`").ToLower())`">$($_.Subnet.Id)</a>"
                 }
-                $script:AzureRmApplicationGatewayGatewayIPConfigurationsDetail += [PSCustomObject]@{
+                $script:AzApplicationGatewayGatewayIPConfigurationsDetail += [PSCustomObject]@{
                     "Name"                      = $_.Name
                     "ProvisioningState"         = $_.ProvisioningState
-                    "Subnet"                    = $script:AzureRmApplicationGatewayGatewayIPConfigurationsSubnetId
+                    "Subnet"                    = $script:AzApplicationGatewayGatewayIPConfigurationsSubnetId
                 }
             }
-            $script:AzureRmApplicationGatewayGatewayIPConfigurationsDetailTable = New-HTMLTable -InputObject $script:AzureRmApplicationGatewayGatewayIPConfigurationsDetail
+            $script:AzApplicationGatewayGatewayIPConfigurationsDetailTable = New-HTMLTable -InputObject $script:AzApplicationGatewayGatewayIPConfigurationsDetail
         }
         
-        $script:AzureRmApplicationGatewayFrontendIPConfigurationsDetail = @()
+        $script:AzApplicationGatewayFrontendIPConfigurationsDetail = @()
         if($_.FrontendIPConfigurations -ne $null){
             $_.FrontendIPConfigurations | foreach{
-                $script:AzureRmApplicationGatewayGatewayIPConfigurationsPublicIPAddressId = $null
+                $script:AzApplicationGatewayGatewayIPConfigurationsPublicIPAddressId = $null
                 if($_.PublicIPAddress.Id -ne $null){
-                    $script:AzureRmApplicationGatewayGatewayIPConfigurationsPublicIPAddressId = "<a href=`"#$(($_.PublicIPAddress.Id).ToLower())`">$($_.PublicIPAddress.Id)</a>"
+                    $script:AzApplicationGatewayGatewayIPConfigurationsPublicIPAddressId = "<a href=`"#$(($_.PublicIPAddress.Id).ToLower())`">$($_.PublicIPAddress.Id)</a>"
                 }
-                $script:AzureRmApplicationGatewayFrontendIPConfigurationsDetail += [PSCustomObject]@{
+                $script:AzApplicationGatewayFrontendIPConfigurationsDetail += [PSCustomObject]@{
                     "Name"                      = $_.Name
                     "ProvisioningState"         = $_.ProvisioningState
                     "PrivateIPAddress"          = $_.PrivateIPAddress
-                    "PublicIPAddress"           = $script:AzureRmApplicationGatewayGatewayIPConfigurationsPublicIPAddressId
+                    "PublicIPAddress"           = $script:AzApplicationGatewayGatewayIPConfigurationsPublicIPAddressId
                     "PrivateIPAllocationMethod" = $_.PrivateIPAllocationMethod
                     "Subnet"                    = $_.Subnet
                 }
             }
-            $script:AzureRmApplicationGatewayFrontendIPConfigurationsDetailTable = New-HTMLTable -InputObject $script:AzureRmApplicationGatewayFrontendIPConfigurationsDetail
+            $script:AzApplicationGatewayFrontendIPConfigurationsDetailTable = New-HTMLTable -InputObject $script:AzApplicationGatewayFrontendIPConfigurationsDetail
         }
         
-        $script:AzureRmApplicationGatewayFrontendPortsDetail = @()
+        $script:AzApplicationGatewayFrontendPortsDetail = @()
         if($_.FrontendPorts -ne $null){
             $_.FrontendPorts | foreach{
-                $script:AzureRmApplicationGatewayFrontendPortsDetail += [PSCustomObject]@{
+                $script:AzApplicationGatewayFrontendPortsDetail += [PSCustomObject]@{
                     "Name"                      = $_.Name
                     "ProvisioningState"         = $_.ProvisioningState
                     "Port"                      = $_.Port
                 }
             }
-            $script:AzureRmApplicationGatewayFrontendPortsDetailTable = New-HTMLTable -InputObject $script:AzureRmApplicationGatewayFrontendPortsDetail
+            $script:AzApplicationGatewayFrontendPortsDetailTable = New-HTMLTable -InputObject $script:AzApplicationGatewayFrontendPortsDetail
         }
         
-        $script:AzureRmApplicationGatewayProbesDetail = @()
+        $script:AzApplicationGatewayProbesDetail = @()
         if($_.Probes -ne $null){
             $_.Probes | foreach{
-                $script:AzureRmApplicationGatewayProbesDetail += [PSCustomObject]@{
+                $script:AzApplicationGatewayProbesDetail += [PSCustomObject]@{
                     "Name"                      = $_.Name
                     "ProvisioningState"         = $_.ProvisioningState
                     "Host"                      = $_.Host
@@ -89,13 +89,13 @@ function Save-AzureRmApplicationGatewayTable{
                     "UnhealthyThreshold"        = $_.UnhealthyThreshold
                 }
             }
-            $script:AzureRmApplicationGatewayProbesDetailTable = New-HTMLTable -InputObject $script:AzureRmApplicationGatewayProbesDetail
+            $script:AzApplicationGatewayProbesDetailTable = New-HTMLTable -InputObject $script:AzApplicationGatewayProbesDetail
         }
         
-        $script:AzureRmApplicationGatewayHttpListenersDetail = @()
+        $script:AzApplicationGatewayHttpListenersDetail = @()
         if($_.HttpListeners -ne $null){
             $_.HttpListeners | foreach{
-                $script:AzureRmApplicationGatewayHttpListenersDetail += [PSCustomObject]@{
+                $script:AzApplicationGatewayHttpListenersDetail += [PSCustomObject]@{
                     "Name"                          = $_.Name
                     "ProvisioningState"             = $_.ProvisioningState
                     "HostName"                      = $_.HostName
@@ -103,37 +103,37 @@ function Save-AzureRmApplicationGatewayTable{
                     "RequireServerNameIndication"   = $_.RequireServerNameIndication
                 }
             }
-            $script:AzureRmApplicationGatewayHttpListenersDetailTable = New-HTMLTable -InputObject $script:AzureRmApplicationGatewayHttpListenersDetail
+            $script:AzApplicationGatewayHttpListenersDetailTable = New-HTMLTable -InputObject $script:AzApplicationGatewayHttpListenersDetail
         }
 
-        $script:AzureRmApplicationGatewayUrlPathMapsDetail = @()
+        $script:AzApplicationGatewayUrlPathMapsDetail = @()
         if($_.UrlPathMaps -ne $null){
             $_.UrlPathMaps | foreach{
-                $script:AzureRmApplicationGatewayUrlPathMapsDetail += [PSCustomObject]@{
+                $script:AzApplicationGatewayUrlPathMapsDetail += [PSCustomObject]@{
                     "Name"                          = $_.Name
                     "ProvisioningState"             = $_.ProvisioningState
                     "PathRules"                     = $_.PathRules
                 }
             }
-            $script:AzureRmApplicationGatewayUrlPathMapsDetailTable = New-HTMLTable -InputObject $script:AzureRmApplicationGatewayUrlPathMapsDetail
+            $script:AzApplicationGatewayUrlPathMapsDetailTable = New-HTMLTable -InputObject $script:AzApplicationGatewayUrlPathMapsDetail
         }
 
-        $script:AzureRmApplicationGatewayRequestRoutingRulesDetail = @()
+        $script:AzApplicationGatewayRequestRoutingRulesDetail = @()
         if($_.RequestRoutingRules -ne $null){
             $_.RequestRoutingRules | foreach{
-                $script:AzureRmApplicationGatewayRequestRoutingRulesDetail += [PSCustomObject]@{
+                $script:AzApplicationGatewayRequestRoutingRulesDetail += [PSCustomObject]@{
                     "Name"                      = $_.Name
                     "ProvisioningState"         = $_.ProvisioningState
                     "RuleType"                  = $_.RuleType
                 }
             }
-            $script:AzureRmApplicationGatewayRequestRoutingRulesDetailTable = New-HTMLTable -InputObject $script:AzureRmApplicationGatewayRequestRoutingRulesDetail
+            $script:AzApplicationGatewayRequestRoutingRulesDetailTable = New-HTMLTable -InputObject $script:AzApplicationGatewayRequestRoutingRulesDetail
         }
         
-        $script:AzureRmApplicationGatewayBackendHttpSettingsCollectionDetail = @()
+        $script:AzApplicationGatewayBackendHttpSettingsCollectionDetail = @()
         if($_.BackendHttpSettingsCollection -ne $null){
             $_.BackendHttpSettingsCollection | foreach{
-                $script:AzureRmApplicationGatewayBackendHttpSettingsCollectionDetail += [PSCustomObject]@{
+                $script:AzApplicationGatewayBackendHttpSettingsCollectionDetail += [PSCustomObject]@{
                     "Name"                          = $_.Name
                     "ProvisioningState"             = $_.ProvisioningState
                     "CookieBasedAffinity"           = $_.CookieBasedAffinity
@@ -143,24 +143,24 @@ function Save-AzureRmApplicationGatewayTable{
                     "RequestTimeout"                = $_.RequestTimeout
                 }
             }
-            $script:AzureRmApplicationGatewayBackendHttpSettingsCollectionDetailTable = New-HTMLTable -InputObject $script:AzureRmApplicationGatewayBackendHttpSettingsCollectionDetail
+            $script:AzApplicationGatewayBackendHttpSettingsCollectionDetailTable = New-HTMLTable -InputObject $script:AzApplicationGatewayBackendHttpSettingsCollectionDetail
         }
 
-        $script:AzureRmApplicationGatewayWebApplicationFirewallConfigurationDetail = @()
+        $script:AzApplicationGatewayWebApplicationFirewallConfigurationDetail = @()
         if($_.WebApplicationFirewallConfiguration -ne $null){
             $_.WebApplicationFirewallConfiguration | foreach{
-                $script:AzureRmApplicationGatewayWebApplicationFirewallConfigurationDetail += [PSCustomObject]@{
+                $script:AzApplicationGatewayWebApplicationFirewallConfigurationDetail += [PSCustomObject]@{
                     "Enabled"                   = $_.Enabled
                     "FirewallMode"              = $_.FirewallMode
                 }
             }
-            $script:AzureRmApplicationGatewayWebApplicationFirewallConfigurationDetailTable = New-HTMLTable -InputObject $script:AzureRmApplicationGatewayWebApplicationFirewallConfigurationDetail
+            $script:AzApplicationGatewayWebApplicationFirewallConfigurationDetailTable = New-HTMLTable -InputObject $script:AzApplicationGatewayWebApplicationFirewallConfigurationDetail
         }
 
-        $script:AzureRmApplicationGatewayRedirectConfigurationsDetail = @()
+        $script:AzApplicationGatewayRedirectConfigurationsDetail = @()
         if($_.RedirectConfigurations -ne $null){
             $_.RedirectConfigurations | foreach{
-                $script:AzureRmApplicationGatewayRedirectConfigurationsDetail += [PSCustomObject]@{
+                $script:AzApplicationGatewayRedirectConfigurationsDetail += [PSCustomObject]@{
                     "Name"                      = $_.Name
                     "IncludePath"               = $_.IncludePath
                     "IncludeQueryString"        = $_.IncludeQueryString
@@ -172,10 +172,10 @@ function Save-AzureRmApplicationGatewayTable{
                     "UrlPathMaps"               = $_.UrlPathMaps.Id
                 }
             }
-            $script:AzureRmApplicationGatewayRedirectConfigurationsDetailTable = New-HTMLTable -InputObject $script:AzureRmApplicationGatewayRedirectConfigurationsDetail
+            $script:AzApplicationGatewayRedirectConfigurationsDetailTable = New-HTMLTable -InputObject $script:AzApplicationGatewayRedirectConfigurationsDetail
         }
 
-        $script:AzureRmApplicationGatewayDetail = [PSCustomObject]@{
+        $script:AzApplicationGatewayDetail = [PSCustomObject]@{
             "Name"                      = $_.Name
             "ResourceGroupName"         = $_.ResourceGroupName
             "Location"                  = $_.Location
@@ -187,24 +187,24 @@ function Save-AzureRmApplicationGatewayTable{
             "Sku"                       = $_.Sku.Name
             "Capacity"                  = $_.Sku.Capacity
             "SslPolicy"                 = $_.SslPolicy
-            "AuthenticationCertificates"= ConvertTo-DetailView -InputObject $script:AzureRmApplicationGatewayAuthenticationCertificatesDetailTable
-            "SslCertificates"           = ConvertTo-DetailView -InputObject $script:AzureRmApplicationGatewaySslCertificatesDetailTable
-            "GatewayIPConfigurations"   = ConvertTo-DetailView -InputObject $script:AzureRmApplicationGatewayGatewayIPConfigurationsDetailTable
-            "FrontendIPConfigurations"  = ConvertTo-DetailView -InputObject $script:AzureRmApplicationGatewayFrontendIPConfigurationsDetailTable
-            "FrontendPublicIPAddress"   = ($script:AzureRmPublicIpAddress | where {($_.Name -eq $FrontendPublicIPAddress)}).IpAddress
-            "FrontendPorts"             = ConvertTo-DetailView -InputObject $script:AzureRmApplicationGatewayFrontendPortsDetailTable
-            "Probes"                    = ConvertTo-DetailView -InputObject $script:AzureRmApplicationGatewayProbesDetailTable
-            "HttpListeners"             = ConvertTo-DetailView -InputObject $script:AzureRmApplicationGatewayHttpListenersDetailTable
-            "UrlPathMaps"               = ConvertTo-DetailView -InputObject $script:AzureRmApplicationGatewayUrlPathMapsDetailTable
-            "RequestRoutingRules"       = ConvertTo-DetailView -InputObject $script:AzureRmApplicationGatewayRequestRoutingRulesDetailTable
+            "AuthenticationCertificates"= ConvertTo-DetailView -InputObject $script:AzApplicationGatewayAuthenticationCertificatesDetailTable
+            "SslCertificates"           = ConvertTo-DetailView -InputObject $script:AzApplicationGatewaySslCertificatesDetailTable
+            "GatewayIPConfigurations"   = ConvertTo-DetailView -InputObject $script:AzApplicationGatewayGatewayIPConfigurationsDetailTable
+            "FrontendIPConfigurations"  = ConvertTo-DetailView -InputObject $script:AzApplicationGatewayFrontendIPConfigurationsDetailTable
+            "FrontendPublicIPAddress"   = ($script:AzPublicIpAddress | where {($_.Name -eq $FrontendPublicIPAddress)}).IpAddress
+            "FrontendPorts"             = ConvertTo-DetailView -InputObject $script:AzApplicationGatewayFrontendPortsDetailTable
+            "Probes"                    = ConvertTo-DetailView -InputObject $script:AzApplicationGatewayProbesDetailTable
+            "HttpListeners"             = ConvertTo-DetailView -InputObject $script:AzApplicationGatewayHttpListenersDetailTable
+            "UrlPathMaps"               = ConvertTo-DetailView -InputObject $script:AzApplicationGatewayUrlPathMapsDetailTable
+            "RequestRoutingRules"       = ConvertTo-DetailView -InputObject $script:AzApplicationGatewayRequestRoutingRulesDetailTable
             "BackendAddressPools"       = $_.BackendAddressPools.BackendAddresses.IpAddress -join "<br>"
-            "BackendHttpSettingsCollection" = ConvertTo-DetailView -InputObject $script:AzureRmApplicationGatewayBackendHttpSettingsCollectionDetailTable
-            "WebApplicationFirewallConfiguration" = ConvertTo-DetailView -InputObject $script:AzureRmApplicationGatewayWebApplicationFirewallConfigurationDetailTable
-            "RedirectConfigurations"    = ConvertTo-DetailView -InputObject $script:AzureRmApplicationGatewayRedirectConfigurationsDetailTable
+            "BackendHttpSettingsCollection" = ConvertTo-DetailView -InputObject $script:AzApplicationGatewayBackendHttpSettingsCollectionDetailTable
+            "WebApplicationFirewallConfiguration" = ConvertTo-DetailView -InputObject $script:AzApplicationGatewayWebApplicationFirewallConfigurationDetailTable
+            "RedirectConfigurations"    = ConvertTo-DetailView -InputObject $script:AzApplicationGatewayRedirectConfigurationsDetailTable
         }
-        $script:AzureRmApplicationGatewayDetailTable = New-HTMLTable -InputObject (ConvertTo-PropertyValue -InputObject $script:AzureRmApplicationGatewayDetail)
+        $script:AzApplicationGatewayDetailTable = New-HTMLTable -InputObject (ConvertTo-PropertyValue -InputObject $script:AzApplicationGatewayDetail)
 
-        $script:AzureRmApplicationGatewayTable += [PSCustomObject]@{
+        $script:AzApplicationGatewayTable += [PSCustomObject]@{
             "Name"                      = "<a name=`"$($_.Id.ToLower())`">$($_.Name)</a>"
             "ResourceGroupName"         = $_.ResourceGroupName
             "Location"                  = $_.Location
@@ -212,11 +212,11 @@ function Save-AzureRmApplicationGatewayTable{
             "Sku"                       = $_.Sku.Name
             "Capacity"                  = $_.Sku.Capacity
             "FrontendPrivateIPAddress"  = $_.FrontendIPConfigurations.PrivateIPAddress
-            "FrontendPublicIPAddress"   = ($script:AzureRmPublicIpAddress | where {($_.Name -eq $FrontendPublicIPAddress)}).IpAddress
+            "FrontendPublicIPAddress"   = ($script:AzPublicIpAddress | where {($_.Name -eq $FrontendPublicIPAddress)}).IpAddress
             "BackendAddressPools"       = $_.BackendAddressPools.BackendAddresses.IpAddress -join ", "
-            "Detail"                    = ConvertTo-DetailView -InputObject $script:AzureRmApplicationGatewayDetailTable
+            "Detail"                    = ConvertTo-DetailView -InputObject $script:AzApplicationGatewayDetailTable
         }
     }
     $script:Report += "<h3>Application Gateway</h3>"
-    $script:Report += ConvertTo-SummaryView -InputObject (Add-ProvisioningStateColor(New-ResourceHTMLTable -InputObject $script:AzureRmApplicationGatewayTable))
+    $script:Report += ConvertTo-SummaryView -InputObject (Add-ProvisioningStateColor(New-ResourceHTMLTable -InputObject $script:AzApplicationGatewayTable))
 }

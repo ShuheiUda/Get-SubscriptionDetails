@@ -31,6 +31,7 @@ function Save-AzPublicIpAddressTable{
             "ResourceGroupName"         = $_.ResourceGroupName
             "Location"                  = $_.Location
             "ProvisioningState"         = $_.ProvisioningState
+            "sku"                       = $_.Sku.Name
             "PublicIpAllocationMethod"  = $_.PublicIpAllocationMethod
             "IpAddress"                 = $_.IpAddress
             "IdleTimeoutInMinutes"      = $_.IdleTimeoutInMinutes

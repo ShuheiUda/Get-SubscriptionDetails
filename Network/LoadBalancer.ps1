@@ -136,6 +136,7 @@ function Save-AzLoadBalancerTable{
             "ResourceGroupName"         = $_.ResourceGroupName
             "Location"                  = $_.Location
             "ProvisioningState"         = $_.ProvisioningState
+            "Sku"                       = $_.Sku.Name
             "FrontendIpConfigurations"  = $_.FrontendIpConfigurations.Name -join ", "
             "BackendAddresspools"       = $_.BackendAddressPools.Name -join ", "
             "InboundNatPools"           = $_.InboundNatPools.Name -join ", "
