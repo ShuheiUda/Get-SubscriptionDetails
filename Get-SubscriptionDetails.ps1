@@ -769,7 +769,6 @@ function Save-AzureReportFooter{
     $Date = (Get-Date -Format yyyyMMdd_HHmmss)
     $global:ReportPath = "$OutputFolder\$SubscriptionID-$Date.htm"
     Set-Content $global:ReportPath $script:Report
-    . $global:ReportPath 
 }
 
 # Call save function
