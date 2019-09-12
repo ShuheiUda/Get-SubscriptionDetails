@@ -7,19 +7,49 @@ function Save-AzStorageAccountTable{
         $script:AzStorageNetworkRuleSetDetailTable = $null
         $script:AzStorageEncryptionDetail = $null
         $script:AzStorageEncryptionDetailTable = $null
-    
+        $script:AzStorageVirtualNetworkRulesDetail = $null
+        $script:AzStorageVirtualNetworkRulesDetailTable = $null
+        $script:AzStorageIpRulesDetail = $null
+        $script:AzStorageIpRulesDetailTable = $null
+        
         if($_.Sku -ne $null){
             $script:AzStorageSkuDetailTable = New-HTMLTable -InputObject $_.Sku
         }
+        
+        if ($_.NetworkRuleSet.VirtualNetworkRules -ne $Null){
+            $script:AzStorageVirtualNetworkRulesDetail = @()
+            $script:AzStorageVirtualNetworkRulesDetailTable = @()
+            $_.NetworkRuleSet.VirtualNetworkRules | ForEach-Object {
+                $script:AzStorageVirtualNetworkRulesDetail += [PSCustomObject]@{
+                    "Action"                    = $_.Action
+                    "VirtualNetworkResourceId"  = $_.VirtualNetworkResourceId
+                }
+            }
+            $script:AzStorageVirtualNetworkRulesDetailTable = New-HTMLTable -InputObject $script:AzStorageVirtualNetworkRulesDetail
+        }
+
+        if ($_.NetworkRuleSet.IpRules -ne $Null){
+            $script:AzStorageIpRulesDetail = @()
+            $script:AzStorageIpRulesDetailTable = @()
+            $_.NetworkRuleSet.IpRules | ForEach-Object {
+                $script:AzStorageIpRulesDetail += [PSCustomObject]@{
+                    "Action"                = $_.Action
+                    "IPAddressOrRange"      = $_.IPAddressOrRange
+                }
+            }
+            $script:AzStorageIpRulesDetailTable = New-HTMLTable -InputObject $script:AzStorageIpRulesDetail
+        }
+
         if($_.NetworkRuleSet -ne $null){
             $script:AzStorageNetworkRuleSetDetail = [PSCustomObject]@{
                 "DefaultAction"             = $_.NetworkRuleSet.DefaultAction
-                "Bypass"                    = $_.NetworkRuleSet.Bypass
-                "VirtualNetworkRules"       = $_.NetworkRuleSet.VirtualNetworkRules
-                "IpRules"                   = $_.NetworkRuleSet.IpRules
+                "Bypass"                    = $_.NetworkRuleSet.Bypass.ToString() -replace ", ","<br>"
+                "VirtualNetworkRules"       = $script:AzStorageVirtualNetworkRulesDetailTable
+                "IpRules"                   = $script:AzStorageIpRulesDetailTable
             }
             $script:AzStorageNetworkRuleSetDetailTable = New-HTMLTable -InputObject $script:AzStorageNetworkRuleSetDetail
         }
+
         if($_.Encryption -ne $null){
             $script:AzStorageEncryptionDetail = [PSCustomObject]@{
                 "Blob.Enabled"              = $_.Encryption.Services.Blob.Enabled
