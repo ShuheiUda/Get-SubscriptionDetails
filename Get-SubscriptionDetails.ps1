@@ -104,7 +104,9 @@ Function ConvertTo-DetailView{
     )
     
     if($InputObject -ne $null){
+        $InputObject = $InputObject.Replace("  <tr class=`"odd`">`r`n    <td>","  <tr class=`"odd detail`">`r`n    <td><span class=`"expandable`"></span>")
         $InputObject = $InputObject.Replace("  <tr class=`"odd`">`n    <td>","  <tr class=`"odd detail`">`n    <td><span class=`"expandable`"></span>")
+        $InputObject = $InputObject.Replace("  <tr class=`"even`">`r`n    <td>","  <tr class=`"even detail`">`r`n    <td><span class=`"expandable`"></span>")
         $InputObject = $InputObject.Replace("  <tr class=`"even`">`n    <td>","  <tr class=`"even detail`">`n    <td><span class=`"expandable`"></span>")
         $InputObject = $InputObject.Replace('&amp;','&')
         $InputObject = $InputObject.Replace('&lt;','<')
@@ -121,7 +123,9 @@ Function ConvertTo-SummaryView{
     )
 
     if($InputObject -ne $null){
+        $InputObject = $InputObject.Replace("  <tr class=`"odd`">`r`n    <td>","  <tr class=`"odd summary`">`r`n    <td><span class=`"expandable`"></span>")
         $InputObject = $InputObject.Replace("  <tr class=`"odd`">`n    <td>","  <tr class=`"odd summary`">`n    <td><span class=`"expandable`"></span>")
+        $InputObject = $InputObject.Replace("  <tr class=`"even`">`r`n    <td>","  <tr class=`"even summary`">`r`n    <td><span class=`"expandable`"></span>")
         $InputObject = $InputObject.Replace("  <tr class=`"even`">`n    <td>","  <tr class=`"even summary`">`n    <td><span class=`"expandable`"></span>")
         $InputObject = $InputObject.Replace('&amp;','&')
         $InputObject = $InputObject.Replace('&lt;','<')
@@ -473,7 +477,7 @@ function Initialize{
     Write-Log "Waiting: Version Check"
     $script:LatestVersion = (Invoke-WebRequest $script:LatestVersionUrl).Content
     if($script:Version -ne $script:LatestVersion){
-        Write-Warning "New version is available. ($script:LatestVersion)`nhttps://github.com/ShuheiUda/Get-SubscriptionDetails"
+        Write-Warning "New version is available. ($script:LatestVersion)`r`nhttps://github.com/ShuheiUda/Get-SubscriptionDetails"
     }
     Write-Log "Success: Version Check" -Color Green
 

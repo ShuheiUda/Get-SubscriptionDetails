@@ -30,7 +30,7 @@ function Save-AzVirtualNetworkGatewayConnection{
             "LocalNetworkGateway2"      = $script:AzVirtualNetworkGatewayConnectionLocalNetworkGateway2Id
             "Peer"                      = $script:AzVirtualNetworkGatewayConnectionPeerId
             "RoutingWeight"             = $_.RoutingWeight
-            "SharedKey"                 = $_.SharedKey
+            "SharedKey"                 = $_ | Get-AzVirtualNetworkGatewayConnectionSharedKey
             "ConnectionStatus"          = $_.ConnectionStatus
             "EgressBytesTransferred"    = $_.EgressBytesTransferred
             "IngressBytesTransferred"   = $_.IngressBytesTransferred
